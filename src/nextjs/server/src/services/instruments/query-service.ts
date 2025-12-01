@@ -28,4 +28,21 @@ export class InstrumentsQueryService {
       instruments: instruments
     }
   }
+
+  async getById(
+          prisma: PrismaClient,
+          instrumentId: string) {
+
+    // Get instrument
+    const instrument = await
+            instrumentModel.getById(
+              prisma,
+              instrumentId)
+
+    // Return
+    return {
+      status: true,
+      instrument: instrument
+    }
+  }
 }

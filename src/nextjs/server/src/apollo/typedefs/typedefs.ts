@@ -214,8 +214,8 @@ export const typeDefs = `#graphql
     # instancesSharedPublicly: [InstanceSharedGroups]
 
     # Instruments
-    getInstruments(
-      type: String): [Instrument]
+    getInstrumentById(instrumentId: String): Instrument
+    getInstruments(type: String): [Instrument]
   }
 
   type Mutation {

@@ -5,6 +5,25 @@ import { InstrumentsQueryService } from '@/services/instruments/query-service'
 const instrumentsQueryService = new InstrumentsQueryService()
 
 // Code
+export async function getInstrumentById(
+                        parent: any,
+                        args: any,
+                        context: any,
+                        info: any) {
+
+  // Debug
+  const fnName = `getInstrument()`
+
+  // Get instruments
+  const instrumentsResults = await
+          instrumentsQueryService.getById(
+            prisma,
+            args.instrumentId)
+
+  // Return
+  return instrumentsResults.instrument
+}
+
 export async function getInstruments(
                         parent: any,
                         args: any,

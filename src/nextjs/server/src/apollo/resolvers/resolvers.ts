@@ -14,7 +14,7 @@ import { upsertUserPreference } from '@/serene-core-server/apollo/resolvers/muta
 
 // Concept queries imports
 // import { filterInstances, filterProjectInstances, instanceById } from './queries/instances'
-import { getInstruments } from './queries/instruments'
+import { getInstrumentById, getInstruments } from './queries/instruments'
 
 // Concept mutations imports
 import { loadServerStartData } from './mutations/server-data-start'
@@ -64,6 +64,7 @@ const Query = {
   // instancesSharedPublicly,
 
   // Instruments
+  getInstrumentById,
   getInstruments
 }
 
