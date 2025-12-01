@@ -73,7 +73,7 @@ model Instrument {
   ofInstrumentPrices           InstrumentPrice[]
   ofDocInsights                DocInsight[]
   ofDocWindowInsights          DocWindowInsight[]
-  ofTradeSignals               TradeSignal[]
+  ofTradeAnalysis              TradeAnalysis[]
 
   @@unique([exchangeId, name])
   @@map("instrument")
@@ -232,22 +232,41 @@ model UserAccount {
   @@schema("public")
 }
 
-// AiTradefi: Trade signals
+// AiTradefi: Trade analysis
 
-model TradeSignal {
+model Analysis {
+  id                           String               @id @default(cuid())
+  status                       String               @db.Char(1)
+  name                         String
+  version                      String
+  prompt                       String
+
+  ofTradeAnalysis              TradeAnalysis[]
+
+  @@unique([name, version])
+  @@map("analysis")
+  @@schema("public")
+}
+
+model TradeAnalysis {
   id                           String               @id @default(cuid())
   instrumentId                 String               @map("instrument_id")
   instrument                   Instrument           @relation(fields: [instrumentId], references: [id])
+  analysisId                   String               @map("analysis_id")
+  analysis                     Analysis             @relation(fields: [analysisId], references: [id])
+  techId                       String               @map("tech_id")
+  tech                         Tech                 @relation(fields: [techId], references: [id])
+  day                          DateTime
+  status                       String               @db.Char(1)
   tradeType                    String               @map("trade_type") @db.Char(1)  // buy (B), sell (S)
-  starting                     DateTime
-  expires                      DateTime?
+  score                        Float                // 0..1
   created                      DateTime             @default(now())
   updated                      DateTime             @updatedAt
 
   ofTrades                     Trade[]
 
-  @@unique([instrumentId, starting])
-  @@map("trade_signal")
+  @@unique([instrumentId, analysisId, techId, day])
+  @@map("trade_analysis")
   @@schema("public")
 }
 
@@ -261,15 +280,15 @@ model Trade {
   userAccount                  UserAccount          @relation(fields: [userAccountId], references: [id])
   brokerId                     String               @map("broker_id")
   broker                       Broker               @relation(fields: [brokerId], references: [id])
-  tradeSignalId                String               @map("trade_signal_id")
-  tradeSignal                  TradeSignal          @relation(fields: [tradeSignalId], references: [id])
+  tradeAnalysisId              String               @map("trade_analysis_id")
+  tradeAnalysis                TradeAnalysis        @relation(fields: [tradeAnalysisId], references: [id])
   status                       String               @db.Char(1)
   currencyCode                 String               @map("currency_code") @db.Char(3)
   expectedAmount               Float?               @map("expected_amount")  // Expected change to account
   created                      DateTime             @default(now())
   updated                      DateTime             @updatedAt
 
-  @@unique([userAccountId, brokerId, tradeSignalId])
+  @@unique([userAccountId, brokerId, tradeAnalysisId])
   @@map("trade")
   @@schema("public")
 }
