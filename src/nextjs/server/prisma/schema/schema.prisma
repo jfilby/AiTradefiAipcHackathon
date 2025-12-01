@@ -1,0 +1,275 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["public", "core"]
+}
+
+// Project specific
+
+// Batch
+
+model BatchJob {
+  id                         String           @id @default(cuid())
+  instanceId                 String?          @map("instance_id")
+  instance                   Instance?        @relation(fields: [instanceId], references: [id])
+  userProfileId              String?          @map("user_profile_id")
+  userProfile                UserProfile?     @relation(fields: [userProfileId], references: [id])
+  runInATransaction          Boolean          @map("run_in_a_transaction")
+  status                     String           @db.Char(1)
+  progressPct                Int?             @map("progress_pct")
+  message                    String?
+  jobType                    String           @map("job_type")
+  refModel                   String?          @map("ref_model")
+  refId                      String?          @map("ref_id")
+  parameters                 String?          // Stringified JSON
+  created                    DateTime         @default(now())
+  updated                    DateTime         @updatedAt
+
+  @@index([refId])
+  @@map("batch_job")
+  @@schema("public")
+}
+
+// Wait-list
+
+model Waitlist {
+  email                        String               @id
+
+  @@map("waitlist")
+  @@schema("public")
+}
+
+// AiTradefi: Instruments
+
+model Exchange {
+  id                           String               @id @default(cuid())
+  name                         String               @unique
+  region                       String
+
+  ofInstruments                Instrument[]
+
+  @@map("exchange")
+  @@schema("public")
+}
+
+model Instrument {
+  id                           String               @id @default(cuid())
+  exchangeId                   String               @map("exchange_id")
+  exchange                     Exchange             @relation(fields: [exchangeId], references: [id])
+  symbol                       String               @unique
+  type                         String               // E.g. stock
+  name                         String
+
+  ofInstrumentPrices           InstrumentPrice[]
+  ofDocInsights                DocInsight[]
+  ofDocWindowInsights          DocWindowInsight[]
+  ofTradeSignals               TradeSignal[]
+
+  @@unique([exchangeId, name])
+  @@map("instrument")
+  @@schema("public")
+}
+
+model InstrumentPrice {
+  id                           String               @id @default(cuid())
+  instrumentId                 String               @map("instrument_id")
+  instrument                   Instrument           @relation(fields: [instrumentId], references: [id])
+  priced                       DateTime
+  timeframe                    Int                  // Timeframe in seconds
+  currencyCode                 String               @map("currency_code") @db.Char(3)
+  price                        Float
+  volume                       Float
+
+  @@unique([instrumentId, priced, timeframe])
+  @@map("instrument_price")
+  @@schema("public")
+}
+
+// AiTradefi: Window types
+
+model WindowType {
+  id                           String               @id @default(cuid())
+  status                       String               @db.Char(1)
+  name                         String               @unique
+  fromTimeUnit                 String               @map("from_time_unit") @db.Char(1)
+  fromTimeValue                Int                  @map("from_time_value")
+  toTimeUnit                   String               @map("to_time_unit") @db.Char(1)
+  toTimeValue                  Int                  @map("to_time_value")
+
+  ofDocWindowInsights          DocWindowInsight[]
+
+  @@unique([fromTimeUnit, fromTimeValue, toTimeUnit, toTimeValue])
+  @@map("window_type")
+  @@schema("public")
+}
+
+// AiTradefi: Documents
+
+model Document {
+  id                           String               @id @default(cuid())
+  docSourceId                  String               @map("doc_source_id")
+  docSource                    DocSource            @relation(fields: [docSourceId], references: [id])
+  uniqueRef                    String               @map("unique_ref")  // Could be a URL or other unique identifier
+  headline                     String
+  originalSource               String?              @map("original_source")
+  originalUrl                  String?              @map("original_url")
+  text                         String
+  instruments                  String[]
+  published                    DateTime
+  created                      DateTime             @default(now())
+
+  ofDocInsights                DocInsight[]
+
+  @@unique([docSourceId, uniqueRef])
+  @@map("document")
+  @@schema("public")
+}
+
+model DocInsight {
+  // Insight for a specific document.
+  id                           String               @id @default(cuid())
+  documentId                   String?              @map("document_id")
+  document                     Document?            @relation(fields: [documentId], references: [id])
+  instrumentId                 String               @map("instrument_id")
+  instrument                   Instrument           @relation(fields: [instrumentId], references: [id])
+  agentUserId                  String               @map("agent_user_id")
+  agentUser                    AgentUser            @relation(fields: [agentUserId], references: [id])
+  status                       String               @db.Char(1)  // active (A), completed (C)
+  advisedTradeType             String?              @map("advised_trade_type") @db.Char(1)  // buy (B), sell (S), hold (H)
+  category                     String               @db.Char(1)  // earnings (E), regulatory (R), technical (T)
+  sentimentScore               Float                @map("sentiment_score")   // -1 to 1
+  confidenceScore              Float                @map("confidence_score")  // 0 to 1
+  potencyScore                 Float                @map("potency_score")     // 0 to 1
+  noveltyScore                 Float                @map("novelty_score")     // 0 to 1
+  urgencyScore                 Float                @map("urgency_score")     // 0 to 1
+  starting                     DateTime             // At minimum the published or sourced date
+  ending                       DateTime?
+  created                      DateTime             @default(now())
+  updated                      DateTime             @updatedAt
+
+  @@unique([documentId, instrumentId, agentUserId])
+  @@map("doc_insight")
+  @@schema("public")
+}
+
+model DocWindowInsight {
+  // Insight for documents over a window.
+  // Can be used to reduce costs and avoid rate-limits.
+  id                           String               @id @default(cuid())
+  windowTypeId                 String?              @map("window_type_id")
+  windowType                   WindowType?          @relation(fields: [windowTypeId], references: [id])
+  instrumentId                 String               @map("instrument_id")
+  instrument                   Instrument           @relation(fields: [instrumentId], references: [id])
+  agentUserId                  String               @map("agent_user_id")
+  agentUser                    AgentUser            @relation(fields: [agentUserId], references: [id])
+  status                       String               @db.Char(1)  // active (A), completed (C)
+  advisedTradeType             String?              @map("advised_trade_type") @db.Char(1)  // buy (B), sell (S), hold (H)
+  category                     String               @db.Char(1)  //  earnings (E), general news (N), regulatory (R), technical (T)
+  sentimentScore               Float                @map("sentiment_score")   // -1 to 1
+  confidenceScore              Float                @map("confidence_score")  // 0 to 1
+  potencyScore                 Float                @map("potency_score")     // 0 to 1
+  noveltyScore                 Float                @map("novelty_score")     // 0 to 1
+  urgencyScore                 Float                @map("urgency_score")     // 0 to 1
+  starting                     DateTime             // At minimum the published or sourced date
+  ending                       DateTime?
+  created                      DateTime             @default(now())
+  updated                      DateTime             @updatedAt
+
+  @@unique([windowTypeId, instrumentId, agentUserId])
+  @@map("doc_window_insight")
+  @@schema("public")
+}
+
+model DocSource {
+  id                           String               @id @default(cuid())
+  name                         String               @unique
+  description                  String?
+
+  ofDocuments                  Document[]
+
+  @@map("doc_source")
+  @@schema("public")
+}
+
+// AiTradefi: User accounts
+
+model Broker {
+  id                           String               @id @default(cuid())
+  name                         String
+
+  ofTrades                     Trade[]
+  ofUserAccounts               UserAccount[]
+
+  @@map("broker")
+  @@schema("public")
+}
+
+model UserAccount {
+  id                           String               @id @default(cuid())
+  userProfileId                String               @map("user_profile_id")
+  userProfile                  UserProfile          @relation(fields: [userProfileId], references: [id])
+  brokerId                     String?              @map("broker_id")
+  broker                       Broker?              @relation(fields: [brokerId], references: [id])
+  accountType                  String               @db.Char(1)  // real (R), demo (D), signals only (S)
+  status                       String               @db.Char(1)
+  currencyCode                 String               @map("currency_code") @db.Char(3)
+  balance                      Float?
+
+  ofTrades                     Trade[]
+
+  @@unique([userProfileId, brokerId])
+  @@map("user_account")
+  @@schema("public")
+}
+
+// AiTradefi: Trade signals
+
+model TradeSignal {
+  id                           String               @id @default(cuid())
+  instrumentId                 String               @map("instrument_id")
+  instrument                   Instrument           @relation(fields: [instrumentId], references: [id])
+  tradeType                    String               @map("trade_type") @db.Char(1)  // buy (B), sell (S)
+  starting                     DateTime
+  expires                      DateTime?
+  created                      DateTime             @default(now())
+  updated                      DateTime             @updatedAt
+
+  ofTrades                     Trade[]
+
+  @@unique([instrumentId, starting])
+  @@map("trade_signal")
+  @@schema("public")
+}
+
+// AiTradefi: Trades
+
+model Trade {
+  // Generated based on user profiles and account balances. Expected to be only
+  // demo trades for the hackathon.
+  id                           String               @id @default(cuid())
+  userAccountId                String               @map("user_account_id")
+  userAccount                  UserAccount          @relation(fields: [userAccountId], references: [id])
+  brokerId                     String               @map("broker_id")
+  broker                       Broker               @relation(fields: [brokerId], references: [id])
+  tradeSignalId                String               @map("trade_signal_id")
+  tradeSignal                  TradeSignal          @relation(fields: [tradeSignalId], references: [id])
+  status                       String               @db.Char(1)
+  currencyCode                 String               @map("currency_code") @db.Char(3)
+  expectedAmount               Float?               @map("expected_amount")  // Expected change to account
+  created                      DateTime             @default(now())
+  updated                      DateTime             @updatedAt
+
+  @@unique([userAccountId, brokerId, tradeSignalId])
+  @@map("trade")
+  @@schema("public")
+}
