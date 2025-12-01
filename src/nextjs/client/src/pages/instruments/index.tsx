@@ -28,12 +28,6 @@ export default function InstrumentsPage({
 
       <Layout userProfile={userProfile}>
 
-        <Typography
-          style={{ marginBottom: '1em' }}
-          variant='h2'>
-          {instance.name}
-        </Typography>
-
         <div style={{ textAlign: 'left', marginBottom: '2em' }}>
 
           <Typography
