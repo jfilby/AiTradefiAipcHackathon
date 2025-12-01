@@ -143,6 +143,36 @@ export class InstrumentModel {
     return instrument
   }
 
+  async getWithRecentTradeAnalysis(
+          prisma: PrismaClient,
+          type: string,
+          analysisId: string,
+          daysAgo: number) {
+
+    // Debug
+    const fnName = `${this.clName}.getWithRecentTradeAnalysis()`
+
+    // Query
+    try {
+      return await prisma.instrument.findMany({
+        where: {
+          type: type,
+          ofTradeAnalysis: {
+            some: {
+              analysisId: analysisId,
+              created: {
+                lt: new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000)
+              }
+            }
+          }
+        }
+      })
+    } catch(error: any) {
+      console.error(`${fnName}: error: ${error}`)
+      throw 'Prisma error'
+    }
+  }
+
   async update(
           prisma: PrismaClient,
           id: string,

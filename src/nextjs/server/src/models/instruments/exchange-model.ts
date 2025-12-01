@@ -9,7 +9,8 @@ export class ExchangeModel {
   async create(
           prisma: PrismaClient,
           name: string,
-          region: string) {
+          region: string,
+          instrumentTypes: string[]) {
 
     // Debug
     const fnName = `${this.clName}.create()`
@@ -19,7 +20,8 @@ export class ExchangeModel {
       return await prisma.exchange.create({
         data: {
           name: name,
-          region: region
+          region: region,
+          instrumentTypes: instrumentTypes
         }
       })
     } catch(error) {
@@ -97,6 +99,43 @@ export class ExchangeModel {
     return exchange
   }
 
+  async getByRegionAndInstrumentType(
+          prisma: PrismaClient,
+          region: string | undefined,
+          instrumentType: string) {
+
+    // Debug
+    const fnName = `${this.clName}.getByInstrumentType()`
+
+    // Validate
+    if (instrumentType == null) {
+      console.error(`${fnName}: instrumentType == null`)
+      throw 'Validation error'
+    }
+
+    // Query
+    var exchange: any = null
+
+    try {
+      exchange = await prisma.exchange.findFirst({
+        where: {
+          region: region,
+          instrumentTypes: {
+            has: instrumentType
+          }
+        }
+      })
+    } catch(error: any) {
+      if (!(error instanceof error.NotFound)) {
+        console.error(`${fnName}: error: ${error}`)
+        throw 'Prisma error'
+      }
+    }
+
+    // Return
+    return exchange
+  }
+
   async getByUniqueKey(
           prisma: PrismaClient,
           name: string) {
@@ -134,7 +173,8 @@ export class ExchangeModel {
           prisma: PrismaClient,
           id: string,
           name: string | undefined,
-          region: string | undefined) {
+          region: string | undefined,
+          instrumentTypes: string[] | undefined) {
 
     // Debug
     const fnName = `${this.clName}.update()`
@@ -144,7 +184,8 @@ export class ExchangeModel {
       return await prisma.exchange.update({
         data: {
           name: name,
-          region: region
+          region: region,
+          instrumentTypes: instrumentTypes
         },
         where: {
           id: id
@@ -159,7 +200,8 @@ export class ExchangeModel {
   async upsert(prisma: PrismaClient,
                id: string | undefined,
                name: string | undefined,
-               region: string | undefined) {
+               region: string | undefined,
+               instrumentTypes: string[] | undefined) {
 
     // Debug
     const fnName = `${this.clName}.upsert()`
@@ -192,12 +234,18 @@ export class ExchangeModel {
         throw 'Prisma error'
       }
 
+      if (instrumentTypes == null) {
+        console.error(`${fnName}: id is null and instrumentTypes is null`)
+        throw 'Prisma error'
+      }
+
       // Create
       return await
                this.create(
                  prisma,
                  name,
-                 region)
+                 region,
+                 instrumentTypes)
     } else {
 
       // Update
@@ -206,7 +254,8 @@ export class ExchangeModel {
                  prisma,
                  id,
                  name,
-                 region)
+                 region,
+                 instrumentTypes)
     }
   }
 }

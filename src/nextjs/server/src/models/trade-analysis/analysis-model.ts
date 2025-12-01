@@ -8,7 +8,9 @@ export class AnalysisModel {
   // Code
   async create(
           prisma: PrismaClient,
+          techId: string,
           status: string,
+          instrumentType: string,
           name: string,
           version: string,
           prompt: string) {
@@ -20,7 +22,9 @@ export class AnalysisModel {
     try {
       return await prisma.analysis.create({
         data: {
+          techId: techId,
           status: status,
+          instrumentType: instrumentType,
           name: name,
           version: version,
           prompt: prompt
@@ -56,7 +60,9 @@ export class AnalysisModel {
 
   async filter(
           prisma: PrismaClient,
+          techId: string | undefined = undefined,
           status: string | undefined = undefined,
+          instrumentType: string | undefined = undefined,
           name: string | undefined = undefined,
           version: string | undefined = undefined) {
 
@@ -67,7 +73,9 @@ export class AnalysisModel {
     try {
       return await prisma.analysis.findMany({
         where: {
+          techId: techId,
           status: status,
+          instrumentType: instrumentType,
           name: name,
           version: version
         }
@@ -148,7 +156,9 @@ export class AnalysisModel {
   async update(
           prisma: PrismaClient,
           id: string,
+          techId: string | undefined,
           status: string | undefined,
+          instrumentType: string | undefined,
           name: string | undefined,
           version: string | undefined,
           prompt: string | undefined) {
@@ -160,7 +170,9 @@ export class AnalysisModel {
     try {
       return await prisma.analysis.update({
         data: {
+          techId: techId,
           status: status,
+          instrumentType: instrumentType,
           name: name,
           version: version,
           prompt: prompt
@@ -178,7 +190,9 @@ export class AnalysisModel {
   async upsert(
           prisma: PrismaClient,
           id: string | undefined,
+          techId: string | undefined,
           status: string | undefined,
+          instrumentType: string | undefined,
           name: string | undefined,
           version: string | undefined,
           prompt: string | undefined) {
@@ -206,8 +220,18 @@ export class AnalysisModel {
     if (id == null) {
 
       // Validate for create (mainly for type validation of the create call)
+      if (techId == null) {
+        console.error(`${fnName}: id is null and techId is null`)
+        throw 'Prisma error'
+      }
+
       if (status == null) {
         console.error(`${fnName}: id is null and status is null`)
+        throw 'Prisma error'
+      }
+
+      if (instrumentType == null) {
+        console.error(`${fnName}: id is null and instrumentType is null`)
         throw 'Prisma error'
       }
 
@@ -230,7 +254,9 @@ export class AnalysisModel {
       return await
                this.create(
                  prisma,
+                 techId,
                  status,
+                 instrumentType,
                  name,
                  version,
                  prompt)
@@ -241,7 +267,9 @@ export class AnalysisModel {
                this.update(
                  prisma,
                  id,
+                 techId,
                  status,
+                 instrumentType,
                  name,
                  version,
                  prompt)

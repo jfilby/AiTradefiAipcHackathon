@@ -1,16 +1,15 @@
 import { PrismaClient } from '@prisma/client'
 
-export class TradeAnalysis {
+export class TradeAnalysisModel {
 
   // Consts
-  clName = 'TradeAnalysis'
+  clName = 'TradeAnalysisModel'
 
   // Code
   async create(
           prisma: PrismaClient,
           instrumentId: string,
           analysisId: string,
-          techId: string,
           day: Date,
           status: string,
           tradeType: string,
@@ -25,7 +24,6 @@ export class TradeAnalysis {
         data: {
           instrumentId: instrumentId,
           analysisId: analysisId,
-          techId: techId,
           day: day,
           status: status,
           tradeType: tradeType,
@@ -64,7 +62,6 @@ export class TradeAnalysis {
           prisma: PrismaClient,
           instrumentId: string | undefined = undefined,
           analysisId: string | undefined = undefined,
-          techId: string | undefined = undefined,
           day: Date | undefined = undefined,
           status: string | undefined = undefined,
           tradeType: string | undefined = undefined) {
@@ -78,7 +75,6 @@ export class TradeAnalysis {
         where: {
           instrumentId: instrumentId,
           analysisId: analysisId,
-          techId: techId,
           day: day,
           status: status,
           tradeType: tradeType
@@ -169,7 +165,6 @@ export class TradeAnalysis {
           id: string,
           instrumentId: string | undefined,
           analysisId: string | undefined,
-          techId: string | undefined,
           day: Date | undefined,
           status: string | undefined,
           tradeType: string | undefined,
@@ -184,7 +179,6 @@ export class TradeAnalysis {
         data: {
           instrumentId: instrumentId,
           analysisId: analysisId,
-          techId: techId,
           day: day,
           status: status,
           tradeType: tradeType,
@@ -205,7 +199,6 @@ export class TradeAnalysis {
           id: string | undefined,
           instrumentId: string | undefined,
           analysisId: string | undefined,
-          techId: string | undefined,
           day: Date | undefined,
           status: string | undefined,
           tradeType: string | undefined,
@@ -246,11 +239,6 @@ export class TradeAnalysis {
         throw 'Prisma error'
       }
 
-      if (techId == null) {
-        console.error(`${fnName}: id is null and techId is null`)
-        throw 'Prisma error'
-      }
-
       if (day == null) {
         console.error(`${fnName}: id is null and day is null`)
         throw 'Prisma error'
@@ -277,7 +265,6 @@ export class TradeAnalysis {
                  prisma,
                  instrumentId,
                  analysisId,
-                 techId,
                  day,
                  status,
                  tradeType,
@@ -291,7 +278,6 @@ export class TradeAnalysis {
                  id,
                  instrumentId,
                  analysisId,
-                 techId,
                  day,
                  status,
                  tradeType,

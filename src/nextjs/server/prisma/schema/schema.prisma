@@ -55,6 +55,7 @@ model Exchange {
   id                           String               @id @default(cuid())
   name                         String               @unique
   region                       String
+  instrumentTypes              String[]
 
   ofInstruments                Instrument[]
 
@@ -236,7 +237,10 @@ model UserAccount {
 
 model Analysis {
   id                           String               @id @default(cuid())
+  techId                       String               @map("tech_id")
+  tech                         Tech                 @relation(fields: [techId], references: [id])
   status                       String               @db.Char(1)
+  instrumentType               String               @map("instrument_type")
   name                         String
   version                      String
   prompt                       String
@@ -254,8 +258,6 @@ model TradeAnalysis {
   instrument                   Instrument           @relation(fields: [instrumentId], references: [id])
   analysisId                   String               @map("analysis_id")
   analysis                     Analysis             @relation(fields: [analysisId], references: [id])
-  techId                       String               @map("tech_id")
-  tech                         Tech                 @relation(fields: [techId], references: [id])
   day                          DateTime
   status                       String               @db.Char(1)
   tradeType                    String               @map("trade_type") @db.Char(1)  // buy (B), sell (S)
@@ -265,7 +267,7 @@ model TradeAnalysis {
 
   ofTrades                     Trade[]
 
-  @@unique([instrumentId, analysisId, techId, day])
+  @@unique([instrumentId, analysisId, day])
   @@map("trade_analysis")
   @@schema("public")
 }

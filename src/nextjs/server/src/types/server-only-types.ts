@@ -28,10 +28,19 @@ export class ServerOnlyTypes {
   ]
 
   // Exchange names
-  static nasdaqExchangeName = 'Nasdaq'
+  static nasdaqExchangeName = 'NASDAQ'
 
   // Instrument types
   static stockType = 'stock'
+
+  // Trading types
+  static buyTradingType = 'B'
+  static sellTradingType = 'S'
+
+  static tradingTypes = [
+    this.buyTradingType,
+    this.sellTradingType
+  ]
 
   // News sources
   static finnHubNewsSourceName = 'FinnHub'
