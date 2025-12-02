@@ -120,6 +120,7 @@ export class TradeAnalysisMutateService {
               analysisId,
               techId,
               day,
+              ServerOnlyTypes.tradeAnalysisEngineVersion,
               BaseDataTypes.activeStatus,
               entry.tradeType,
               entry.score,

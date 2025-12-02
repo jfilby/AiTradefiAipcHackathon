@@ -12,6 +12,7 @@ export class TradeAnalysisModel {
           analysisId: string,
           techId: string,
           day: Date,
+          engineVersion: string,
           status: string,
           tradeType: string,
           score: number,
@@ -28,6 +29,7 @@ export class TradeAnalysisModel {
           analysisId: analysisId,
           techId: techId,
           day: day,
+          engineVersion: engineVersion,
           status: status,
           tradeType: tradeType,
           score: score,
@@ -179,6 +181,7 @@ export class TradeAnalysisModel {
           analysisId: string | undefined,
           techId: string | undefined,
           day: Date | undefined,
+          engineVersion: string | undefined,
           status: string | undefined,
           tradeType: string | undefined,
           score: number | undefined,
@@ -195,6 +198,7 @@ export class TradeAnalysisModel {
           analysisId: analysisId,
           techId: techId,
           day: day,
+          engineVersion: engineVersion,
           status: status,
           tradeType: tradeType,
           score: score,
@@ -217,6 +221,7 @@ export class TradeAnalysisModel {
           analysisId: string | undefined,
           techId: string | undefined,
           day: Date | undefined,
+          engineVersion: string | undefined,
           status: string | undefined,
           tradeType: string | undefined,
           score: number | undefined,
@@ -269,6 +274,11 @@ export class TradeAnalysisModel {
         throw 'Prisma error'
       }
 
+      if (engineVersion == null) {
+        console.error(`${fnName}: id is null and engineVersion is null`)
+        throw 'Prisma error'
+      }
+
       if (status == null) {
         console.error(`${fnName}: id is null and status is null`)
         throw 'Prisma error'
@@ -297,6 +307,7 @@ export class TradeAnalysisModel {
                  analysisId,
                  techId,
                  day,
+                 engineVersion,
                  status,
                  tradeType,
                  score,
@@ -312,6 +323,7 @@ export class TradeAnalysisModel {
                  analysisId,
                  techId,
                  day,
+                 engineVersion,
                  status,
                  tradeType,
                  score,

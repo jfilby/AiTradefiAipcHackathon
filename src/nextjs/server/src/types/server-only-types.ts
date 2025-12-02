@@ -42,6 +42,9 @@ export class ServerOnlyTypes {
     this.sellTradeType
   ]
 
+  // Trade analysis
+  static tradeAnalysisEngineVersion = '1.0.0'
+
   // News sources
   static finnHubNewsSourceName = 'FinnHub'
 }

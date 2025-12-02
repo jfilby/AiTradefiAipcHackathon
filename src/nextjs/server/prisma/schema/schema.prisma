@@ -275,6 +275,7 @@ model TradeAnalysis {
   techId                       String               @map("tech_id")
   tech                         Tech                 @relation(fields: [techId], references: [id])
   day                          DateTime
+  engineVersion                String               @map("engine_version")
   status                       String               @db.Char(1)
   tradeType                    String               @map("trade_type") @db.Char(1)  // buy (B), sell (S)
   score                        Float                // 0..1
