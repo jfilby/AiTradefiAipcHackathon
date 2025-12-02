@@ -12,6 +12,7 @@ export class AnalysisModel {
           instrumentType: string,
           name: string,
           version: string,
+          description: string,
           prompt: string) {
 
     // Debug
@@ -25,6 +26,7 @@ export class AnalysisModel {
           instrumentType: instrumentType,
           name: name,
           version: version,
+          description: description,
           prompt: prompt
         }
       })
@@ -156,6 +158,7 @@ export class AnalysisModel {
           instrumentType: string | undefined,
           name: string | undefined,
           version: string | undefined,
+          description: string | undefined,
           prompt: string | undefined) {
 
     // Debug
@@ -169,6 +172,7 @@ export class AnalysisModel {
           instrumentType: instrumentType,
           name: name,
           version: version,
+          description: description,
           prompt: prompt
         },
         where: {
@@ -188,6 +192,7 @@ export class AnalysisModel {
           instrumentType: string | undefined,
           name: string | undefined,
           version: string | undefined,
+          description: string | undefined,
           prompt: string | undefined) {
 
     // Debug
@@ -233,6 +238,11 @@ export class AnalysisModel {
         throw 'Prisma error'
       }
 
+      if (description == null) {
+        console.error(`${fnName}: id is null and description is null`)
+        throw 'Prisma error'
+      }
+
       if (prompt == null) {
         console.error(`${fnName}: id is null and prompt is null`)
         throw 'Prisma error'
@@ -246,6 +256,7 @@ export class AnalysisModel {
                  instrumentType,
                  name,
                  version,
+                 description,
                  prompt)
     } else {
 
@@ -258,6 +269,7 @@ export class AnalysisModel {
                  instrumentType,
                  name,
                  version,
+                 description,
                  prompt)
     }
   }

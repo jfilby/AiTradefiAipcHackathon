@@ -11,6 +11,7 @@ import { DocSourceModel } from '@/models/documents/doc-source-model'
 import { InstrumentModel } from '@/models/instruments/instrument-model'
 import { WindowTypeModel } from '@/models/instruments/window-type-model'
 import { AgentUserService } from '@/services/agents/agent-user-service'
+import { SetupAnalysesTechService } from '../analysis/setup-analyses-tech-service'
 
 // Models
 const agentUserModel = new AgentUserModel()
@@ -23,6 +24,7 @@ const windowTypeModel = new WindowTypeModel()
 // Services
 const agentUserService = new AgentUserService()
 const sereneAiSetup = new SereneAiSetup()
+const setupAnalysesTechService = new SetupAnalysesTechService()
 
 // Class
 export class SetupService {
@@ -93,6 +95,9 @@ export class SetupService {
     await this.setupBaseData(
             prisma,
             adminUserProfile)
+
+    // Setup analysis tech
+    await setupAnalysesTechService.setup(prisma)
   }
 
   async setupBaseData(

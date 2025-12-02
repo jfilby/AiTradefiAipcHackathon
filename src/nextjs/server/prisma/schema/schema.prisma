@@ -241,6 +241,7 @@ model Analysis {
   instrumentType               String               @map("instrument_type")
   name                         String
   version                      String
+  description                  String
   prompt                       String
 
   ofAnalysesTech               AnalysisTech[]

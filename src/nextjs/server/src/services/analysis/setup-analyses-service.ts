@@ -2,6 +2,11 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { PrismaClient } from '@prisma/client'
 import { ConsoleService } from '@/serene-core-server/services/console/service'
+import { BaseDataTypes } from '@/shared/types/base-data-types'
+import { AnalysisModel } from '@/models/trade-analysis/analysis-model'
+
+// Models
+const analysisModel = new AnalysisModel()
 
 // Services
 const consoleService = new ConsoleService()
@@ -52,7 +57,16 @@ export class SetupAnalysesService {
 
     for (const definition of definitions) {
 
-      ;
+      const analysis = await
+              analysisModel.upsert(
+                prisma,
+                undefined,  // id
+                BaseDataTypes.activeStatus,
+                definition.instrumentType,
+                definition.name,
+                definition.version,
+                definition.description,
+                definition.prompt.join(''))
     }
   }
 
