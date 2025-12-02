@@ -154,6 +154,7 @@ export class TradeAnalysisMutateService {
     const analyses = await
             analysisModel.filter(
               prisma,
+              undefined,  // type
               BaseDataTypes.activeStatus)
 
     for (const analysis of analyses) {
