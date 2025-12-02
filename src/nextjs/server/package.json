@@ -27,6 +27,7 @@
     "eslint": "^8",
     "eslint-config-next": "15.4.5",
     "fast-equals": "^5.2.2",
+    "finnhub": "^2.0.12",
     "graphql": "^16.11.0",
     "isolated-vm": "^6.0.1",
     "jsdom": "^26.1.0",
@@ -45,7 +46,5 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5",
     "uuid": "^11.1.0"
-  },
-  "devDependencies": {
   }
 }
