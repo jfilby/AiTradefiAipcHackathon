@@ -177,7 +177,7 @@ export class TradeAnalysisLlmService {
     // Debug
     const fnName = `${this.clName}.validateQueryResultsEntry()`
 
-    console.log(`${fnName}: entry: ` + JSON.stringify(entry))
+    // console.log(`${fnName}: entry: ` + JSON.stringify(entry))
 
     // Validate exchange
     const exchange = await
