@@ -149,8 +149,7 @@ export class TradeAnalysisMutateService {
       throw new CustomError(`${fnName}: adminUserProfile == null`)
     }
 
-    // Get exchanges
-    // Run each available analysis
+    // Run each active analysis
     const analyses = await
             analysisModel.filter(
               prisma,
@@ -207,7 +206,7 @@ export class TradeAnalysisMutateService {
         tech = await
           techModel.getById(
             prisma,
-            leadingAnalysisTechs[0].techId)
+            nonLeadingAnalysisTech.techId)
 
         await this.runAnalysis(
                 prisma,
