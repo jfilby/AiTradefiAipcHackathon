@@ -30,7 +30,8 @@ export class SetupAnalysesTechService {
 
   analysisModelSpecs: AnalysisModelSpec[] = [
     {
-      variantName: AiTechDefs.googleGemini_V2pt5ProFree,
+      // variantName: AiTechDefs.googleGemini_V2pt5ProFree,
+      variantName: AiTechDefs.googleGemini_V2pt5FlashFree,
       leading: true
     }
   ]
