@@ -66,7 +66,7 @@ export class SetupAnalysesService {
                 definition.name,
                 definition.version,
                 definition.description,
-                definition.prompt.join(''))
+                definition.prompt.join('\n'))
     }
   }
 
