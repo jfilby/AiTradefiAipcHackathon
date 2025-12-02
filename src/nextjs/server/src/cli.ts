@@ -7,6 +7,7 @@ import { TechProviderMutateService } from '@/serene-core-server/services/tech/te
 import { UsersService } from '@/serene-core-server/services/users/service'
 import { ServerTestTypes } from './types/server-test-types'
 import { FinnHubApiServiceTests } from './services/external-data/finnhub/api-service-tests'
+import { SetupAnalysesService } from './services/analysis/setup-analyses-service'
 import { SetupService } from './services/setup/setup'
 import { TestsService } from './services/tests/tests-service'
 
@@ -17,11 +18,13 @@ import { TestsService } from './services/tests/tests-service'
   const fnName = 'cli.ts'
 
   // Consts
+  const loadAnalyses = 'load-analyses'
   const loadTechProviderApiKeysCommand = 'load-tech-provider-api-keys'
   const setupCommand = 'setup'
   const testsCommand = 'tests'
 
   const commands = [
+          loadAnalyses,
           loadTechProviderApiKeysCommand,
           setupCommand,
           testsCommand
@@ -33,6 +36,7 @@ import { TestsService } from './services/tests/tests-service'
   console.log(`${fnName}: comand to run: ${command}`)
 
   // Services
+  const setupAnalysesService = new SetupAnalysesService()
   const setupService = new SetupService()
   const finnHubApiServiceTests = new FinnHubApiServiceTests()
   const techProviderMutateService = new TechProviderMutateService()
@@ -55,6 +59,13 @@ import { TestsService } from './services/tests/tests-service'
 
   // Run the chosen command
   switch (command) {
+
+    case loadAnalyses: {
+
+      await setupAnalysesService.setup(prisma)
+
+      break
+    }
 
     case loadTechProviderApiKeysCommand: {
 

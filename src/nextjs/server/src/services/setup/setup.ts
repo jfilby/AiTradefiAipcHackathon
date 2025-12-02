@@ -105,7 +105,8 @@ export class SetupService {
               prisma,
               undefined,  // id
               ServerOnlyTypes.nasdaqExchangeName,
-              'US')
+              'US',
+              [ServerOnlyTypes.stockType])
 
     for (const entry of TradingParameterTypes.nasdaqStocks) {
 
