@@ -1,24 +1,24 @@
-import { Analysis, Exchange, PrismaClient } from '@prisma/client'
+import { Analysis, Exchange, PrismaClient, Tech } from '@prisma/client'
 import { CustomError } from '@/serene-core-server/types/errors'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { ServerOnlyTypes } from '@/types/server-only-types'
 import { AnalysisModel } from '@/models/trade-analysis/analysis-model'
+import { AnalysisTechModel } from '@/models/trade-analysis/analysis-tech-model'
 import { ExchangeModel } from '@/models/instruments/exchange-model'
 import { InstrumentModel } from '@/models/instruments/instrument-model'
 import { TechModel } from '@/serene-core-server/models/tech/tech-model'
 import { TradeAnalysisModel } from '@/models/trade-analysis/trade-analysis-model'
-import { GetTechService } from '../tech/get-tech-service'
 import { TradeAnalysisLlmService } from './llm-service'
 
 // Models
 const analysisModel = new AnalysisModel()
+const analysisTechModel = new AnalysisTechModel()
 const exchangeModel = new ExchangeModel()
 const instrumentModel = new InstrumentModel()
 const techModel = new TechModel()
 const tradeAnalysisModel = new TradeAnalysisModel()
 
 // Services
-const getTechService = new GetTechService()
 const tradeAnalysisLlmService = new TradeAnalysisLlmService()
 
 // Class
@@ -32,36 +32,48 @@ export class TradeAnalysisMutateService {
     type: string,
     analysisPrompt: string,
     exchangeNames: string[],
+    instruments: string[],
     instrumentNamesAlreadyRun: string[]) {
 
-    const prompt =
-            `## Instructions\n` +
-            `Generate analysis results, in JSON, for 3 instruments of type ` +
-            `${type} as shown in the example section.\n` +
-            `\n` +
-            `## Analysis thesis\n` +
-            `${analysisPrompt}\n` +
-            `\n` +
-            `## Exchanges\n` +
-            `Only include for exchanges: ` +
-            exchangeNames.join(', ') + `\n` +
-            `\n` +
-            `## Don't include\n` +
-            `Don't include any analysis for these instruments: ` +
-            instrumentNamesAlreadyRun.join(', ') + `\n` +
-            `\n` +
-            `## Fields\n` +
-            `Take note of these fields in the output:\n` +
-            `- tradeType: recommend a B (buy) or S (sell)\n` +
-            `- score: the score from 0..1 by the analysis thesis\n` +
-            `\n` +
-            `## Example\n` +
-            `{\n` +
-            `  "exchange": "NASDAQ",\n` +
-            `  "instrument": "NVDA",\n` +
-            `  "tradeType": "B",\n` +
-            `  "score": 0.85\n` +
-            `}\n`
+    var prompt =
+          `## Instructions\n` +
+          `Generate analysis results, in JSON, for 3 instruments of type ` +
+          `${type} as shown in the example section.\n` +
+          `\n` +
+          `## Analysis thesis\n` +
+          `${analysisPrompt}\n` +
+          `\n` +
+          `## Exchanges\n` +
+          `Only include for exchanges: ` +
+          exchangeNames.join(', ') + `\n` +
+          `\n`
+
+    if (instruments.length > 0) {
+
+      prompt +=
+        `## Instruments\n` +
+        `Only for these instruments: ` +
+        instruments.join(', ') + `\n` +
+        `\n`
+    }
+
+    prompt +=
+      `## Don't include\n` +
+      `Don't include any analysis for these instruments: ` +
+      instrumentNamesAlreadyRun.join(', ') + `\n` +
+      `\n` +
+      `## Fields\n` +
+      `Take note of these fields in the output:\n` +
+      `- tradeType: recommend a B (buy) or S (sell)\n` +
+      `- score: the score from 0..1 by the analysis thesis\n` +
+      `\n` +
+      `## Example\n` +
+      `{\n` +
+      `  "exchange": "NASDAQ",\n` +
+      `  "instrument": "NVDA",\n` +
+      `  "tradeType": "B",\n` +
+      `  "score": 0.85\n` +
+      `}\n`
 
     return prompt
   }
@@ -69,12 +81,15 @@ export class TradeAnalysisMutateService {
   async processQueryResults(
           prisma: PrismaClient,
           analysisId: string,
-          queryResults: any) {
+          techId: string,
+          queryResults: any): Promise<string[]> {
 
     // Get day
     const day = new Date()
 
     // Process each entry
+    var instruments: string[] = []
+
     for (const entry of queryResults.json) {
 
       // Get Exchange
@@ -95,16 +110,27 @@ export class TradeAnalysisMutateService {
               prisma,
               instrument.id,
               analysisId,
+              techId,
               day,
               BaseDataTypes.activeStatus,
               entry.tradeType,
               entry.score)
+
+      // Save instrument name
+      instruments.push(entry.instrument)
     }
+
+    // Return
+    return instruments
   }
 
   async run(prisma: PrismaClient,
             userProfileId: string) {
 
+    // Debug
+    const fnName = `${this.clName}.run()`
+
+    // Get exchanges
     // Run each available analysis
     const analyses = await
             analysisModel.filter(
@@ -113,17 +139,72 @@ export class TradeAnalysisMutateService {
 
     for (const analysis of analyses) {
 
-      await this.runAnalysis(
+      // Get leading analysis tech
+      const leadingAnalysisTechs = await
+              analysisTechModel.filter(
+                prisma,
+                analysis.id,
+                undefined,  // techId
+                BaseDataTypes.activeStatus,
+                true)       // isLeaderTech
+
+      if (leadingAnalysisTechs.length === 0) {
+        throw new CustomError(`${fnName}: leadingAnalysisTechs.length === 0`)
+      }
+
+      // Get tech
+      var tech = await
+            techModel.getById(
               prisma,
-              userProfileId,
-              analysis)
+              leadingAnalysisTechs[0].techId)
+
+      // Run the analysis for the leading techId
+      const instruments = await
+              this.runAnalysis(
+                prisma,
+                userProfileId,
+                analysis,
+                tech,
+                [])  // instruments
+
+      // Get non-leading analysis tech
+      const nonLeadingAnalysisTechs = await
+              analysisTechModel.filter(
+                prisma,
+                analysis.id,
+                undefined,  // techId
+                BaseDataTypes.activeStatus,
+                false)      // isLeaderTech
+
+      if (leadingAnalysisTechs.length === 0) {
+        throw new CustomError(`${fnName}: leadingAnalysisTechs.length === 0`)
+      }
+
+      // Generate for techs that mirror the leading one
+      for (const nonLeadingAnalysisTech of nonLeadingAnalysisTechs) {
+
+        // Get tech
+        tech = await
+          techModel.getById(
+            prisma,
+            leadingAnalysisTechs[0].techId)
+
+        await this.runAnalysis(
+                prisma,
+                userProfileId,
+                tech,
+                tech,
+                instruments)
+      }
     }
   }
 
   async runAnalysis(
           prisma: PrismaClient,
           userProfileId: string,
-          analysis: Analysis) {
+          analysis: Analysis,
+          tech: Tech,
+          instruments: string[]): Promise<string[]> {
 
     // Debug
     const fnName = `${this.clName}.runAnalysis()`
@@ -151,17 +232,13 @@ export class TradeAnalysisMutateService {
             instrumentsAlreadyRun.map(
               (instrumentAlreadyRun) => instrumentAlreadyRun.name)
 
-    const tech = await
-            techModel.getById(
-              prisma,
-              analysis.techId)
-
     // Get the prompt
     const prompt =
             this.getPrompt(
               analysis.instrumentType,
               analysis.prompt,
               exchangeNames,
+              instruments,
               instrumentNamesAlreadyRun)
 
     // LLM request
@@ -181,9 +258,14 @@ export class TradeAnalysisMutateService {
     console.log(`${fnName}: queryResults: ` + JSON.stringify(queryResults))
 
     // Process
-    await this.processQueryResults(
-            prisma,
-            analysis.id,
-            queryResults)
+    const returningInstruments = await
+            this.processQueryResults(
+              prisma,
+              analysis.id,
+              tech.id,
+              queryResults)
+
+    // Return
+    return returningInstruments
   }
 }

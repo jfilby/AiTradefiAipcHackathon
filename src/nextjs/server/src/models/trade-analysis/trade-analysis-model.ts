@@ -10,6 +10,7 @@ export class TradeAnalysisModel {
           prisma: PrismaClient,
           instrumentId: string,
           analysisId: string,
+          techId: string,
           day: Date,
           status: string,
           tradeType: string,
@@ -24,6 +25,7 @@ export class TradeAnalysisModel {
         data: {
           instrumentId: instrumentId,
           analysisId: analysisId,
+          techId: techId,
           day: day,
           status: status,
           tradeType: tradeType,
@@ -62,6 +64,7 @@ export class TradeAnalysisModel {
           prisma: PrismaClient,
           instrumentId: string | undefined = undefined,
           analysisId: string | undefined = undefined,
+          techId: string | undefined = undefined,
           day: Date | undefined = undefined,
           status: string | undefined = undefined,
           tradeType: string | undefined = undefined) {
@@ -75,6 +78,7 @@ export class TradeAnalysisModel {
         where: {
           instrumentId: instrumentId,
           analysisId: analysisId,
+          techId: techId,
           day: day,
           status: status,
           tradeType: tradeType
@@ -117,6 +121,7 @@ export class TradeAnalysisModel {
           prisma: PrismaClient,
           instrumentId: string,
           analysisId: string,
+          techId: string,
           day: Date) {
 
     // Debug
@@ -130,6 +135,11 @@ export class TradeAnalysisModel {
 
     if (analysisId == null) {
       console.error(`${fnName}: analysisId == null`)
+      throw 'Validation error'
+    }
+
+    if (techId == null) {
+      console.error(`${fnName}: techId == null`)
       throw 'Validation error'
     }
 
@@ -165,6 +175,7 @@ export class TradeAnalysisModel {
           id: string,
           instrumentId: string | undefined,
           analysisId: string | undefined,
+          techId: string | undefined,
           day: Date | undefined,
           status: string | undefined,
           tradeType: string | undefined,
@@ -179,6 +190,7 @@ export class TradeAnalysisModel {
         data: {
           instrumentId: instrumentId,
           analysisId: analysisId,
+          techId: techId,
           day: day,
           status: status,
           tradeType: tradeType,
@@ -199,6 +211,7 @@ export class TradeAnalysisModel {
           id: string | undefined,
           instrumentId: string | undefined,
           analysisId: string | undefined,
+          techId: string | undefined,
           day: Date | undefined,
           status: string | undefined,
           tradeType: string | undefined,
@@ -211,6 +224,7 @@ export class TradeAnalysisModel {
     if (id == null &&
         instrumentId != null &&
         analysisId != null &&
+        techId != null &&
         day != null) {
 
       const tradeAnalysis = await
@@ -218,6 +232,7 @@ export class TradeAnalysisModel {
                 prisma,
                 instrumentId,
                 analysisId,
+                techId,
                 day)
 
       if (tradeAnalysis != null) {
@@ -236,6 +251,11 @@ export class TradeAnalysisModel {
 
       if (analysisId == null) {
         console.error(`${fnName}: id is null and analysisId is null`)
+        throw 'Prisma error'
+      }
+
+      if (techId == null) {
+        console.error(`${fnName}: id is null and techId is null`)
         throw 'Prisma error'
       }
 
@@ -265,6 +285,7 @@ export class TradeAnalysisModel {
                  prisma,
                  instrumentId,
                  analysisId,
+                 techId,
                  day,
                  status,
                  tradeType,
@@ -278,6 +299,7 @@ export class TradeAnalysisModel {
                  id,
                  instrumentId,
                  analysisId,
+                 techId,
                  day,
                  status,
                  tradeType,

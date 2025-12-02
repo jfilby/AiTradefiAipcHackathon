@@ -237,18 +237,31 @@ model UserAccount {
 
 model Analysis {
   id                           String               @id @default(cuid())
-  techId                       String               @map("tech_id")
-  tech                         Tech                 @relation(fields: [techId], references: [id])
   status                       String               @db.Char(1)
   instrumentType               String               @map("instrument_type")
   name                         String
   version                      String
   prompt                       String
 
+  ofAnalysesTech               AnalysisTech[]
   ofTradeAnalysis              TradeAnalysis[]
 
   @@unique([name, version])
   @@map("analysis")
+  @@schema("public")
+}
+
+model AnalysisTech {
+  id                           String               @id @default(cuid())
+  analysisId                   String               @map("analysis_id")
+  analysis                     Analysis             @relation(fields: [analysisId], references: [id])
+  techId                       String               @map("tech_id")
+  tech                         Tech                 @relation(fields: [techId], references: [id])
+  status                       String               @db.Char(1)
+  isLeaderTech                 Boolean              @map("is_leader_tech")
+
+  @@unique([analysisId, techId])
+  @@map("analysis_tech")
   @@schema("public")
 }
 
@@ -258,6 +271,8 @@ model TradeAnalysis {
   instrument                   Instrument           @relation(fields: [instrumentId], references: [id])
   analysisId                   String               @map("analysis_id")
   analysis                     Analysis             @relation(fields: [analysisId], references: [id])
+  techId                       String               @map("tech_id")
+  tech                         Tech                 @relation(fields: [techId], references: [id])
   day                          DateTime
   status                       String               @db.Char(1)
   tradeType                    String               @map("trade_type") @db.Char(1)  // buy (B), sell (S)
@@ -267,7 +282,7 @@ model TradeAnalysis {
 
   ofTrades                     Trade[]
 
-  @@unique([instrumentId, analysisId, day])
+  @@unique([instrumentId, analysisId, techId, day])
   @@map("trade_analysis")
   @@schema("public")
 }

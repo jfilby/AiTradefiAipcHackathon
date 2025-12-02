@@ -1,31 +1,29 @@
 import { PrismaClient } from '@prisma/client'
 
-export class AnalysisModel {
+export class AnalysisTechModel {
 
   // Consts
-  clName = 'AnalysisModel'
+  clName = 'AnalysisTechModel'
 
   // Code
   async create(
           prisma: PrismaClient,
+          analysisId: string,
+          techId: string,
           status: string,
-          instrumentType: string,
-          name: string,
-          version: string,
-          prompt: string) {
+          isLeaderTech: boolean) {
 
     // Debug
     const fnName = `${this.clName}.create()`
 
     // Create record
     try {
-      return await prisma.analysis.create({
+      return await prisma.analysisTech.create({
         data: {
+          analysisId: analysisId,
+          techId: techId,
           status: status,
-          instrumentType: instrumentType,
-          name: name,
-          version: version,
-          prompt: prompt
+          isLeaderTech: isLeaderTech
         }
       })
     } catch(error) {
@@ -43,7 +41,7 @@ export class AnalysisModel {
 
     // Delete
     try {
-      return await prisma.analysis.delete({
+      return await prisma.analysisTech.delete({
         where: {
           id: id
         }
@@ -58,22 +56,22 @@ export class AnalysisModel {
 
   async filter(
           prisma: PrismaClient,
+          analysisId: string | undefined = undefined,
+          techId: string | undefined = undefined,
           status: string | undefined = undefined,
-          instrumentType: string | undefined = undefined,
-          name: string | undefined = undefined,
-          version: string | undefined = undefined) {
+          isLeaderTech: boolean | undefined = undefined) {
 
     // Debug
     const fnName = `${this.clName}.filter()`
 
     // Query
     try {
-      return await prisma.analysis.findMany({
+      return await prisma.analysisTech.findMany({
         where: {
+          analysisId: analysisId,
+          techId: techId,
           status: status,
-          instrumentType: instrumentType,
-          name: name,
-          version: version
+          isLeaderTech: isLeaderTech
         }
       })
     } catch(error: any) {
@@ -90,10 +88,10 @@ export class AnalysisModel {
     const fnName = `${this.clName}.getById()`
 
     // Query
-    var analysis: any = null
+    var analysisTech: any = null
 
     try {
-      analysis = await prisma.analysis.findUnique({
+      analysisTech = await prisma.analysisTech.findUnique({
         where: {
           id: id
         }
@@ -106,36 +104,36 @@ export class AnalysisModel {
     }
 
     // Return
-    return analysis
+    return analysisTech
   }
 
   async getByUniqueKey(
           prisma: PrismaClient,
-          name: string,
-          version: string) {
+          analysisId: string,
+          techId: string) {
 
     // Debug
     const fnName = `${this.clName}.getByUniqueKey()`
 
     // Validate
-    if (name == null) {
-      console.error(`${fnName}: name == null`)
+    if (analysisId == null) {
+      console.error(`${fnName}: analysisId == null`)
       throw 'Validation error'
     }
 
-    if (version == null) {
-      console.error(`${fnName}: version == null`)
+    if (techId == null) {
+      console.error(`${fnName}: techId == null`)
       throw 'Validation error'
     }
 
     // Query
-    var analysis: any = null
+    var analysisTech: any = null
 
     try {
-      analysis = await prisma.analysis.findFirst({
+      analysisTech = await prisma.analysisTech.findFirst({
         where: {
-          name: name,
-          version: version
+          analysisId: analysisId,
+          techId: techId
         }
       })
     } catch(error: any) {
@@ -146,30 +144,28 @@ export class AnalysisModel {
     }
 
     // Return
-    return analysis
+    return analysisTech
   }
 
   async update(
           prisma: PrismaClient,
           id: string,
+          analysisId: string | undefined,
+          techId: string | undefined,
           status: string | undefined,
-          instrumentType: string | undefined,
-          name: string | undefined,
-          version: string | undefined,
-          prompt: string | undefined) {
+          isLeaderTech: boolean | undefined) {
 
     // Debug
     const fnName = `${this.clName}.update()`
 
     // Update record
     try {
-      return await prisma.analysis.update({
+      return await prisma.analysisTech.update({
         data: {
+          analysisId: analysisId,
+          techId: techId,
           status: status,
-          instrumentType: instrumentType,
-          name: name,
-          version: version,
-          prompt: prompt
+          isLeaderTech: isLeaderTech
         },
         where: {
           id: id
@@ -184,28 +180,27 @@ export class AnalysisModel {
   async upsert(
           prisma: PrismaClient,
           id: string | undefined,
+          analysisId: string | undefined,
+          techId: string | undefined,
           status: string | undefined,
-          instrumentType: string | undefined,
-          name: string | undefined,
-          version: string | undefined,
-          prompt: string | undefined) {
+          isLeaderTech: boolean | undefined) {
 
     // Debug
     const fnName = `${this.clName}.upsert()`
 
     // If id isn't specified, but the unique keys are, try to get the record
     if (id == null &&
-        name != null &&
-        version != null) {
+        analysisId != null &&
+        techId != null) {
 
-      const analysis = await
+      const analysisTech = await
               this.getByUniqueKey(
                 prisma,
-                name,
-                version)
+                analysisId,
+                techId)
 
-      if (analysis != null) {
-        id = analysis.id
+      if (analysisTech != null) {
+        id = analysisTech.id
       }
     }
 
@@ -213,28 +208,23 @@ export class AnalysisModel {
     if (id == null) {
 
       // Validate for create (mainly for type validation of the create call)
+      if (analysisId == null) {
+        console.error(`${fnName}: id is null and analysisId is null`)
+        throw 'Prisma error'
+      }
+
+      if (techId == null) {
+        console.error(`${fnName}: id is null and techId is null`)
+        throw 'Prisma error'
+      }
+
       if (status == null) {
         console.error(`${fnName}: id is null and status is null`)
         throw 'Prisma error'
       }
 
-      if (instrumentType == null) {
-        console.error(`${fnName}: id is null and instrumentType is null`)
-        throw 'Prisma error'
-      }
-
-      if (name == null) {
-        console.error(`${fnName}: id is null and name is null`)
-        throw 'Prisma error'
-      }
-
-      if (version == null) {
-        console.error(`${fnName}: id is null and version is null`)
-        throw 'Prisma error'
-      }
-
-      if (prompt == null) {
-        console.error(`${fnName}: id is null and prompt is null`)
+      if (isLeaderTech == null) {
+        console.error(`${fnName}: id is null and isLeaderTech is null`)
         throw 'Prisma error'
       }
 
@@ -242,11 +232,10 @@ export class AnalysisModel {
       return await
                this.create(
                  prisma,
+                 analysisId,
+                 techId,
                  status,
-                 instrumentType,
-                 name,
-                 version,
-                 prompt)
+                 isLeaderTech)
     } else {
 
       // Update
@@ -254,11 +243,10 @@ export class AnalysisModel {
                this.update(
                  prisma,
                  id,
+                 analysisId,
+                 techId,
                  status,
-                 instrumentType,
-                 name,
-                 version,
-                 prompt)
+                 isLeaderTech)
     }
   }
 }

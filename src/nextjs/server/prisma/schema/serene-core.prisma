@@ -373,7 +373,8 @@ model Tech {
   ofRateLimitedApis            RateLimitedApi[]
 
   ofLlmCaches                  LlmCache[]
-  ofAnalysis                   Analysis[]
+  ofAnalysesTech               AnalysisTech[]
+  ofTradeAnalyses              TradeAnalysis[]
 
   @@map("tech")
   @@schema("public")
