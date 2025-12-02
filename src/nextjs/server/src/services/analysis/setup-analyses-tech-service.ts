@@ -46,6 +46,7 @@ export class SetupAnalysesTechService {
     const analyses = await
             analysisModel.filter(
               prisma,
+              undefined,  // type
               BaseDataTypes.activeStatus)
 
     // Get tech for the models to be used
@@ -70,6 +71,8 @@ export class SetupAnalysesTechService {
     }
 
     // Get/create TechAnalysis records
+    console.log(`${fnName}: ${analyses.length} analyses..`)
+
     for (const analysis of analyses) {
 
       for (const analysisModelInfo of analysisModelsInfo) {

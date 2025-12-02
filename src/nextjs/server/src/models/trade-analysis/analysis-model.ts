@@ -8,6 +8,7 @@ export class AnalysisModel {
   // Code
   async create(
           prisma: PrismaClient,
+          type: string,
           status: string,
           instrumentType: string,
           name: string,
@@ -22,6 +23,7 @@ export class AnalysisModel {
     try {
       return await prisma.analysis.create({
         data: {
+          type: type,
           status: status,
           instrumentType: instrumentType,
           name: name,
@@ -60,6 +62,7 @@ export class AnalysisModel {
 
   async filter(
           prisma: PrismaClient,
+          type: string | undefined = undefined,
           status: string | undefined = undefined,
           instrumentType: string | undefined = undefined,
           name: string | undefined = undefined,
@@ -72,6 +75,7 @@ export class AnalysisModel {
     try {
       return await prisma.analysis.findMany({
         where: {
+          type: type,
           status: status,
           instrumentType: instrumentType,
           name: name,
@@ -154,6 +158,7 @@ export class AnalysisModel {
   async update(
           prisma: PrismaClient,
           id: string,
+          type: string | undefined,
           status: string | undefined,
           instrumentType: string | undefined,
           name: string | undefined,
@@ -168,6 +173,7 @@ export class AnalysisModel {
     try {
       return await prisma.analysis.update({
         data: {
+          type: type,
           status: status,
           instrumentType: instrumentType,
           name: name,
@@ -188,6 +194,7 @@ export class AnalysisModel {
   async upsert(
           prisma: PrismaClient,
           id: string | undefined,
+          type: string | undefined,
           status: string | undefined,
           instrumentType: string | undefined,
           name: string | undefined,
@@ -218,6 +225,11 @@ export class AnalysisModel {
     if (id == null) {
 
       // Validate for create (mainly for type validation of the create call)
+      if (type == null) {
+        console.error(`${fnName}: id is null and type is null`)
+        throw 'Prisma error'
+      }
+
       if (status == null) {
         console.error(`${fnName}: id is null and status is null`)
         throw 'Prisma error'
@@ -252,6 +264,7 @@ export class AnalysisModel {
       return await
                this.create(
                  prisma,
+                 type,
                  status,
                  instrumentType,
                  name,
@@ -265,6 +278,7 @@ export class AnalysisModel {
                this.update(
                  prisma,
                  id,
+                 type,
                  status,
                  instrumentType,
                  name,

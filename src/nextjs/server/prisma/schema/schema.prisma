@@ -237,6 +237,7 @@ model UserAccount {
 
 model Analysis {
   id                           String               @id @default(cuid())
+  type                         String               @db.Char(1)  // S (screener), E (evaluator)
   status                       String               @db.Char(1)
   instrumentType               String               @map("instrument_type")
   name                         String

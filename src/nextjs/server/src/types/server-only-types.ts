@@ -42,6 +42,10 @@ export class ServerOnlyTypes {
     this.sellTradeType
   ]
 
+  // Analysis types
+  static evaluatorType = 'E'
+  static screenerType = 'S'
+
   // Trade analysis
   static tradeAnalysisEngineVersion = '1.0.0'
 

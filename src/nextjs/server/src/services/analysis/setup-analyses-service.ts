@@ -4,6 +4,7 @@ import { PrismaClient } from '@prisma/client'
 import { ConsoleService } from '@/serene-core-server/services/console/service'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { AnalysisModel } from '@/models/trade-analysis/analysis-model'
+import { ServerOnlyTypes } from '@/types/server-only-types'
 
 // Models
 const analysisModel = new AnalysisModel()
@@ -57,10 +58,20 @@ export class SetupAnalysesService {
 
     for (const definition of definitions) {
 
+      var type: string | undefined = undefined
+
+      if (definition.type === 'screener') {
+        type = ServerOnlyTypes.screenerType
+
+      } else if (definition.type === 'evaluator') {
+        type = ServerOnlyTypes.evaluatorType
+      }
+
       const analysis = await
               analysisModel.upsert(
                 prisma,
                 undefined,  // id
+                type,
                 BaseDataTypes.activeStatus,
                 definition.instrumentType,
                 definition.name,
