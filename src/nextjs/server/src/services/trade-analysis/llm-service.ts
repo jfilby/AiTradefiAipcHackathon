@@ -5,12 +5,10 @@ import { AgentLlmService } from '@/serene-ai-server/services/llm-apis/agent-llm-
 import { LlmUtilsService } from '@/serene-ai-server/services/llm-apis/utils-service'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { ExchangeModel } from '@/models/instruments/exchange-model'
-import { InstrumentModel } from '@/models/instruments/instrument-model'
 import { ServerOnlyTypes } from '@/types/server-only-types'
 
 // Models
 const exchangeModel = new ExchangeModel()
-const instrumentModel = new InstrumentModel()
 
 // Services
 const agentLlmService = new AgentLlmService()
@@ -179,6 +177,8 @@ export class TradeAnalysisLlmService {
     // Debug
     const fnName = `${this.clName}.validateQueryResultsEntry()`
 
+    console.log(`${fnName}: entry: ` + JSON.stringify(entry))
+
     // Validate exchange
     const exchange = await
             exchangeModel.getByUniqueKey(
@@ -191,21 +191,16 @@ export class TradeAnalysisLlmService {
     }
 
     // Validate instrument
-    const instrument = await
-            instrumentModel.getByUniqueKey(
-              prisma,
-              exchange.id,
-              entry.instrument)
+    if (typeof entry.instrument !== 'string') {
 
-    if (instrument == null) {
       console.log(`${fnName}: invalid instrument`)
       return false
     }
 
-    // Validate tradingType
-    if (!ServerOnlyTypes.tradingTypes.includes(entry.tradingType)) {
+    // Validate tradeType
+    if (!ServerOnlyTypes.tradeTypes.includes(entry.tradeType)) {
 
-      console.log(`${fnName}: invalid tradingType`)
+      console.log(`${fnName}: invalid tradeType`)
       return false
     }
 

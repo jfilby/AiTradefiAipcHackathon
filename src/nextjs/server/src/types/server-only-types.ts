@@ -34,12 +34,12 @@ export class ServerOnlyTypes {
   static stockType = 'stock'
 
   // Trading types
-  static buyTradingType = 'B'
-  static sellTradingType = 'S'
+  static buyTradeType = 'B'
+  static sellTradeType = 'S'
 
-  static tradingTypes = [
-    this.buyTradingType,
-    this.sellTradingType
+  static tradeTypes = [
+    this.buyTradeType,
+    this.sellTradeType
   ]
 
   // News sources

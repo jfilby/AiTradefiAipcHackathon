@@ -114,10 +114,8 @@ export class ExchangeModel {
     }
 
     // Query
-    var exchange: any = null
-
     try {
-      exchange = await prisma.exchange.findFirst({
+      return await prisma.exchange.findMany({
         where: {
           region: region,
           instrumentTypes: {
@@ -131,9 +129,6 @@ export class ExchangeModel {
         throw 'Prisma error'
       }
     }
-
-    // Return
-    return exchange
   }
 
   async getByUniqueKey(

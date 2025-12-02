@@ -85,6 +85,7 @@ export class TradeAnalysisMutateService {
           prisma: PrismaClient,
           analysisId: string,
           techId: string,
+          instrumentType: string,
           queryResults: any): Promise<string[]> {
 
     // Get day
@@ -103,9 +104,12 @@ export class TradeAnalysisMutateService {
 
       // Get Instrument
       const instrument = await
-              instrumentModel.getByUniqueKey(
+              instrumentModel.upsert(
                 prisma,
+                undefined,  // id
                 exchange.id,
+                entry.instrument,
+                instrumentType,
                 entry.instrument)
 
       // Create TradeAnalysis
@@ -221,13 +225,22 @@ export class TradeAnalysisMutateService {
     // Debug
     const fnName = `${this.clName}.runAnalysis()`
 
+    // Instrument type
+    const instrumentType = ServerOnlyTypes.stockType
+
     // Get exchanges
     const exchanges = await
             exchangeModel.getByRegionAndInstrumentType(
               prisma,
               undefined,  // region
-              ServerOnlyTypes.stockType)
+              instrumentType)
 
+    // Validate
+    if (exchanges == null) {
+      throw new CustomError(`${fnName}: exchanges == null`)
+    }
+
+    // Get exchange names
     const exchangeNames =
             exchanges.map(
               (exchange: Exchange) => exchange.name)
@@ -275,6 +288,7 @@ export class TradeAnalysisMutateService {
               prisma,
               analysis.id,
               tech.id,
+              instrumentType,
               queryResults)
 
     // Return
