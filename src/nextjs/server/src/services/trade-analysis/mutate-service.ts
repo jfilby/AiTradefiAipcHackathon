@@ -75,7 +75,8 @@ export class TradeAnalysisMutateService {
       `  "exchange": "NASDAQ",\n` +
       `  "instrument": "NVDA",\n` +
       `  "tradeType": "B",\n` +
-      `  "score": 0.85\n` +
+      `  "score": 0.85,\n` +
+      `  "thesis": "Consistent sales increases..` +
       `}\n`
 
     return prompt
@@ -121,7 +122,8 @@ export class TradeAnalysisMutateService {
               day,
               BaseDataTypes.activeStatus,
               entry.tradeType,
-              entry.score)
+              entry.score,
+              entry.thesis)
 
       // Save instrument name
       instruments.push(entry.instrument)

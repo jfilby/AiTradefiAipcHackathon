@@ -14,7 +14,8 @@ export class TradeAnalysisModel {
           day: Date,
           status: string,
           tradeType: string,
-          score: number) {
+          score: number,
+          thesis: string) {
 
     // Debug
     const fnName = `${this.clName}.create()`
@@ -29,7 +30,8 @@ export class TradeAnalysisModel {
           day: day,
           status: status,
           tradeType: tradeType,
-          score: score
+          score: score,
+          thesis: thesis
         }
       })
     } catch(error) {
@@ -179,7 +181,8 @@ export class TradeAnalysisModel {
           day: Date | undefined,
           status: string | undefined,
           tradeType: string | undefined,
-          score: number | undefined) {
+          score: number | undefined,
+          thesis: string | undefined) {
 
     // Debug
     const fnName = `${this.clName}.update()`
@@ -194,7 +197,8 @@ export class TradeAnalysisModel {
           day: day,
           status: status,
           tradeType: tradeType,
-          score: score
+          score: score,
+          thesis: thesis
         },
         where: {
           id: id
@@ -215,7 +219,8 @@ export class TradeAnalysisModel {
           day: Date | undefined,
           status: string | undefined,
           tradeType: string | undefined,
-          score: number | undefined) {
+          score: number | undefined,
+          thesis: string | undefined) {
 
     // Debug
     const fnName = `${this.clName}.upsert()`
@@ -279,6 +284,11 @@ export class TradeAnalysisModel {
         throw 'Prisma error'
       }
 
+      if (thesis == null) {
+        console.error(`${fnName}: id is null and thesis is null`)
+        throw 'Prisma error'
+      }
+
       // Create
       return await
                this.create(
@@ -289,7 +299,8 @@ export class TradeAnalysisModel {
                  day,
                  status,
                  tradeType,
-                 score)
+                 score,
+                 thesis)
     } else {
 
       // Update
@@ -303,7 +314,8 @@ export class TradeAnalysisModel {
                  day,
                  status,
                  tradeType,
-                 score)
+                 score,
+                 thesis)
     }
   }
 }
