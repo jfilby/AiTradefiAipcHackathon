@@ -57,7 +57,8 @@ export class TradeAnalysisMutateService {
     if (pass === 2) {
 
       prompt +=
-        `- Don't refer to the analysis thesis when writing your thesis.\n`
+        `- Don't refer to the analysis thesis or its requirements when ` +
+        `  writing your thesis.\n`
     }
 
     // Continue prompt
