@@ -186,7 +186,7 @@ export class TradeAnalysisLlmService {
               entry.exchange)
 
     if (exchange == null) {
-      console.log(`${fnName}: invalid exchange`)
+      console.log(`${fnName}: invalid/unhandled exchange: ${entry.exchange}`)
       return false
     }
 
