@@ -10,7 +10,8 @@ export class ExchangeModel {
           prisma: PrismaClient,
           name: string,
           region: string,
-          instrumentTypes: string[]) {
+          instrumentTypes: string[],
+          yahooFinanceSuffix: string | null) {
 
     // Debug
     const fnName = `${this.clName}.create()`
@@ -21,7 +22,8 @@ export class ExchangeModel {
         data: {
           name: name,
           region: region,
-          instrumentTypes: instrumentTypes
+          instrumentTypes: instrumentTypes,
+          yahooFinanceSuffix: yahooFinanceSuffix
         }
       })
     } catch(error) {
@@ -169,7 +171,8 @@ export class ExchangeModel {
           id: string,
           name: string | undefined,
           region: string | undefined,
-          instrumentTypes: string[] | undefined) {
+          instrumentTypes: string[] | undefined,
+          yahooFinanceSuffix: string | null | undefined) {
 
     // Debug
     const fnName = `${this.clName}.update()`
@@ -180,7 +183,8 @@ export class ExchangeModel {
         data: {
           name: name,
           region: region,
-          instrumentTypes: instrumentTypes
+          instrumentTypes: instrumentTypes,
+          yahooFinanceSuffix: yahooFinanceSuffix
         },
         where: {
           id: id
@@ -196,7 +200,8 @@ export class ExchangeModel {
                id: string | undefined,
                name: string | undefined,
                region: string | undefined,
-               instrumentTypes: string[] | undefined) {
+               instrumentTypes: string[] | undefined,
+               yahooFinanceSuffix: string | null | undefined) {
 
     // Debug
     const fnName = `${this.clName}.upsert()`
@@ -234,13 +239,19 @@ export class ExchangeModel {
         throw 'Prisma error'
       }
 
+      if (yahooFinanceSuffix === undefined) {
+        console.error(`${fnName}: id is null and yahooFinanceSuffix is undefined`)
+        throw 'Prisma error'
+      }
+
       // Create
       return await
                this.create(
                  prisma,
                  name,
                  region,
-                 instrumentTypes)
+                 instrumentTypes,
+                 yahooFinanceSuffix)
     } else {
 
       // Update
@@ -250,7 +261,8 @@ export class ExchangeModel {
                  id,
                  name,
                  region,
-                 instrumentTypes)
+                 instrumentTypes,
+                 yahooFinanceSuffix)
     }
   }
 }

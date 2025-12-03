@@ -56,6 +56,7 @@ model Exchange {
   name                         String               @unique
   region                       String
   instrumentTypes              String[]
+  yahooFinanceSuffix           String?              @map("yahoo_finance_suffix")
 
   ofInstruments                Instrument[]
 
@@ -75,6 +76,11 @@ model Instrument {
   ofDocInsights                DocInsight[]
   ofDocWindowInsights          DocWindowInsight[]
   ofTradeAnalysis              TradeAnalysis[]
+
+  ofYFinanceCharts             YFinanceChart[]
+  ofYFinanceChartsTrailing     YFinanceChartTrailing[]
+  ofYFinanceFins               YFinanceFin[]
+  ofYFinanceQuotes             YFinanceQuote[]
 
   @@unique([exchangeId, name])
   @@map("instrument")
@@ -311,5 +317,69 @@ model Trade {
 
   @@unique([userAccountId, brokerId, tradeAnalysisId])
   @@map("trade")
+  @@schema("public")
+}
+
+// AiTradefi: Y! Finance data
+
+model YFinanceChart {
+  // Charts from period1 to period2
+  id                           String               @id @default(cuid())
+  instrumentId                 String               @map("instrument_id")
+  instrument                   Instrument           @relation(fields: [instrumentId], references: [id])
+  type                         String               @db.Char(1)  // Q (quarterly) or Y (yearly)
+  period1                      DateTime             @db.Date
+  period2                      DateTime             @db.Date
+  interval                     String
+  data                         Json                 @db.JsonB
+  created                      DateTime             @default(now())
+
+  @@unique([instrumentId, type, period1, period2, interval])
+  @@map("yfinance_chart")
+  @@schema("public")
+}
+
+model YFinanceChartTrailing {
+  // Charts from period1 to today
+  id                           String               @id @default(cuid())
+  instrumentId                 String               @map("instrument_id")
+  instrument                   Instrument           @relation(fields: [instrumentId], references: [id])
+  type                         String               @db.Char(1)  // Q (quarterly) or Y (yearly)
+  period1                      DateTime             @db.Date
+  interval                     String
+  data                         Json                 @db.JsonB
+  created                      DateTime             @default(now())
+
+  @@unique([instrumentId, type, period1, interval])
+  @@map("yfinance_chart_trailing")
+  @@schema("public")
+}
+
+model YFinanceFin {
+  // Financial statements
+  id                           String               @id @default(cuid())
+  instrumentId                 String               @map("instrument_id")
+  instrument                   Instrument           @relation(fields: [instrumentId], references: [id])
+  type                         String               @db.Char(1)  // Q (quarterly) or Y (yearly)
+  period                       DateTime             @db.Date
+  data                         Json                 @db.JsonB
+  created                      DateTime             @default(now())
+  updated                      DateTime             @updatedAt
+
+  @@unique([instrumentId, type, period])
+  @@map("yfinance_fin")
+  @@schema("public")
+}
+
+model YFinanceQuote {
+  // Latest quote
+  id                           String               @id @default(cuid())
+  instrumentId                 String               @map("instrument_id") @unique
+  instrument                   Instrument           @relation(fields: [instrumentId], references: [id])
+  data                         Json                 @db.JsonB
+  created                      DateTime             @default(now())
+  updated                      DateTime             @updatedAt
+
+  @@map("yfinance_symbol")
   @@schema("public")
 }

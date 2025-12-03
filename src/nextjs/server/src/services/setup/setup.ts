@@ -6,12 +6,14 @@ import { SereneAiSetup } from '@/serene-ai-server/services/setup/setup-service'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { ServerOnlyTypes } from '@/types/server-only-types'
 import { TradingParameterTypes } from '@/types/trading-parameter-types'
+import { YahooFinanceTypes } from '../external-data/yfinance/types'
 import { ExchangeModel } from '@/models/instruments/exchange-model'
 import { DocSourceModel } from '@/models/documents/doc-source-model'
 import { InstrumentModel } from '@/models/instruments/instrument-model'
 import { WindowTypeModel } from '@/models/instruments/window-type-model'
 import { AgentUserService } from '@/services/agents/agent-user-service'
 import { SetupAnalysesTechService } from '../analysis/setup-analyses-tech-service'
+import { YFinanceUtilsService } from '../external-data/yfinance/utils-service'
 
 // Models
 const agentUserModel = new AgentUserModel()
@@ -25,6 +27,7 @@ const windowTypeModel = new WindowTypeModel()
 const agentUserService = new AgentUserService()
 const sereneAiSetup = new SereneAiSetup()
 const setupAnalysesTechService = new SetupAnalysesTechService()
+const yFinanceUtilsService = new YFinanceUtilsService()
 
 // Class
 export class SetupService {
@@ -111,7 +114,8 @@ export class SetupService {
               undefined,  // id
               ServerOnlyTypes.nasdaqExchangeName,
               'US',
-              [ServerOnlyTypes.stockType])
+              [ServerOnlyTypes.stockType],
+              yFinanceUtilsService.getExhangeSuffix(ServerOnlyTypes.nasdaqExchangeName))
 
     for (const entry of TradingParameterTypes.nasdaqStocks) {
 
