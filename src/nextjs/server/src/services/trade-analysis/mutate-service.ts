@@ -10,7 +10,7 @@ import { AnalysisModel } from '@/models/trade-analysis/analysis-model'
 import { AnalysisTechModel } from '@/models/trade-analysis/analysis-tech-model'
 import { ExchangeModel } from '@/models/instruments/exchange-model'
 import { InstrumentModel } from '@/models/instruments/instrument-model'
-import { TradeAnalysisGroupModel } from '@/models/trade-analysis/trade-analyses-group-model'
+import { TradeAnalysesGroupModel } from '@/models/trade-analysis/trade-analyses-group-model'
 import { TradeAnalysisModel } from '@/models/trade-analysis/trade-analysis-model'
 import { TradeAnalysisLlmService } from './llm-service'
 import { YFinanceMutateService } from '../external-data/yfinance/mutate-service'
@@ -22,7 +22,7 @@ const analysisTechModel = new AnalysisTechModel()
 const exchangeModel = new ExchangeModel()
 const instrumentModel = new InstrumentModel()
 const techModel = new TechModel()
-const tradeAnalysisGroupModel = new TradeAnalysisGroupModel()
+const tradeAnalysesGroupModel = new TradeAnalysesGroupModel()
 const tradeAnalysisModel = new TradeAnalysisModel()
 
 // Services
@@ -254,7 +254,7 @@ export class TradeAnalysisMutateService {
 
     // Upsert a TradeAnalysisGroup
     const tradeAnalysisGroup = await
-            tradeAnalysisGroupModel.upsert(
+            tradeAnalysesGroupModel.upsert(
               prisma,
               undefined,  // id
               analysisId,

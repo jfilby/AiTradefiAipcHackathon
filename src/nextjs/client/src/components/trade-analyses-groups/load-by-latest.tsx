@@ -1,22 +1,22 @@
 import { useEffect } from 'react'
 import { useQuery } from '@apollo/client/react'
-import { getLatestTradeAnalysesQuery } from '@/apollo/trade-analyses'
+import { getLatestTradeAnalysesGroupsQuery } from '@/apollo/trade-analyses'
 
 interface Props {
   userProfileId: string
   instanceId?: string
-  setTradeAnalyses: any
+  setTradeAnalysesGroups: any
 }
 
-export default function LoadLatestTradeAnalyses({
+export default function LoadLatestTradeAnalysesGroups({
                           userProfileId,
                           instanceId,
-                          setTradeAnalyses
+                          setTradeAnalysesGroups
                         }: Props) {
 
   // GraphQL
-  const { refetch: fetchGetTradeAnalysesQuery } =
-    useQuery<any>(getLatestTradeAnalysesQuery, {
+  const { refetch: fetchGetTradeAnalysesGroupsQuery } =
+    useQuery<any>(getLatestTradeAnalysesGroupsQuery, {
       fetchPolicy: 'no-cache'
       /* onCompleted: data => {
         console.log('elementName: ' + elementName)
@@ -32,15 +32,15 @@ export default function LoadLatestTradeAnalyses({
 
     // Query
     const { data } = await
-            fetchGetTradeAnalysesQuery({
+            fetchGetTradeAnalysesGroupsQuery({
               userProfileId: userProfileId,
               instanceId: instanceId,
               instrumentType: null
           })
 
-    const results = data.getLatestTradeAnalyses
+    const results = data.getLatestTradeAnalysesGroups
 
-    setTradeAnalyses(results.tradeAnalyses)
+    setTradeAnalysesGroups(results.tradeAnalysesGroups)
   }
 
   // Effects

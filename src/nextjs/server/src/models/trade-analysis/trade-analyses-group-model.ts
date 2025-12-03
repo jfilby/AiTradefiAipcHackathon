@@ -1,10 +1,10 @@
 import { PrismaClient } from '@prisma/client'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 
-export class TradeAnalysisGroupModel {
+export class TradeAnalysesGroupModel {
 
   // Consts
-  clName = 'TradeAnalysisGroupModel'
+  clName = 'TradeAnalysesGroupModel'
 
   // Code
   async create(

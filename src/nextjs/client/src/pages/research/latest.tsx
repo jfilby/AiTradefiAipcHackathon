@@ -3,8 +3,8 @@ import { useState } from 'react'
 import { loadServerPage } from '@/services/page/load-server-page'
 import Layout from '@/components/layouts/layout'
 import { Typography } from '@mui/material'
-import ListTradeAnalyses from '@/components/trade-analyses/list'
-import LoadLatestTradeAnalyses from '@/components/trade-analyses/load-by-latest'
+import ListTradeAnalysesGroups from '@/components/trade-analyses-groups/list'
+import LoadLatestTradeAnalyses from '@/components/trade-analyses-groups/load-by-latest'
 
 interface Props {
   userProfile: any
@@ -17,7 +17,7 @@ export default function LatestResearchPage({
                         }: Props) {
 
   // State
-  const [tradeAnalyses, setTradeAnalyses] = useState<any[]>([])
+  const [tradeAnalysesGroups, setTradeAnalysesGroups] = useState<any[]>([])
 
   // Render
   return (
@@ -38,15 +38,15 @@ export default function LatestResearchPage({
             Stock research
           </Typography>
 
-          <ListTradeAnalyses
+          <ListTradeAnalysesGroups
             instanceId={undefined}
-            tradeAnalyses={tradeAnalyses} />
+            tradeAnalysesGroups={tradeAnalysesGroups} />
         </div>
 
         <LoadLatestTradeAnalyses
           userProfileId={userProfile.id}
           instanceId={undefined}
-          setTradeAnalyses={setTradeAnalyses} />
+          setTradeAnalysesGroups={setTradeAnalysesGroups} />
 
       </Layout>
     </>

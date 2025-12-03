@@ -1,7 +1,9 @@
 import { prisma } from '@/db'
+import { TradeAnalysesGroupQueryService } from '@/services/trade-analyses-groups/query-service'
 import { TradeAnalysisQueryService } from '@/services/trade-analysis/query-service'
 
 // Services
+const tradeAnalysesGroupQueryService = new TradeAnalysesGroupQueryService()
 const tradeAnalysisQueryService = new TradeAnalysisQueryService()
 
 // Code
@@ -18,27 +20,46 @@ export async function getTradeAnalysisById(
   const results = await
           tradeAnalysisQueryService.getById(
             prisma,
-            args.instrumentId)
+            args.tradeAnalysisId)
 
   // Return
   return results
 }
 
-export async function getLatestTradeAnalyses(
+export async function getTradeAnalysesGroupById(
                         parent: any,
                         args: any,
                         context: any,
                         info: any) {
 
   // Debug
-  const fnName = `getLatestTradeAnalyses()`
+  const fnName = `getTradeAnalysesGroupById()`
+
+  // Get instruments
+  const results = await
+          tradeAnalysesGroupQueryService.getById(
+            prisma,
+            args.tradeAnalysesGroupId)
+
+  // Return
+  return results
+}
+
+export async function getLatestTradeAnalysesGroups(
+                        parent: any,
+                        args: any,
+                        context: any,
+                        info: any) {
+
+  // Debug
+  const fnName = `getLatestTradeAnalysesGroup()`
 
   // Debug
   console.log(`${fnName}: starting..`)
 
   // Get instruments
   const results = await
-          tradeAnalysisQueryService.getLatest(
+          tradeAnalysesGroupQueryService.getLatest(
             prisma,
             null)  // any instrumentType
 

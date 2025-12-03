@@ -32,33 +32,34 @@ export const getTradeAnalysisQuery = gql`
   }
 `
 
-export const getLatestTradeAnalysesQuery = gql`
-  query getLatestTradeAnalyses(
+export const getLatestTradeAnalysesGroupsQuery = gql`
+  query getLatestTradeAnalysesGroups(
           $userProfileId: String!,
           $instanceId: String,
           $instrumentType: String) {
-    getLatestTradeAnalyses(
+    getLatestTradeAnalysesGroups(
       userProfileId: $userProfileId,
       instanceId: $instanceId,
       instrumentType: $instrumentType) {
 
       status
       message
-      tradeAnalyses {
+      tradeAnalysesGroups {
         id
         analysis {
           name
         }
-        instrument {
-          exchange {
+        day
+        ofTradeAnalyses {
+          instrument {
+            exchange {
+              name
+            }
             name
           }
-          name
+          score
+          thesis
         }
-        score
-        thesis
-        created
-        updated
       }
     }
   }

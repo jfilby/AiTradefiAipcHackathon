@@ -27,22 +27,4 @@ export class TradeAnalysisQueryService {
       tradeAnalysis: tradeAnalysis
     }
   }
-
-  async getLatest(
-          prisma: PrismaClient,
-          instrumentType: string | null) {
-
-    // Get latest
-    const tradeAnalyses = await
-            tradeAnalysisModel.getLatest(
-              prisma,
-              instrumentType ?? undefined,
-              10)  // limitBy
-
-    // Return
-    return {
-      status: true,
-      tradeAnalyses: tradeAnalyses
-    }
-  }
 }

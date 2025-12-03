@@ -1,18 +1,19 @@
 import { useState } from 'react'
 import { Alert, Divider, Typography } from '@mui/material'
+import ListTradeAnalyses from '../trade-analyses/list'
 
 interface Props {
   instanceId?: string
-  tradeAnalysis: any
+  tradeAnalysesGroup: any
 }
 
-export default function ViewTradeAnalysis({
+export default function ViewTradeAnalysesGroup({
                           instanceId,
-                          tradeAnalysis
+                          tradeAnalysesGroup
                         }: Props) {
 
   // Consts
-  const pathsUrl = `/i/${instanceId}/trade-analysis/${tradeAnalysis.id}`
+  const pathsUrl = `/i/${instanceId}/trade-analysis-group/${tradeAnalysesGroup.id}`
 
   // State
   const [alertSeverity, setAlertSeverity] = useState<any>('')
@@ -32,35 +33,24 @@ export default function ViewTradeAnalysis({
         <></>
       }
 
-      {/*<p>tradeAnalysis: {JSON.stringify(tradeAnalysis)}</p>*/}
+      {/*<p>tradeAnalysesGroup: {JSON.stringify(tradeAnalysesGroup)}</p>*/}
 
       <div style={{ marginBottom: '2em' }}>
         <div style={{ display: 'block', marginBottom: '1em' }}>
 
-          <div style={{ marginBottom: '0.5em' }}>
+          <div style={{ marginBottom: '1em' }}>
             <Typography
               style={{ display: 'inline-block' }}
-              variant='h6'>
-              {tradeAnalysis.instrument.name}
-            </Typography>
-
-            <Typography
-              style={{ display: 'inline-block', marginLeft: '0.5em', width: '50%' }}
-              variant='body2'>
-
-              <span>
-                {tradeAnalysis.instrument.exchange.name}
-              </span>
-              <span style={{ color: '#660', marginLeft: '1em' }}>
-                {tradeAnalysis.score * 100}%
-              </span>
+              variant='h5'>
+              {(new Date(parseInt(tradeAnalysesGroup.day))).toDateString()}
             </Typography>
           </div>
 
-          <div style={{ marginBottom: '0.5em' }}>
-            <Typography variant='body1'>
-              {tradeAnalysis.thesis}
-            </Typography>
+          <div>
+            <ListTradeAnalyses
+              key={tradeAnalysesGroup.id}
+              instanceId={instanceId}
+              tradeAnalyses={tradeAnalysesGroup.ofTradeAnalyses} />
           </div>
         </div>
       </div>

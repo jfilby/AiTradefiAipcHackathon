@@ -148,10 +148,17 @@ export const typeDefs = `#graphql
     chatSession: ChatSession
   }
 
+  type TradeAnalysesGroup {
+    id: String
+    analysis: Analysis!
+    day: String!
+    ofTradeAnalyses: [TradeAnalysis]
+  }
+
   type TradeAnalysis {
     id: String
+    tradeAnalysesGroupId: String!
     instrument: Instrument!
-    analysis: Analysis!
     score: Float!
     thesis: String!
     created: String
@@ -164,10 +171,16 @@ export const typeDefs = `#graphql
     tradeAnalysis: TradeAnalysis
   }
 
-  type TradeAnalysesResults {
+  type TradeAnalysesGroupResults {
     status: Boolean!
     message: String
-    tradeAnalyses: [TradeAnalysis]
+    tradeAnalysesGroup: TradeAnalysesGroup
+  }
+
+  type TradeAnalysesGroupsResults {
+    status: Boolean!
+    message: String
+    tradeAnalysesGroups: [TradeAnalysesGroup]
   }
 
   type UpsertInstanceResults {
@@ -263,15 +276,20 @@ export const typeDefs = `#graphql
     getInstruments(type: String): InstrumentsResults
 
     # Trade analyses
-    getLatestTradeAnalyses(
-      userProfileId: String!,
-      instanceId: String,
-      instrumentType: String): TradeAnalysesResults
-
     getTradeAnalysisById(
       userProfileId: String!,
       instanceId: String,
       tradeAnalysisId: String!): TradeAnalysisResults
+
+    getTradeAnalysesGroupById(
+      userProfileId: String!,
+      instanceId: String,
+      tradeAnalysesGroupId: String): TradeAnalysesGroupResults
+
+    getLatestTradeAnalysesGroups(
+      userProfileId: String!,
+      instanceId: String,
+      instrumentType: String): TradeAnalysesGroupsResults
   }
 
   type Mutation {
