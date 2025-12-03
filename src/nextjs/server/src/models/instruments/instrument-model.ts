@@ -11,7 +11,8 @@ export class InstrumentModel {
           exchangeId: string,
           symbol: string,
           type: string,
-          name: string) {
+          name: string,
+          yahooFinanceTicker: string | null) {
 
     // Debug
     const fnName = `${this.clName}.create()`
@@ -23,7 +24,8 @@ export class InstrumentModel {
           exchangeId: exchangeId,
           symbol: symbol,
           type: type,
-          name: name
+          name: name,
+          yahooFinanceTicker: yahooFinanceTicker
         }
       })
     } catch(error) {
@@ -179,7 +181,8 @@ export class InstrumentModel {
           exchangeId: string | undefined,
           symbol: string | undefined,
           type: string | undefined,
-          name: string | undefined) {
+          name: string | undefined,
+          yahooFinanceTicker: string | null | undefined) {
 
     // Debug
     const fnName = `${this.clName}.update()`
@@ -191,7 +194,8 @@ export class InstrumentModel {
           exchangeId: exchangeId,
           symbol: symbol,
           type: type,
-          name: name
+          name: name,
+          yahooFinanceTicker: yahooFinanceTicker
         },
         where: {
           id: id
@@ -208,7 +212,8 @@ export class InstrumentModel {
                exchangeId: string | undefined,
                symbol: string | undefined,
                type: string | undefined,
-               name: string | undefined) {
+               name: string | undefined,
+               yahooFinanceTicker: string | null | undefined) {
 
     // Debug
     const fnName = `${this.clName}.upsert()`
@@ -253,6 +258,11 @@ export class InstrumentModel {
         throw 'Prisma error'
       }
 
+      if (yahooFinanceTicker === undefined) {
+        console.error(`${fnName}: id is null and yahooFinanceTicker is undefined`)
+        throw 'Prisma error'
+      }
+
       // Create
       return await
                this.create(
@@ -260,7 +270,8 @@ export class InstrumentModel {
                  exchangeId,
                  symbol,
                  type,
-                 name)
+                 name,
+                 yahooFinanceTicker)
     } else {
 
       // Update
@@ -271,7 +282,8 @@ export class InstrumentModel {
                  exchangeId,
                  symbol,
                  type,
-                 name)
+                 name,
+                 yahooFinanceTicker)
     }
   }
 }

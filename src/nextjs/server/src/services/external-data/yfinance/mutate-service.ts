@@ -26,16 +26,29 @@ export class YFinanceMutateService {
             exchange: Exchange,
             instrument: Instrument) {
 
-    // Get ticker
-    const ticker =
-            yFinanceUtilsService.getTicker(
-              instrument,
-              exchange)
+    // Get ticker?
+    if (instrument.yahooFinanceTicker == null) {
+
+      const ticker =
+              yFinanceUtilsService.getTicker(
+                instrument,
+                exchange)
+
+      instrument = await
+        instrumentModel.update(
+          prisma,
+          instrument.id,
+          undefined,  // exchangeId
+          undefined,  // symbol
+          undefined,  // type
+          undefined,  // name
+          ticker)
+    }
 
     // Save quote
     await this.saveQuote(
             prisma,
-            ticker,
+            instrument.yahooFinanceTicker!,
             instrument)
   }
 
@@ -67,6 +80,12 @@ export class YFinanceMutateService {
 
     if (instrument == null) {
 
+      // Get Y! Finance ticker
+      const ticker =
+              yFinanceUtilsService.getTicker(
+                instrument,
+                exchange)
+
       // Create instrument
       instrument = await
         instrumentModel.create(
@@ -74,7 +93,8 @@ export class YFinanceMutateService {
           exchange.id,
           instrumentName,
           instrumentType,
-          instrumentName)
+          instrumentName,
+          ticker)
     }
 
     // Run

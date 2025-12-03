@@ -111,7 +111,8 @@ export class TradeAnalysisMutateService {
                 exchange.id,
                 entry.instrument,
                 instrumentType,
-                entry.instrument)
+                entry.instrument,
+                null)       // yahooFinanceTicker
 
       // Create TradeAnalysis
       await tradeAnalysisModel.create(

@@ -71,6 +71,7 @@ model Instrument {
   symbol                       String               @unique
   type                         String               // E.g. stock
   name                         String
+  yahooFinanceTicker           String?              @map("yahoo_finance_ticker")
 
   ofInstrumentPrices           InstrumentPrice[]
   ofDocInsights                DocInsight[]

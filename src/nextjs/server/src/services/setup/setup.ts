@@ -126,7 +126,8 @@ export class SetupService {
                 nasdaqExchange.id,
                 entry.symbol,
                 entry.type,
-                entry.name)
+                entry.name,
+                null)       // yahooFinanceTicker
     }
 
     // Upserts for WindowType
