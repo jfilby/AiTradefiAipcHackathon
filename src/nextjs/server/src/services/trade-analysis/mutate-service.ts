@@ -37,6 +37,7 @@ export class TradeAnalysisMutateService {
 
   // Code
   getPrompt(
+    pass: number,
     type: string,
     analysisPrompt: string,
     exchangeNames: string[],
@@ -50,16 +51,25 @@ export class TradeAnalysisMutateService {
     var prompt =
           `## Instructions\n` +
           `- Generate analysis results, in JSON, for 10 instruments of type ` +
-          `  ${type} as shown in the example section.\n` +
-          `- Don't refer to the analysis thesis when writing your thesis.\n` +
-          `\n` +
-          `## Analysis thesis\n` +
-          `${analysisPrompt}\n` +
-          `\n` +
-          `## Exchanges\n` +
-          `Only include for exchanges: ` +
-          exchangeNames.join(', ') + `\n` +
-          `\n`
+          `  ${type} as shown in the example section.\n`
+
+    // No thesis until pass 2
+    if (pass === 2) {
+
+      prompt +=
+        `- Don't refer to the analysis thesis when writing your thesis.\n`
+    }
+
+    // Continue prompt
+    prompt +=
+      `\n` +
+      `## Analysis thesis\n` +
+      `${analysisPrompt}\n` +
+      `\n` +
+      `## Exchanges\n` +
+      `Only include for exchanges: ` +
+      exchangeNames.join(', ') + `\n` +
+      `\n`
 
     // Include known instruments and their contexts
     if (instrumentContextMap.size > 0) {
@@ -106,8 +116,20 @@ export class TradeAnalysisMutateService {
       `  "exchange": "NASDAQ",\n` +
       `  "instrument": "NVDA",\n` +
       `  "tradeType": "B",\n` +
-      `  "score": 0.85,\n` +
-      `  "thesis": "Consistent sales increases..` +
+      `  "score": 0.85`
+
+    // Only include the thesis field in pass 2
+    if (pass === 2) {
+
+      prompt +=
+        `,\n` +
+        `  "thesis": "Consistent sales increases..`
+    } else {
+      prompt += `\n`
+    }
+
+    // End of example
+    prompt +=
       `}\n`
 
     return prompt
@@ -279,7 +301,7 @@ export class TradeAnalysisMutateService {
             adminUserProfile.id,
             analysis,
             tech,
-            i,   // pass
+            i + 1,   // pass (starts at 1)
             instrumentContextMap)
       }
 
@@ -310,7 +332,7 @@ export class TradeAnalysisMutateService {
                 adminUserProfile.id,
                 analysis,
                 tech,
-                1,  // pass 2
+                2,  // pass 2
                 instrumentContextMap)
       }
     }
@@ -328,7 +350,7 @@ export class TradeAnalysisMutateService {
     const fnName = `${this.clName}.runAnalysis()`
 
     // Validate
-    if (pass < 0 || pass > 1) {
+    if (pass < 1 || pass > 2) {
       throw new CustomError(`${fnName}: invalid pass: ${pass}`)
     }
 
@@ -369,6 +391,7 @@ export class TradeAnalysisMutateService {
     // Get the prompt
     const prompt =
             this.getPrompt(
+              pass,
               analysis.instrumentType,
               analysis.prompt,
               exchangeNames,
@@ -394,7 +417,7 @@ export class TradeAnalysisMutateService {
     // Process
     var newInstrumentContextMap: InstrumentContextMap
 
-    if (pass === 0) {
+    if (pass === 1) {
 
       newInstrumentContextMap = await
         this.processQueryResultsPass1(
@@ -404,7 +427,7 @@ export class TradeAnalysisMutateService {
           instrumentType,
           queryResults)
 
-    } else if (pass === 1) {
+    } else if (pass === 2) {
 
       newInstrumentContextMap = await
         this.processQueryResultsPass2(
