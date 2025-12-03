@@ -49,7 +49,7 @@ export class TradeAnalysisMutateService {
     // Start the prompt
     var prompt =
           `## Instructions\n` +
-          `Generate analysis results, in JSON, for 3 instruments of type ` +
+          `Generate analysis results, in JSON, for 10 instruments of type ` +
           `${type} as shown in the example section.\n` +
           `\n` +
           `## Analysis thesis\n` +
@@ -142,10 +142,16 @@ export class TradeAnalysisMutateService {
                 null)       // yahooFinanceTicker
 
       // Enrich with Y! Finance data
-      await yFinanceMutateService.run(
-              prisma,
-              exchange,
-              instrument)
+      const found = await
+              yFinanceMutateService.run(
+                prisma,
+                exchange,
+                instrument)
+
+      // Not found?
+      if (found === false) {
+        continue
+      }
 
       // Get context
       const yFinanceInstrumentContext = await

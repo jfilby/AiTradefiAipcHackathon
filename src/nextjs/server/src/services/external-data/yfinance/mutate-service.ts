@@ -17,7 +17,7 @@ const yFinanceFinModel = new YFinanceFinModel()
 const yFinanceQuoteModel = new YFinanceQuoteModel()
 
 // Services
-const yahooFinance = new YahooFinance()
+const yahooFinance = new YahooFinance({ suppressNotices: ['yahooSurvey'] })
 const yFinanceUtilsService = new YFinanceUtilsService()
 
 // Class
@@ -74,9 +74,14 @@ export class YFinanceMutateService {
             instrument.id)
 
     // Save quote
-    await this.saveQuote(
-            prisma,
-            instrument)
+    const found = await
+              this.saveQuote(
+              prisma,
+              instrument)
+
+    if (found === false) {
+      return false
+    }
 
     // Save financials
     await this.saveFinancials(
@@ -87,6 +92,9 @@ export class YFinanceMutateService {
     await this.saveCharts(
             prisma,
             instrument)
+
+    // Return OK
+    return true
   }
 
   async runByNames(
@@ -216,7 +224,7 @@ export class YFinanceMutateService {
               prisma,
               undefined,  // id
               instrument.id,
-              YFinanceFinTypes.Q,
+              YFinanceFinTypes.quarterly,
               period1Date,
               data)
   }
@@ -245,18 +253,30 @@ export class YFinanceMutateService {
               prisma,
               undefined,  // id
               instrument.id,
-              YFinanceFinTypes.Y,
+              YFinanceFinTypes.annual,
               period1Date,
               data)
   }
 
   async saveQuote(
           prisma: PrismaClient,
-          instrument: Instrument) {
+          instrument: Instrument): Promise<boolean> {
+
+    // Debug
+    const fnName = `${this.clName}.runByNames()`
 
     // Get a quote for the Y! Finance symbol
     const quote = await
             yahooFinance.quote(instrument.yahooFinanceTicker!)
+
+    // Validate
+    if (quote == null) {
+
+      console.log(`${fnName}: quote == null for ticker: ` +
+                  `${instrument.yahooFinanceTicker}`)
+
+      return false
+    }
 
     // Upsert quote
     const yFinanceQuote = await
@@ -265,5 +285,8 @@ export class YFinanceMutateService {
               undefined,  // id
               instrument.id,
               quote)
+
+    // Return OK
+    return true
   }
 }

@@ -60,8 +60,8 @@ export class YahooFinanceTypes {
 }
 
 export enum YFinanceFinTypes {
-  Q = 'quarterly',
-  Y = 'annualy'
+  quarterly = 'Q',
+  annual = 'Y'
 }
 
 export interface YFinanceInstrumentContext {
