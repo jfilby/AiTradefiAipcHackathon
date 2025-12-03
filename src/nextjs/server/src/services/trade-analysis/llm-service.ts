@@ -26,6 +26,7 @@ export class TradeAnalysisLlmService {
           prisma: PrismaClient,
           userProfileId: string,
           llmTech: Tech,
+          pass: number,
           prompt: string) {
 
     // Debug
@@ -93,7 +94,10 @@ export class TradeAnalysisLlmService {
 
         validated = false
       } else {
-        validated = await this.validateQueryResults(queryResults)
+        validated = await
+          this.validateQueryResults(
+            pass,
+            queryResults)
       }
 
       if (validated === false) {
@@ -145,7 +149,9 @@ export class TradeAnalysisLlmService {
     }
   }
 
-  async validateQueryResults(queryResults: any) {
+  async validateQueryResults(
+          pass: number,
+          queryResults: any) {
 
     // Debug
     const fnName = `${this.clName}.validateQueryResults()`
@@ -163,7 +169,12 @@ export class TradeAnalysisLlmService {
     // Validate the JSON
     for (const entry of queryResults.json) {
 
-      if (await this.validateQueryResultsEntry(entry) === false) {
+      const entryValidated = await
+              this.validateQueryResultsEntry(
+                pass,
+                entry)
+
+      if (entryValidated === false) {
         return false
       }
     }
@@ -172,7 +183,9 @@ export class TradeAnalysisLlmService {
     return true
   }
 
-  async validateQueryResultsEntry(entry: any) {
+  async validateQueryResultsEntry(
+          pass: number,
+          entry: any) {
 
     // Debug
     const fnName = `${this.clName}.validateQueryResultsEntry()`
@@ -204,11 +217,20 @@ export class TradeAnalysisLlmService {
       return false
     }
 
-    // Validate score
-    if (typeof entry.score !== 'number') {
+    // Validate score and thesis (pass 2 only)
+    if (pass === 2) {
 
-      console.log(`${fnName}: invalid score`)
-      return false
+      if (typeof entry.score !== 'number') {
+
+        console.log(`${fnName}: invalid score`)
+        return false
+      }
+
+      if (typeof entry.thesis !== 'string') {
+
+        console.log(`${fnName}: invalid thesis`)
+        return false
+      }
     }
 
     // Validated OK

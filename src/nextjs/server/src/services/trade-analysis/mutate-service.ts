@@ -103,7 +103,7 @@ export class TradeAnalysisMutateService {
       }
     }
 
-    // Complete the prompt
+    // Continue the prompt
     prompt +=
       `## Don't include\n` +
       `Don't include any analysis for these instruments: ` +
@@ -111,22 +111,30 @@ export class TradeAnalysisMutateService {
       `\n` +
       `## Fields\n` +
       `Take note of these fields in the output:\n` +
-      `- tradeType: recommend a B (buy) or S (sell)\n` +
-      `- score: the score from 0..1 by the analysis thesis\n` +
+      `- tradeType: recommend a B (buy) or S (sell)\n`
+
+    if (pass === 2) {
+
+      prompt +=
+        `- score: the score from 0..1 by the analysis thesis\n`
+    }
+
+    // Continue the prompt
+    prompt +=
       `\n` +
       `## Example\n` +
       `{\n` +
       `  "exchange": "NASDAQ",\n` +
       `  "instrument": "NVDA",\n` +
-      `  "tradeType": "B",\n` +
-      `  "score": 0.85`
+      `  "tradeType": "B"\n`
 
     // Only include the thesis field in pass 2
     if (pass === 2) {
 
       prompt +=
         `,\n` +
-        `  "thesis": "Consistent sales increases..`
+        `  "score": 0.85\n` +
+        `  "thesis": "Consistent sales increases.."\n`
     } else {
       prompt += `\n`
     }
@@ -471,6 +479,7 @@ export class TradeAnalysisMutateService {
               prisma,
               userProfileId,
               tech,
+              pass,
               prompt)
 
     // Validate
