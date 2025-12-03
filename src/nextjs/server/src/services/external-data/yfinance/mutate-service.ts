@@ -7,6 +7,7 @@ import { YFinanceChartModel } from '@/models/yfinance-models/yfinance-chart-mode
 import { YFinanceFinModel } from '@/models/yfinance-models/yfinance-fin-model'
 import { YFinanceQuoteModel } from '@/models/yfinance-models/yfinance-quote-model'
 import { YFinanceUtilsService } from './utils-service'
+import { YFinanceFinTypes } from './types'
 
 // Models
 const exchangeModel = new ExchangeModel()
@@ -26,6 +27,24 @@ export class YFinanceMutateService {
   clName = 'YFinanceMutateService'
 
   // Code
+  async deleteFinanceData(
+          prisma: PrismaClient,
+          instrumentId: string) {
+
+    // Delete by instrumentId
+    await yFinanceChartModel.deleteByInstrumentId(
+            prisma,
+            instrumentId)
+
+    await yFinanceChartModel.deleteByInstrumentId(
+            prisma,
+            instrumentId)
+
+    await yFinanceChartModel.deleteByInstrumentId(
+            prisma,
+            instrumentId)
+  }
+
   async run(prisma: PrismaClient,
             exchange: Exchange,
             instrument: Instrument) {
@@ -48,6 +67,11 @@ export class YFinanceMutateService {
           undefined,  // name
           ticker)
     }
+
+    // Delete existing data
+    await this.deleteFinanceData(
+            prisma,
+            instrument.id)
 
     // Save quote
     await this.saveQuote(
@@ -192,7 +216,7 @@ export class YFinanceMutateService {
               prisma,
               undefined,  // id
               instrument.id,
-              'Q',
+              YFinanceFinTypes.Q,
               period1Date,
               data)
   }
@@ -221,7 +245,7 @@ export class YFinanceMutateService {
               prisma,
               undefined,  // id
               instrument.id,
-              'Y',
+              YFinanceFinTypes.Y,
               period1Date,
               data)
   }

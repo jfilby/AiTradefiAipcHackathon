@@ -50,6 +50,28 @@ export class YFinanceQuoteModel {
     }
   }
 
+  async deleteByInstrumentId(
+          prisma: PrismaClient,
+          instrumentId: string) {
+
+    // Debug
+    const fnName = `${this.clName}.deleteById()`
+
+    // Delete
+    try {
+      return await prisma.yFinanceQuote.delete({
+        where: {
+          instrumentId: instrumentId
+        }
+      })
+    } catch(error: any) {
+      if (!(error instanceof error.NotFound)) {
+        console.error(`${fnName}: error: ${error}`)
+        throw 'Prisma error'
+      }
+    }
+  }
+
   async filter(
           prisma: PrismaClient,
           instrumentId: string | undefined = undefined) {
