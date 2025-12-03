@@ -37,13 +37,38 @@ export default function ViewTradeAnalysis({
       <div style={{ marginBottom: '2em' }}>
         <div style={{ display: 'block', marginBottom: '1em' }}>
 
-          <Typography variant='h6'>
-            {tradeAnalysis.instrument.name}:{tradeAnalysis.instrument.exchange.name}
-          </Typography>
+          <div style={{ marginBottom: '0.5em' }}>
+            <Typography
+              style={{ display: 'inline-block' }}
+              variant='h6'>
+              {tradeAnalysis.instrument.name}
+            </Typography>
 
-          <Typography variant='body1'>
-            {tradeAnalysis.thesis}
-          </Typography>
+            <Typography
+              style={{ display: 'inline-block', marginLeft: '0.5em', width: '50%' }}
+              variant='body2'>
+
+              <span>
+                {tradeAnalysis.instrument.exchange.name}
+              </span>
+              <span style={{ marginLeft: '1em' }}>
+              </span>
+            </Typography>
+          </div>
+
+          <div style={{ marginBottom: '0.5em' }}>
+            <Typography variant='body1'>
+              {tradeAnalysis.thesis}
+            </Typography>
+          </div>
+
+          <div style={{ marginBottom: '0.5em' }}>
+            <Typography
+              color='grey'
+              variant='body2'>
+              {(new Date(parseInt(tradeAnalysis.created))).toDateString()}
+            </Typography>
+          </div>
         </div>
       </div>
 
