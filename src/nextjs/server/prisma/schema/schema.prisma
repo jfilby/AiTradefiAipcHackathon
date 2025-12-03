@@ -381,6 +381,6 @@ model YFinanceQuote {
   created                      DateTime             @default(now())
   updated                      DateTime             @updatedAt
 
-  @@map("yfinance_symbol")
+  @@map("yfinance_quote")
   @@schema("public")
 }
