@@ -36,7 +36,8 @@ export class TradeAnalysisQueryService {
     const tradeAnalyses = await
             tradeAnalysisModel.getLatest(
               prisma,
-              instrumentType ?? undefined)
+              instrumentType ?? undefined,
+              10)  // limitBy
 
     // Return
     return {
