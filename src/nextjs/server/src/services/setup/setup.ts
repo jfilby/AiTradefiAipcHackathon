@@ -107,16 +107,26 @@ export class SetupService {
           prisma: PrismaClient,
           adminUserProfile: UserProfile) {
 
-    // Upserts for the Nasdaq
-    const nasdaqExchange = await
-            exchangeModel.upsert(
-              prisma,
-              undefined,  // id
-              ServerOnlyTypes.nasdaqExchangeName,
-              'US',
-              [ServerOnlyTypes.stockType],
-              yFinanceUtilsService.getExhangeSuffix(ServerOnlyTypes.nasdaqExchangeName))
+    // Exchange upserts
+    for (const exchangeName of ServerOnlyTypes.exchangeNames) {
 
+      const exchange = await
+              exchangeModel.upsert(
+                prisma,
+                undefined,  // id
+                exchangeName,
+                'US',
+                [ServerOnlyTypes.stockType],
+                yFinanceUtilsService.getExhangeSuffix(exchangeName))
+    }
+
+    // Get NASDAQ exchange
+    const nasdaqExchange = await
+            exchangeModel.getByUniqueKey(
+              prisma,
+              ServerOnlyTypes.nasdaqExchangeName)
+
+    // Demo data
     for (const entry of TradingParameterTypes.nasdaqStocks) {
 
       const instrument = await

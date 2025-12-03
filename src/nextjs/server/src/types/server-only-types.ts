@@ -29,6 +29,12 @@ export class ServerOnlyTypes {
 
   // Exchange names
   static nasdaqExchangeName = 'NASDAQ'
+  static nyseExchangeName = 'NYSE'
+
+  static exchangeNames = [
+    this.nasdaqExchangeName,
+    this.nyseExchangeName
+  ]
 
   // Instrument types
   static stockType = 'stock'
