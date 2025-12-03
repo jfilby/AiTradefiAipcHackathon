@@ -157,6 +157,9 @@ export class InstrumentModel {
     // Query
     try {
       return await prisma.instrument.findMany({
+        include: {
+          exchange: true
+        },
         where: {
           type: type,
           ofTradeAnalysis: {

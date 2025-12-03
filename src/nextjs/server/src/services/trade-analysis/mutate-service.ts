@@ -362,7 +362,9 @@ export class TradeAnalysisMutateService {
 
     const instrumentNamesAlreadyRun =
             instrumentsAlreadyRun.map(
-              (instrumentAlreadyRun) => instrumentAlreadyRun.name)
+              (instrumentAlreadyRun) =>
+                `${instrumentAlreadyRun.name}:` +
+                `${instrumentAlreadyRun.exchange.name}`)
 
     // Get the prompt
     const prompt =
