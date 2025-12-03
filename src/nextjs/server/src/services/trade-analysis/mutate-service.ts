@@ -5,12 +5,15 @@ import { UsersService } from '@/serene-core-server/services/users/service'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { ServerOnlyTypes } from '@/types/server-only-types'
 import { ServerTestTypes } from '@/types/server-test-types'
+import { InstrumentContextMap, YFinanceInstrumentContext } from '../external-data/yfinance/types'
 import { AnalysisModel } from '@/models/trade-analysis/analysis-model'
 import { AnalysisTechModel } from '@/models/trade-analysis/analysis-tech-model'
 import { ExchangeModel } from '@/models/instruments/exchange-model'
 import { InstrumentModel } from '@/models/instruments/instrument-model'
 import { TradeAnalysisModel } from '@/models/trade-analysis/trade-analysis-model'
 import { TradeAnalysisLlmService } from './llm-service'
+import { YFinanceMutateService } from '../external-data/yfinance/mutate-service'
+import { YFinanceQueryService } from '../external-data/yfinance/query-service'
 
 // Models
 const analysisModel = new AnalysisModel()
@@ -23,6 +26,8 @@ const tradeAnalysisModel = new TradeAnalysisModel()
 // Services
 const tradeAnalysisLlmService = new TradeAnalysisLlmService()
 const usersService = new UsersService()
+const yFinanceMutateService = new YFinanceMutateService()
+const yFinanceQueryService = new YFinanceQueryService()
 
 // Class
 export class TradeAnalysisMutateService {
@@ -35,9 +40,13 @@ export class TradeAnalysisMutateService {
     type: string,
     analysisPrompt: string,
     exchangeNames: string[],
-    instruments: string[],
+    instrumentContextMap: InstrumentContextMap,
     instrumentNamesAlreadyRun: string[]) {
 
+    // Debug
+    const fnName = `${this.clName}.getPrompt()`
+
+    // Start the prompt
     var prompt =
           `## Instructions\n` +
           `Generate analysis results, in JSON, for 3 instruments of type ` +
@@ -51,15 +60,36 @@ export class TradeAnalysisMutateService {
           exchangeNames.join(', ') + `\n` +
           `\n`
 
-    if (instruments.length > 0) {
+    // Include known instruments and their contexts
+    if (instrumentContextMap.size > 0) {
 
       prompt +=
         `## Instruments\n` +
-        `Only for these instruments: ` +
-        instruments.join(', ') + `\n` +
+        `Only for the instruments in this section.\n` +
         `\n`
+
+      for (const instrument of instrumentContextMap.keys()) {
+
+        const context = instrumentContextMap.get(instrument)
+
+        if (context == null) {
+          throw new CustomError(`${fnName}: context == null for instrument: ` +
+                                `${instrument}`)
+        }
+
+        prompt +=
+          `### ${instrument}\n` +
+          `\n` +
+          `#### Quote\n` +
+          JSON.stringify(context.yFinanceQuote) +
+          `\n` +
+          `#### Financials\n` +
+          JSON.stringify(context.yFinanceFinancials) +
+          `\n`
+      }
     }
 
+    // Complete the prompt
     prompt +=
       `## Don't include\n` +
       `Don't include any analysis for these instruments: ` +
@@ -82,18 +112,68 @@ export class TradeAnalysisMutateService {
     return prompt
   }
 
-  async processQueryResults(
+  async processQueryResultsPass1(
           prisma: PrismaClient,
           analysisId: string,
           techId: string,
           instrumentType: string,
-          queryResults: any): Promise<string[]> {
+          queryResults: any): Promise<InstrumentContextMap> {
+
+    // Process entries
+    const instrumentsMap = new Map<string, YFinanceInstrumentContext | undefined>()
+
+    for (const entry of queryResults.json) {
+
+      // Get Exchange
+      const exchange = await
+              exchangeModel.getByUniqueKey(
+                prisma,
+                entry.exchange)
+
+      // Get Instrument
+      const instrument = await
+              instrumentModel.upsert(
+                prisma,
+                undefined,  // id
+                exchange.id,
+                entry.instrument,
+                instrumentType,
+                entry.instrument,
+                null)       // yahooFinanceTicker
+
+      // Enrich with Y! Finance data
+      await yFinanceMutateService.run(
+              prisma,
+              exchange,
+              instrument)
+
+      // Get context
+      const yFinanceInstrumentContext = await
+              yFinanceQueryService.getContext(
+                prisma,
+                instrument.id)
+
+      instrumentsMap.set(
+        instrument.id,
+        yFinanceInstrumentContext)
+    }
+
+    // Return
+    return instrumentsMap
+  }
+
+  async processQueryResultsPass2(
+          prisma: PrismaClient,
+          analysisId: string,
+          techId: string,
+          instrumentType: string,
+          queryResults: any): Promise<InstrumentContextMap> {
 
     // Get day
     const day = new Date()
 
     // Process each entry
-    var instruments: string[] = []
+    var instrumentsMap = new Map<string, YFinanceInstrumentContext | undefined>()
 
     for (const entry of queryResults.json) {
 
@@ -128,11 +208,13 @@ export class TradeAnalysisMutateService {
               entry.thesis)
 
       // Save instrument name
-      instruments.push(entry.instrument)
+      instrumentsMap.set(
+        entry.instrumentId,
+        undefined)
     }
 
     // Return
-    return instruments
+    return instrumentsMap
   }
 
   async run(prisma: PrismaClient) {
@@ -179,13 +261,20 @@ export class TradeAnalysisMutateService {
               leadingAnalysisTechs[0].techId)
 
       // Run the analysis for the leading techId
-      const instruments = await
-              this.runAnalysis(
-                prisma,
-                adminUserProfile.id,
-                analysis,
-                tech,
-                [])  // instruments
+      var instrumentContextMap =
+            new Map<string, YFinanceInstrumentContext | undefined>()
+
+      for (var i = 0; i < 2; i++) {
+
+        instrumentContextMap = await
+          this.runAnalysis(
+            prisma,
+            adminUserProfile.id,
+            analysis,
+            tech,
+            i,   // pass
+            instrumentContextMap)
+      }
 
       // Get non-leading analysis tech
       const nonLeadingAnalysisTechs = await
@@ -212,9 +301,10 @@ export class TradeAnalysisMutateService {
         await this.runAnalysis(
                 prisma,
                 adminUserProfile.id,
+                analysis,
                 tech,
-                tech,
-                instruments)
+                1,  // pass 2
+                instrumentContextMap)
       }
     }
   }
@@ -224,10 +314,16 @@ export class TradeAnalysisMutateService {
           userProfileId: string,
           analysis: Analysis,
           tech: Tech,
-          instruments: string[]): Promise<string[]> {
+          pass: number,
+          instrumentContextMap: InstrumentContextMap): Promise<InstrumentContextMap> {
 
     // Debug
     const fnName = `${this.clName}.runAnalysis()`
+
+    // Validate
+    if (pass < 0 || pass > 1) {
+      throw new CustomError(`${fnName}: invalid pass: ${pass}`)
+    }
 
     // Instrument type
     const instrumentType = ServerOnlyTypes.stockType
@@ -267,7 +363,7 @@ export class TradeAnalysisMutateService {
               analysis.instrumentType,
               analysis.prompt,
               exchangeNames,
-              instruments,
+              instrumentContextMap,
               instrumentNamesAlreadyRun)
 
     // LLM request
@@ -287,15 +383,30 @@ export class TradeAnalysisMutateService {
     console.log(`${fnName}: queryResults: ` + JSON.stringify(queryResults))
 
     // Process
-    const returningInstruments = await
-            this.processQueryResults(
-              prisma,
-              analysis.id,
-              tech.id,
-              instrumentType,
-              queryResults)
+    var newInstrumentContextMap: InstrumentContextMap
+
+    if (pass === 0) {
+
+      newInstrumentContextMap = await
+        this.processQueryResultsPass1(
+          prisma,
+          analysis.id,
+          tech.id,
+          instrumentType,
+          queryResults)
+
+    } else if (pass === 1) {
+
+      newInstrumentContextMap = await
+        this.processQueryResultsPass2(
+          prisma,
+          analysis.id,
+          tech.id,
+          instrumentType,
+          queryResults)
+    }
 
     // Return
-    return returningInstruments
+    return newInstrumentContextMap!
   }
 }

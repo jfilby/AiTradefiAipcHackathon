@@ -3,12 +3,14 @@ import YahooFinance from 'yahoo-finance2'
 import { CustomError } from '@/serene-core-server/types/errors'
 import { ExchangeModel } from '@/models/instruments/exchange-model'
 import { InstrumentModel } from '@/models/instruments/instrument-model'
+import { YFinanceFinModel } from '@/models/yfinance-models/yfinance-fin-model'
 import { YFinanceQuoteModel } from '@/models/yfinance-models/yfinance-quote-model'
 import { YFinanceUtilsService } from './utils-service'
 
 // Models
 const exchangeModel = new ExchangeModel()
 const instrumentModel = new InstrumentModel()
+const yFinanceFinModel = new YFinanceFinModel()
 const yFinanceQuoteModel = new YFinanceQuoteModel()
 
 // Services
@@ -48,7 +50,11 @@ export class YFinanceMutateService {
     // Save quote
     await this.saveQuote(
             prisma,
-            instrument.yahooFinanceTicker!,
+            instrument)
+
+    // Save financials
+    await this.saveFinancials(
+            prisma,
             instrument)
   }
 
@@ -104,14 +110,86 @@ export class YFinanceMutateService {
             instrument.id)
   }
 
+  async saveFinancials(
+          prisma: PrismaClient,
+          instrument: Instrument) {
+
+    // Save the last 3 quarters
+    await this.saveFinancialsLast3Quarters(
+            prisma,
+            instrument)
+
+    // Save the last 3 years
+    await this.saveFinancialsLast3Years(
+            prisma,
+            instrument)
+  }
+
+  async saveFinancialsLast3Quarters(
+          prisma: PrismaClient,
+          instrument: Instrument) {
+
+    // Compute period1 = ~400 days ago (covers at least 4 quarters even around year boundaries)
+    const period1Date = new Date(Date.now() - 400 * 24 * 60 * 60 * 1000)
+    const period1 = period1Date.toISOString().split('T')[0]
+
+    // Get financials for the last 4 quarters
+    const data = await
+            yahooFinance.fundamentalsTimeSeries(
+              instrument.yahooFinanceTicker!,
+              {
+                period1: period1,
+                type: 'quarterly',
+                module: 'all'
+              })
+
+    // Save
+    const yFinanceFin = await
+            yFinanceFinModel.upsert(
+              prisma,
+              undefined,  // id
+              instrument.id,
+              'Q',
+              period1Date,
+              data)
+  }
+
+  async saveFinancialsLast3Years(
+          prisma: PrismaClient,
+          instrument: Instrument) {
+
+    // Compute period1 = 3 years ago, but on the 1st day of the year
+    const period1Date = new Date(new Date().getFullYear() - 3, 0, 1)
+    const period1 = period1Date.toISOString().split('T')[0]
+
+    // Get financials for the last 3 years
+    const data = await
+            yahooFinance.fundamentalsTimeSeries(
+              instrument.yahooFinanceTicker!,
+              {
+                period1: period1,
+                type: 'annual',
+                module: 'all'
+              })
+
+    // Save
+    const yFinanceFin = await
+            yFinanceFinModel.upsert(
+              prisma,
+              undefined,  // id
+              instrument.id,
+              'Y',
+              period1Date,
+              data)
+  }
+
   async saveQuote(
           prisma: PrismaClient,
-          ticker: string,
           instrument: Instrument) {
 
     // Get a quote for the Y! Finance symbol
     const quote = await
-            yahooFinance.quote(ticker)
+            yahooFinance.quote(instrument.yahooFinanceTicker!)
 
     // Upsert quote
     const yFinanceQuote = await

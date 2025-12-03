@@ -58,3 +58,12 @@ export class YahooFinanceTypes {
     { 'exchange': 'MOEX',          'yahooSuffix': '.ME' }    /* Moscow Exchange, Russia */
   ]
 }
+
+export interface YFinanceInstrumentContext {
+  yFinanceQuote: any
+  yFinanceFinancials: any
+}
+
+export type InstrumentContextMap =
+  Map<string, YFinanceInstrumentContext | undefined>
+
