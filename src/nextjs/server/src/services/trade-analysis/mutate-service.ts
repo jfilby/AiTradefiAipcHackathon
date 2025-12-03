@@ -223,6 +223,19 @@ export class TradeAnalysisMutateService {
                 entry.instrument,
                 null)       // yahooFinanceTicker
 
+      // Check if TradeAnalysis already exists
+      const tradeAnalysis = await
+              tradeAnalysisModel.getByUniqueKey(
+                prisma,
+                instrument.id,
+                analysisId,
+                techId,
+                day)
+
+      if (tradeAnalysis != null) {
+        continue
+      }
+
       // Create TradeAnalysis
       await tradeAnalysisModel.create(
               prisma,
@@ -397,6 +410,9 @@ export class TradeAnalysisMutateService {
               exchangeNames,
               instrumentContextMap,
               instrumentNamesAlreadyRun)
+
+    // Debug
+    console.log(`${fnName}: prompt: ${prompt}`)
 
     // LLM request
     const { status, message, queryResults } = await
