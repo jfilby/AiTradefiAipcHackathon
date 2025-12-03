@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-import { BaseDataTypes } from '@/shared/types/base-data-types'
 
 export class TradeAnalysisModel {
 
@@ -9,11 +8,9 @@ export class TradeAnalysisModel {
   // Code
   async create(
           prisma: PrismaClient,
+          tradeAnalysesGroupId: string,
           instrumentId: string,
-          analysisId: string,
           techId: string,
-          day: Date,
-          engineVersion: string,
           status: string,
           tradeType: string,
           score: number,
@@ -26,11 +23,9 @@ export class TradeAnalysisModel {
     try {
       return await prisma.tradeAnalysis.create({
         data: {
+          tradeAnalysesGroupId: tradeAnalysesGroupId,
           instrumentId: instrumentId,
-          analysisId: analysisId,
           techId: techId,
-          day: day,
-          engineVersion: engineVersion,
           status: status,
           tradeType: tradeType,
           score: score,
@@ -67,10 +62,9 @@ export class TradeAnalysisModel {
 
   async filter(
           prisma: PrismaClient,
+          tradeAnalysesGroupId: string | undefined = undefined,
           instrumentId: string | undefined = undefined,
-          analysisId: string | undefined = undefined,
           techId: string | undefined = undefined,
-          day: Date | undefined = undefined,
           status: string | undefined = undefined,
           tradeType: string | undefined = undefined) {
 
@@ -81,10 +75,9 @@ export class TradeAnalysisModel {
     try {
       return await prisma.tradeAnalysis.findMany({
         where: {
+          tradeAnalysesGroupId: tradeAnalysesGroupId,
           instrumentId: instrumentId,
-          analysisId: analysisId,
           techId: techId,
-          day: day,
           status: status,
           tradeType: tradeType
         }
@@ -124,32 +117,26 @@ export class TradeAnalysisModel {
 
   async getByUniqueKey(
           prisma: PrismaClient,
+          tradeAnalysesGroupId: string,
           instrumentId: string,
-          analysisId: string,
-          techId: string,
-          day: Date) {
+          techId: string) {
 
     // Debug
     const fnName = `${this.clName}.getByUniqueKey()`
 
     // Validate
+    if (tradeAnalysesGroupId == null) {
+      console.error(`${fnName}: tradeAnalysesGroupId == null`)
+      throw 'Validation error'
+    }
+
     if (instrumentId == null) {
       console.error(`${fnName}: instrumentId == null`)
       throw 'Validation error'
     }
 
-    if (analysisId == null) {
-      console.error(`${fnName}: analysisId == null`)
-      throw 'Validation error'
-    }
-
     if (techId == null) {
       console.error(`${fnName}: techId == null`)
-      throw 'Validation error'
-    }
-
-    if (day == null) {
-      console.error(`${fnName}: day == null`)
       throw 'Validation error'
     }
 
@@ -159,9 +146,9 @@ export class TradeAnalysisModel {
     try {
       tradeAnalysis = await prisma.tradeAnalysis.findFirst({
         where: {
+          tradeAnalysesGroupId: tradeAnalysesGroupId,
           instrumentId: instrumentId,
-          analysisId: analysisId,
-          day: day
+          techId: techId
         }
       })
     } catch(error: any) {
@@ -175,58 +162,12 @@ export class TradeAnalysisModel {
     return tradeAnalysis
   }
 
-  async getLatest(
-          prisma: PrismaClient,
-          instrumentType: string | undefined,
-          limitBy: number = 100) {
-
-    // Debug
-    const fnName = `${this.clName}.getLatest()`
-
-    // Query
-    try {
-      return await prisma.tradeAnalysis.findMany({
-        take: limitBy,
-        include: {
-          analysis: true,
-          instrument: {
-            include: {
-              exchange: true
-            }
-          }
-        },
-        where: {
-          instrument: {
-            status: BaseDataTypes.activeStatus,
-            type: instrumentType
-          },
-          tradeType: 'B',
-          score: {
-            gte: 0.75
-          }
-        },
-        orderBy: [
-          {
-            score: 'desc'
-          }
-        ]
-      })
-    } catch(error: any) {
-      if (!(error instanceof error.NotFound)) {
-        console.error(`${fnName}: error: ${error}`)
-        throw 'Prisma error'
-      }
-    }
-  }
-
   async update(
           prisma: PrismaClient,
           id: string,
+          tradeAnalysesGroupId: string | undefined,
           instrumentId: string | undefined,
-          analysisId: string | undefined,
           techId: string | undefined,
-          day: Date | undefined,
-          engineVersion: string | undefined,
           status: string | undefined,
           tradeType: string | undefined,
           score: number | undefined,
@@ -239,11 +180,9 @@ export class TradeAnalysisModel {
     try {
       return await prisma.tradeAnalysis.update({
         data: {
+          tradeAnalysesGroupId: tradeAnalysesGroupId,
           instrumentId: instrumentId,
-          analysisId: analysisId,
           techId: techId,
-          day: day,
-          engineVersion: engineVersion,
           status: status,
           tradeType: tradeType,
           score: score,
@@ -262,6 +201,7 @@ export class TradeAnalysisModel {
   async upsert(
           prisma: PrismaClient,
           id: string | undefined,
+          tradeAnalysesGroupId: string | undefined,
           instrumentId: string | undefined,
           analysisId: string | undefined,
           techId: string | undefined,
@@ -277,18 +217,16 @@ export class TradeAnalysisModel {
 
     // If id isn't specified, but the unique keys are, try to get the record
     if (id == null &&
+        tradeAnalysesGroupId != null &&
         instrumentId != null &&
-        analysisId != null &&
-        techId != null &&
-        day != null) {
+        techId != null) {
 
       const tradeAnalysis = await
               this.getByUniqueKey(
                 prisma,
+                tradeAnalysesGroupId,
                 instrumentId,
-                analysisId,
-                techId,
-                day)
+                techId)
 
       if (tradeAnalysis != null) {
         id = tradeAnalysis.id
@@ -299,28 +237,18 @@ export class TradeAnalysisModel {
     if (id == null) {
 
       // Validate for create (mainly for type validation of the create call)
+      if (tradeAnalysesGroupId == null) {
+        console.error(`${fnName}: id is null and tradeAnalysesGroupId is null`)
+        throw 'Prisma error'
+      }
+
       if (instrumentId == null) {
         console.error(`${fnName}: id is null and instrumentId is null`)
         throw 'Prisma error'
       }
 
-      if (analysisId == null) {
-        console.error(`${fnName}: id is null and analysisId is null`)
-        throw 'Prisma error'
-      }
-
       if (techId == null) {
         console.error(`${fnName}: id is null and techId is null`)
-        throw 'Prisma error'
-      }
-
-      if (day == null) {
-        console.error(`${fnName}: id is null and day is null`)
-        throw 'Prisma error'
-      }
-
-      if (engineVersion == null) {
-        console.error(`${fnName}: id is null and engineVersion is null`)
         throw 'Prisma error'
       }
 
@@ -348,11 +276,9 @@ export class TradeAnalysisModel {
       return await
                this.create(
                  prisma,
+                 tradeAnalysesGroupId,
                  instrumentId,
-                 analysisId,
                  techId,
-                 day,
-                 engineVersion,
                  status,
                  tradeType,
                  score,
@@ -364,11 +290,9 @@ export class TradeAnalysisModel {
                this.update(
                  prisma,
                  id,
+                 tradeAnalysesGroupId,
                  instrumentId,
-                 analysisId,
                  techId,
-                 day,
-                 engineVersion,
                  status,
                  tradeType,
                  score,

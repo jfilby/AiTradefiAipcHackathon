@@ -10,6 +10,7 @@ import { AnalysisModel } from '@/models/trade-analysis/analysis-model'
 import { AnalysisTechModel } from '@/models/trade-analysis/analysis-tech-model'
 import { ExchangeModel } from '@/models/instruments/exchange-model'
 import { InstrumentModel } from '@/models/instruments/instrument-model'
+import { TradeAnalysisGroupModel } from '@/models/trade-analysis/trade-analyses-group-model'
 import { TradeAnalysisModel } from '@/models/trade-analysis/trade-analysis-model'
 import { TradeAnalysisLlmService } from './llm-service'
 import { YFinanceMutateService } from '../external-data/yfinance/mutate-service'
@@ -21,6 +22,7 @@ const analysisTechModel = new AnalysisTechModel()
 const exchangeModel = new ExchangeModel()
 const instrumentModel = new InstrumentModel()
 const techModel = new TechModel()
+const tradeAnalysisGroupModel = new TradeAnalysisGroupModel()
 const tradeAnalysisModel = new TradeAnalysisModel()
 
 // Services
@@ -242,6 +244,16 @@ export class TradeAnalysisMutateService {
     // Get day
     const day = new Date()
 
+    // Upsert a TradeAnalysisGroup
+    const tradeAnalysisGroup = await
+            tradeAnalysisGroupModel.upsert(
+              prisma,
+              undefined,  // id
+              analysisId,
+              day,
+              ServerOnlyTypes.tradeAnalysisEngineVersion,
+              BaseDataTypes.activeStatus)
+
     // Process each entry
     var instrumentsMap = new Map<string, YFinanceInstrumentContext | undefined>()
 
@@ -269,10 +281,9 @@ export class TradeAnalysisMutateService {
       const tradeAnalysis = await
               tradeAnalysisModel.getByUniqueKey(
                 prisma,
+                tradeAnalysisGroup.id,
                 instrument.id,
-                analysisId,
-                techId,
-                day)
+                techId)
 
       if (tradeAnalysis != null) {
         continue
@@ -281,11 +292,9 @@ export class TradeAnalysisMutateService {
       // Create TradeAnalysis
       await tradeAnalysisModel.create(
               prisma,
+              tradeAnalysisGroup.id,
               instrument.id,
-              analysisId,
               techId,
-              day,
-              ServerOnlyTypes.tradeAnalysisEngineVersion,
               BaseDataTypes.activeStatus,
               entry.tradeType,
               entry.score,

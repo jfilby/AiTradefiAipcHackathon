@@ -253,7 +253,7 @@ model Analysis {
   prompt                       String
 
   ofAnalysesTech               AnalysisTech[]
-  ofTradeAnalysis              TradeAnalysis[]
+  ofTradeAnalysesGroups        TradeAnalysesGroup[]
 
   @@unique([name, version])
   @@map("analysis")
@@ -276,14 +276,12 @@ model AnalysisTech {
 
 model TradeAnalysis {
   id                           String               @id @default(cuid())
+  tradeAnalysesGroupId         String               @map("trade_analyses_group_id")
+  tradeAnalysesGroup           TradeAnalysesGroup   @relation(fields: [tradeAnalysesGroupId], references: [id])
   instrumentId                 String               @map("instrument_id")
   instrument                   Instrument           @relation(fields: [instrumentId], references: [id])
-  analysisId                   String               @map("analysis_id")
-  analysis                     Analysis             @relation(fields: [analysisId], references: [id])
   techId                       String               @map("tech_id")
   tech                         Tech                 @relation(fields: [techId], references: [id])
-  day                          DateTime
-  engineVersion                String               @map("engine_version")
   status                       String               @db.Char(1)
   tradeType                    String               @map("trade_type") @db.Char(1)  // buy (B), sell (S)
   score                        Float                // 0..1
@@ -293,8 +291,24 @@ model TradeAnalysis {
 
   ofTrades                     Trade[]
 
-  @@unique([instrumentId, analysisId, techId, day])
+  @@unique([tradeAnalysesGroupId, instrumentId, techId])
   @@map("trade_analysis")
+  @@schema("public")
+}
+
+model TradeAnalysesGroup {
+  id                           String               @id @default(cuid())
+  analysisId                   String               @map("analysis_id")
+  analysis                     Analysis             @relation(fields: [analysisId], references: [id])
+  day                          DateTime
+  status                       String               @db.Char(1)
+  engineVersion                String               @map("engine_version")
+  created                      DateTime             @default(now())
+
+  ofTradeAnalyses              TradeAnalysis[]
+
+  @@unique([analysisId, day])
+  @@map("trade_analyses_group")
   @@schema("public")
 }
 

@@ -168,9 +168,11 @@ export class InstrumentModel {
           type: type,
           ofTradeAnalysis: {
             some: {
-              analysisId: analysisId,
-              created: {
-                gte: new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000)
+              tradeAnalysesGroup: {
+                analysisId: analysisId,
+                day: {
+                  gte: new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000)
+                }
               }
             }
           }
