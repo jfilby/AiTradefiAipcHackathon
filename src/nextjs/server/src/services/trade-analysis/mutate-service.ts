@@ -49,8 +49,9 @@ export class TradeAnalysisMutateService {
     // Start the prompt
     var prompt =
           `## Instructions\n` +
-          `Generate analysis results, in JSON, for 10 instruments of type ` +
-          `${type} as shown in the example section.\n` +
+          `- Generate analysis results, in JSON, for 10 instruments of type ` +
+          `  ${type} as shown in the example section.\n` +
+          `- Don't refer to the analysis thesis when writing your thesis.\n` +
           `\n` +
           `## Analysis thesis\n` +
           `${analysisPrompt}\n` +
