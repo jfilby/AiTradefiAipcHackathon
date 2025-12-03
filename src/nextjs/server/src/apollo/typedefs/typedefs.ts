@@ -111,11 +111,34 @@ export const typeDefs = `#graphql
   # AiTradefi (types)
   # ---
 
+  type Analysis {
+    id: String!
+    name: String!
+  }
+
+  type Exchange {
+    id: String!
+    name: String!
+  }
+
   type Instrument {
     id: String!
+    exchange: Exchange!
     name: String!
     type: String!
     created: String!
+  }
+
+  type InstrumentResults {
+    status: Boolean!
+    message: String
+    instrument: Instrument
+  }
+
+  type InstrumentsResults {
+    status: Boolean!
+    message: String
+    instruments: [Instrument]
   }
 
   type ServerStartData {
@@ -123,6 +146,28 @@ export const typeDefs = `#graphql
     message: String
     instance: Instance
     chatSession: ChatSession
+  }
+
+  type TradeAnalysis {
+    id: String
+    instrument: Instrument!
+    analysis: Analysis!
+    score: Float!
+    thesis: String!
+    created: String
+    updated: String
+  }
+
+  type TradeAnalysisResults {
+    status: Boolean!
+    message: String
+    tradeAnalysis: TradeAnalysis
+  }
+
+  type TradeAnalysesResults {
+    status: Boolean!
+    message: String
+    tradeAnalyses: [TradeAnalysis]
   }
 
   type UpsertInstanceResults {
@@ -214,8 +259,19 @@ export const typeDefs = `#graphql
     # instancesSharedPublicly: [InstanceSharedGroups]
 
     # Instruments
-    getInstrumentById(instrumentId: String): Instrument
-    getInstruments(type: String): [Instrument]
+    getInstrumentById(instrumentId: String): InstrumentResults
+    getInstruments(type: String): InstrumentsResults
+
+    # Trade analyses
+    getLatestTradeAnalyses(
+      userProfileId: String!,
+      instanceId: String,
+      instrumentType: String): TradeAnalysesResults
+
+    getTradeAnalysisById(
+      userProfileId: String!,
+      instanceId: String,
+      tradeAnalysisId: String!): TradeAnalysisResults
   }
 
   type Mutation {

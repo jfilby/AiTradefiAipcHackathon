@@ -1,22 +1,22 @@
 import { useEffect } from 'react'
 import { useQuery } from '@apollo/client/react'
-import { getInstrumentsQuery } from '@/apollo/instruments'
+import { getTradeAnalysisQuery } from '@/apollo/trade-analyses'
 
 interface Props {
   userProfileId: string
-  instanceId?: string
-  setInstruments: any
+  tradeAnalysisId: string
+  setTradeAnalysis: any
 }
 
-export default function LoadInstruments({
+export default function LoadTradeAnalysisById({
                           userProfileId,
-                          instanceId,
-                          setInstruments
+                          tradeAnalysisId,
+                          setTradeAnalysis
                         }: Props) {
 
   // GraphQL
-  const { refetch: fetchGetInstrumentsQuery } =
-    useQuery<any>(getInstrumentsQuery, {
+  const { refetch: fetchGetTradeAnalysisQuery } =
+    useQuery<any>(getTradeAnalysisQuery, {
       fetchPolicy: 'no-cache'
       /* onCompleted: data => {
         console.log('elementName: ' + elementName)
@@ -28,25 +28,25 @@ export default function LoadInstruments({
     })
 
   // Functions
-  async function getInstruments() {
+  async function getTradeAnalysis() {
 
     // Query
     const { data } = await
-            fetchGetInstrumentsQuery({
+            fetchGetTradeAnalysisQuery({
               userProfileId: userProfileId,
-              instanceId: instanceId
-          })
+              tradeAnalysisId: tradeAnalysisId
+            })
 
-    const results = data.getInstruments
+    const results = data.getTradeAnalysis
 
-    setInstruments(results.instruments)
+    setTradeAnalysis(results.tradeAnalysis)
   }
 
   // Effects
   useEffect(() => {
 
     const fetchData = async () => {
-      await getInstruments()
+      await getTradeAnalysis()
     }
 
     // Async call

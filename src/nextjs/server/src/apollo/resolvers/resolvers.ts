@@ -15,6 +15,7 @@ import { upsertUserPreference } from '@/serene-core-server/apollo/resolvers/muta
 // Concept queries imports
 // import { filterInstances, filterProjectInstances, instanceById } from './queries/instances'
 import { getInstrumentById, getInstruments } from './queries/instruments'
+import { getLatestTradeAnalyses, getTradeAnalysisById } from './queries/trade-analyses'
 
 // Concept mutations imports
 import { loadServerStartData } from './mutations/server-data-start'
@@ -65,7 +66,11 @@ const Query = {
 
   // Instruments
   getInstrumentById,
-  getInstruments
+  getInstruments,
+
+  // Trade analyses
+  getTradeAnalysisById,
+  getLatestTradeAnalyses
 }
 
 const Mutation = {

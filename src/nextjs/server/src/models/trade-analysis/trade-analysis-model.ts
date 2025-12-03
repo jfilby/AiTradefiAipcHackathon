@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { BaseDataTypes } from '@/shared/types/base-data-types'
 
 export class TradeAnalysisModel {
 
@@ -172,6 +173,50 @@ export class TradeAnalysisModel {
 
     // Return
     return tradeAnalysis
+  }
+
+  async getLatest(
+          prisma: PrismaClient,
+          instrumentType: string | undefined,
+          limitBy: number = 100) {
+
+    // Debug
+    const fnName = `${this.clName}.getLatest()`
+
+    // Query
+    try {
+      return await prisma.tradeAnalysis.findMany({
+        take: limitBy,
+        include: {
+          analysis: true,
+          instrument: {
+            include: {
+              exchange: true
+            }
+          }
+        },
+        where: {
+          instrument: {
+            status: BaseDataTypes.activeStatus,
+            type: instrumentType
+          },
+          tradeType: 'B',
+          score: {
+            gte: 0.75
+          }
+        },
+        orderBy: [
+          {
+            score: 'desc'
+          }
+        ]
+      })
+    } catch(error: any) {
+      if (!(error instanceof error.NotFound)) {
+        console.error(`${fnName}: error: ${error}`)
+        throw 'Prisma error'
+      }
+    }
   }
 
   async update(

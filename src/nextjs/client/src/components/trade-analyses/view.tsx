@@ -3,16 +3,16 @@ import { Alert, Divider, Typography } from '@mui/material'
 
 interface Props {
   instanceId?: string
-  instrument: any
+  tradeAnalysis: any
 }
 
-export default function ViewInstrument({
+export default function ViewTradeAnalysis({
                           instanceId,
-                          instrument
+                          tradeAnalysis
                         }: Props) {
 
   // Consts
-  const pathsUrl = `/i/${instanceId}/instruments/${instrument.id}`
+  const pathsUrl = `/i/${instanceId}/trade-analysis/${tradeAnalysis.id}`
 
   // State
   const [alertSeverity, setAlertSeverity] = useState<any>('')
@@ -32,13 +32,17 @@ export default function ViewInstrument({
         <></>
       }
 
-      {/*<p>instrument: {JSON.stringify(instrument)}</p>*/}
+      {/*<p>tradeAnalysis: {JSON.stringify(tradeAnalysis)}</p>*/}
 
       <div style={{ marginBottom: '2em' }}>
         <div style={{ display: 'block', marginBottom: '1em' }}>
 
           <Typography variant='h6'>
-            {instrument.name}
+            {tradeAnalysis.instrument.name}:{tradeAnalysis.instrument.exchange.name}
+          </Typography>
+
+          <Typography variant='body1'>
+            {tradeAnalysis.thesis}
           </Typography>
         </div>
       </div>
