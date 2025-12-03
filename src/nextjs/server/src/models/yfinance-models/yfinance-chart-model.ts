@@ -9,10 +9,9 @@ export class YFinanceChartModel {
   async create(
           prisma: PrismaClient,
           instrumentId: string,
-          type: string,
+          interval: string,
           period1: Date,
           period2: Date,
-          interval: string,
           data: any) {
 
     // Debug
@@ -23,10 +22,9 @@ export class YFinanceChartModel {
       return await prisma.yFinanceChart.create({
         data: {
           instrumentId: instrumentId,
-          type: type,
+          interval: interval,
           period1: period1,
           period2: period2,
-          interval: interval,
           data: data
         }
       })
@@ -61,7 +59,6 @@ export class YFinanceChartModel {
   async filter(
           prisma: PrismaClient,
           instrumentId: string | undefined = undefined,
-          type: string | undefined = undefined,
           interval: string | undefined = undefined) {
 
     // Debug
@@ -72,7 +69,6 @@ export class YFinanceChartModel {
       return await prisma.yFinanceChart.findMany({
         where: {
           instrumentId: instrumentId,
-          type: type,
           interval: interval
         }
       })
@@ -112,10 +108,9 @@ export class YFinanceChartModel {
   async getByUniqueKey(
           prisma: PrismaClient,
           instrumentId: string,
-          type: string,
+          interval: string,
           period1: Date,
-          period2: Date,
-          interval: string) {
+          period2: Date) {
 
     // Debug
     const fnName = `${this.clName}.getByUniqueKey()`
@@ -126,8 +121,8 @@ export class YFinanceChartModel {
       throw 'Validation error'
     }
 
-    if (type == null) {
-      console.error(`${fnName}: type == null`)
+    if (interval == null) {
+      console.error(`${fnName}: interval == null`)
       throw 'Validation error'
     }
 
@@ -141,11 +136,6 @@ export class YFinanceChartModel {
       throw 'Validation error'
     }
 
-    if (interval == null) {
-      console.error(`${fnName}: interval == null`)
-      throw 'Validation error'
-    }
-
     // Query
     var yFinanceChart: any = null
 
@@ -153,10 +143,9 @@ export class YFinanceChartModel {
       yFinanceChart = await prisma.yFinanceChart.findFirst({
         where: {
           instrumentId: instrumentId,
-          type: type,
+          interval: interval,
           period1: period1,
-          period2: period2,
-          interval: interval
+          period2: period2
         }
       })
     } catch(error: any) {
@@ -174,10 +163,9 @@ export class YFinanceChartModel {
           prisma: PrismaClient,
           id: string,
           instrumentId: string | undefined,
-          type: string | undefined,
+          interval: string | undefined,
           period1: Date | undefined,
           period2: Date | undefined,
-          interval: string | undefined,
           data: any | undefined) {
 
     // Debug
@@ -188,10 +176,9 @@ export class YFinanceChartModel {
       return await prisma.yFinanceChart.update({
         data: {
           instrumentId: instrumentId,
-          type: type,
+          interval: interval,
           period1: period1,
           period2: period2,
-          interval: interval,
           data: data
         },
         where: {
@@ -208,10 +195,9 @@ export class YFinanceChartModel {
           prisma: PrismaClient,
           id: string | undefined,
           instrumentId: string | undefined,
-          type: string | undefined,
+          interval: string | undefined,
           period1: Date | undefined,
           period2: Date | undefined,
-          interval: string | undefined,
           data: any | undefined) {
 
     // Debug
@@ -220,19 +206,17 @@ export class YFinanceChartModel {
     // If id isn't specified, but the unique keys are, try to get the record
     if (id == null &&
         instrumentId != null &&
-        type != null &&
+        interval != null &&
         period1 != null &&
-        period2 != null &&
-        interval != null) {
+        period2 != null) {
 
       const yFinanceChart = await
               this.getByUniqueKey(
                 prisma,
                 instrumentId,
-                type,
+                interval,
                 period1,
-                period2,
-                interval)
+                period2)
 
       if (yFinanceChart != null) {
         id = yFinanceChart.id
@@ -248,8 +232,8 @@ export class YFinanceChartModel {
         throw 'Prisma error'
       }
 
-      if (type == null) {
-        console.error(`${fnName}: id is null and type is null`)
+      if (interval == null) {
+        console.error(`${fnName}: id is null and interval is null`)
         throw 'Prisma error'
       }
 
@@ -263,11 +247,6 @@ export class YFinanceChartModel {
         throw 'Prisma error'
       }
 
-      if (interval == null) {
-        console.error(`${fnName}: id is null and interval is null`)
-        throw 'Prisma error'
-      }
-
       if (data == null) {
         console.error(`${fnName}: id is null and data is null`)
         throw 'Prisma error'
@@ -278,10 +257,9 @@ export class YFinanceChartModel {
                this.create(
                  prisma,
                  instrumentId,
-                 type,
+                 interval,
                  period1,
                  period2,
-                 interval,
                  data)
     } else {
 
@@ -291,10 +269,9 @@ export class YFinanceChartModel {
                  prisma,
                  id,
                  instrumentId,
-                 type,
+                 interval,
                  period1,
                  period2,
-                 interval,
                  data)
     }
   }

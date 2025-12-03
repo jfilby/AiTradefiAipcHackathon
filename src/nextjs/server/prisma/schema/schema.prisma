@@ -79,7 +79,6 @@ model Instrument {
   ofTradeAnalysis              TradeAnalysis[]
 
   ofYFinanceCharts             YFinanceChart[]
-  ofYFinanceChartsTrailing     YFinanceChartTrailing[]
   ofYFinanceFins               YFinanceFin[]
   ofYFinanceQuotes             YFinanceQuote[]
 
@@ -328,31 +327,14 @@ model YFinanceChart {
   id                           String               @id @default(cuid())
   instrumentId                 String               @map("instrument_id")
   instrument                   Instrument           @relation(fields: [instrumentId], references: [id])
-  type                         String               @db.Char(1)  // Q (quarterly) or Y (yearly)
+  interval                     String
   period1                      DateTime             @db.Date
   period2                      DateTime             @db.Date
-  interval                     String
   data                         Json                 @db.JsonB
   created                      DateTime             @default(now())
 
-  @@unique([instrumentId, type, period1, period2, interval])
+  @@unique([instrumentId, interval, period1, period2])
   @@map("yfinance_chart")
-  @@schema("public")
-}
-
-model YFinanceChartTrailing {
-  // Charts from period1 to today
-  id                           String               @id @default(cuid())
-  instrumentId                 String               @map("instrument_id")
-  instrument                   Instrument           @relation(fields: [instrumentId], references: [id])
-  type                         String               @db.Char(1)  // Q (quarterly) or Y (yearly)
-  period1                      DateTime             @db.Date
-  interval                     String
-  data                         Json                 @db.JsonB
-  created                      DateTime             @default(now())
-
-  @@unique([instrumentId, type, period1, interval])
-  @@map("yfinance_chart_trailing")
   @@schema("public")
 }
 

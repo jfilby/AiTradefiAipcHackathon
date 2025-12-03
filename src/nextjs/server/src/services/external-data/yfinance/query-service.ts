@@ -28,10 +28,16 @@ export class YFinanceQueryService {
               prisma,
               instrumentId)
 
+    const yFinanceCharts = await
+            yFinanceFinModel.filter(
+              prisma,
+              instrumentId)
+
     // Set context
     const yFinanceInstrumentContext: YFinanceInstrumentContext = {
       yFinanceQuote: yFinanceQuote,
-      yFinanceFinancials: yFinanceFins
+      yFinanceFinancials: yFinanceFins,
+      yFinanceCharts: yFinanceCharts
     }
 
     // Return

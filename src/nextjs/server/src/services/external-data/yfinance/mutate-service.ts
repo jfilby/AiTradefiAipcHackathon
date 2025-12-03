@@ -3,6 +3,7 @@ import YahooFinance from 'yahoo-finance2'
 import { CustomError } from '@/serene-core-server/types/errors'
 import { ExchangeModel } from '@/models/instruments/exchange-model'
 import { InstrumentModel } from '@/models/instruments/instrument-model'
+import { YFinanceChartModel } from '@/models/yfinance-models/yfinance-chart-model'
 import { YFinanceFinModel } from '@/models/yfinance-models/yfinance-fin-model'
 import { YFinanceQuoteModel } from '@/models/yfinance-models/yfinance-quote-model'
 import { YFinanceUtilsService } from './utils-service'
@@ -10,6 +11,7 @@ import { YFinanceUtilsService } from './utils-service'
 // Models
 const exchangeModel = new ExchangeModel()
 const instrumentModel = new InstrumentModel()
+const yFinanceChartModel = new YFinanceChartModel()
 const yFinanceFinModel = new YFinanceFinModel()
 const yFinanceQuoteModel = new YFinanceQuoteModel()
 
@@ -54,6 +56,11 @@ export class YFinanceMutateService {
 
     // Save financials
     await this.saveFinancials(
+            prisma,
+            instrument)
+
+    // Save charts
+    await this.saveCharts(
             prisma,
             instrument)
   }
@@ -108,6 +115,42 @@ export class YFinanceMutateService {
             prisma,
             exchange.id,
             instrument.id)
+  }
+
+  async saveCharts(
+          prisma: PrismaClient,
+          instrument: Instrument) {
+
+    // Save the last year on the day interval
+
+    // Compute trailing 1-year window from today
+    const today = new Date()
+    const oneYearAgo = new Date()
+    oneYearAgo.setFullYear(today.getFullYear() - 1)
+
+    const period1 = oneYearAgo
+    const period2 = today
+    const interval = '1d'
+
+    // Get last year of daily data
+    const data = await yahooFinance.chart(
+      instrument.yahooFinanceTicker!,
+      {
+        period1: period1,
+        period2: period2,
+        interval: interval
+      })
+
+    // Save
+    const yFinanceChart = await
+            yFinanceChartModel.upsert(
+              prisma,
+              undefined,  // id
+              instrument.id,
+              interval,
+              period1,
+              period2,
+              data)
   }
 
   async saveFinancials(

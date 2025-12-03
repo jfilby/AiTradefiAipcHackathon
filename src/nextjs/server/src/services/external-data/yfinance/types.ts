@@ -62,6 +62,7 @@ export class YahooFinanceTypes {
 export interface YFinanceInstrumentContext {
   yFinanceQuote: any
   yFinanceFinancials: any
+  yFinanceCharts: any
 }
 
 export type InstrumentContextMap =
