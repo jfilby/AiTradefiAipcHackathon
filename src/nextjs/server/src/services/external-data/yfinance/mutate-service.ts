@@ -1,6 +1,7 @@
 import { Exchange, Instrument, PrismaClient } from '@prisma/client'
 import YahooFinance from 'yahoo-finance2'
 import { CustomError } from '@/serene-core-server/types/errors'
+import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { ExchangeModel } from '@/models/instruments/exchange-model'
 import { InstrumentModel } from '@/models/instruments/instrument-model'
 import { YFinanceChartModel } from '@/models/yfinance-models/yfinance-chart-model'
@@ -62,6 +63,7 @@ export class YFinanceMutateService {
           prisma,
           instrument.id,
           undefined,  // exchangeId
+          BaseDataTypes.inactiveStatus,
           undefined,  // symbol
           undefined,  // type
           undefined,  // name
@@ -136,6 +138,7 @@ export class YFinanceMutateService {
         instrumentModel.create(
           prisma,
           exchange.id,
+          BaseDataTypes.activeStatus,
           instrumentName,
           instrumentType,
           instrumentName,

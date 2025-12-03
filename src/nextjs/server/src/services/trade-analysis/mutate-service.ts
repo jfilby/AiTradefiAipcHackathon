@@ -154,15 +154,25 @@ export class TradeAnalysisMutateService {
                 entry.exchange)
 
       // Get Instrument
-      const instrument = await
-              instrumentModel.upsert(
-                prisma,
-                undefined,  // id
-                exchange.id,
-                entry.instrument,
-                instrumentType,
-                entry.instrument,
-                null)       // yahooFinanceTicker
+      var instrument = await
+            instrumentModel.getByUniqueKey(
+              prisma,
+              exchange.id,
+              entry.instrument)
+
+      if (instrument == null) {
+
+        // Create (but not yet active)
+        instrument = await
+          instrumentModel.create(
+            prisma,
+            exchange.id,
+            BaseDataTypes.newStatus,
+            entry.instrument,
+            instrumentType,
+            entry.instrument,
+            null)       // yahooFinanceTicker
+      }
 
       // Enrich with Y! Finance data
       const found = await
@@ -173,7 +183,37 @@ export class TradeAnalysisMutateService {
 
       // Not found?
       if (found === false) {
+        
+        // Set to inactive
+        instrument = await
+          instrumentModel.update(
+            prisma,
+            instrument.id,
+            undefined,  // exchangeId,
+            BaseDataTypes.inactiveStatus,
+            undefined,  // smybol
+            undefined,  // type
+            undefined,  // name
+            undefined)  // yahooFinanceTicker
+
+        // Skip to next instrument
         continue
+      }
+
+      // Found
+      if (instrument.status !== BaseDataTypes.activeStatus) {
+
+        // Set to active
+        instrument = await
+          instrumentModel.update(
+            prisma,
+            instrument.id,
+            undefined,  // exchangeId,
+            BaseDataTypes.activeStatus,
+            undefined,  // smybol
+            undefined,  // type
+            undefined,  // name
+            undefined)  // yahooFinanceTicker
       }
 
       // Get context
@@ -218,6 +258,7 @@ export class TradeAnalysisMutateService {
                 prisma,
                 undefined,  // id
                 exchange.id,
+                BaseDataTypes.activeStatus,
                 entry.instrument,
                 instrumentType,
                 entry.instrument,

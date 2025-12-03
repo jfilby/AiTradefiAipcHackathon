@@ -9,6 +9,7 @@ export class InstrumentModel {
   async create(
           prisma: PrismaClient,
           exchangeId: string,
+          status: string,
           symbol: string,
           type: string,
           name: string,
@@ -22,6 +23,7 @@ export class InstrumentModel {
       return await prisma.instrument.create({
         data: {
           exchangeId: exchangeId,
+          status: status,
           symbol: symbol,
           type: type,
           name: name,
@@ -59,6 +61,7 @@ export class InstrumentModel {
   async filter(
           prisma: PrismaClient,
           exchangeId: string | undefined = undefined,
+          status: string | undefined = undefined,
           type: string | undefined = undefined) {
 
     // Debug
@@ -69,6 +72,7 @@ export class InstrumentModel {
       return await prisma.instrument.findMany({
         where: {
           exchangeId: exchangeId,
+          status: status,
           type: type
         }
       })
@@ -182,6 +186,7 @@ export class InstrumentModel {
           prisma: PrismaClient,
           id: string,
           exchangeId: string | undefined,
+          status: string | undefined,
           symbol: string | undefined,
           type: string | undefined,
           name: string | undefined,
@@ -195,6 +200,7 @@ export class InstrumentModel {
       return await prisma.instrument.update({
         data: {
           exchangeId: exchangeId,
+          status: status,
           symbol: symbol,
           type: type,
           name: name,
@@ -213,6 +219,7 @@ export class InstrumentModel {
   async upsert(prisma: PrismaClient,
                id: string | undefined,
                exchangeId: string | undefined,
+               status: string | undefined,
                symbol: string | undefined,
                type: string | undefined,
                name: string | undefined,
@@ -246,6 +253,11 @@ export class InstrumentModel {
         throw 'Prisma error'
       }
 
+      if (status == null) {
+        console.error(`${fnName}: id is null and status is null`)
+        throw 'Prisma error'
+      }
+
       if (symbol == null) {
         console.error(`${fnName}: id is null and symbol is null`)
         throw 'Prisma error'
@@ -271,6 +283,7 @@ export class InstrumentModel {
                this.create(
                  prisma,
                  exchangeId,
+                 status,
                  symbol,
                  type,
                  name,
@@ -283,6 +296,7 @@ export class InstrumentModel {
                  prisma,
                  id,
                  exchangeId,
+                 status,
                  symbol,
                  type,
                  name,

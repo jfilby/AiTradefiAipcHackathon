@@ -129,15 +129,26 @@ export class SetupService {
     // Demo data
     for (const entry of TradingParameterTypes.nasdaqStocks) {
 
-      const instrument = await
-              instrumentModel.upsert(
-                prisma,
-                undefined,  // id
-                nasdaqExchange.id,
-                entry.symbol,
-                entry.type,
-                entry.name,
-                null)       // yahooFinanceTicker
+      var instrument = await
+            instrumentModel.getByUniqueKey(
+              prisma,
+              nasdaqExchange.id,
+              entry.symbol)
+
+      if (instrument != null) {
+        continue
+      }
+
+      instrument = await
+        instrumentModel.upsert(
+          prisma,
+          undefined,  // id
+          nasdaqExchange.id,
+          BaseDataTypes.activeStatus,
+          entry.symbol,
+          entry.type,
+          entry.name,
+          null)       // yahooFinanceTicker
     }
 
     // Upserts for WindowType

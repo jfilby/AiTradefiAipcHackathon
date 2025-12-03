@@ -68,6 +68,7 @@ model Instrument {
   id                           String               @id @default(cuid())
   exchangeId                   String               @map("exchange_id")
   exchange                     Exchange             @relation(fields: [exchangeId], references: [id])
+  status                       String               @db.Char(1)
   symbol                       String               @unique
   type                         String               // E.g. stock
   name                         String

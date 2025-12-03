@@ -13,13 +13,15 @@ export class InstrumentsQueryService {
   // Code
   async getAll(
           prisma: PrismaClient,
+          status: string,
           type: string) {
 
     // Get instruments
     const instruments = await
             instrumentModel.filter(
               prisma,
-              undefined,
+              undefined,  // exchangeId
+              status,
               type)
 
     // Return
