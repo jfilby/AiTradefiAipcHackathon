@@ -30,7 +30,7 @@ export class InstrumentModel {
       })
     } catch(error) {
       console.error(`${fnName}: error: ${error}`)
-      throw 'Prisma error'
+      throw error
     }
   }
 

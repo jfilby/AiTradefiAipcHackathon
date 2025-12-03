@@ -412,7 +412,7 @@ export class TradeAnalysisMutateService {
               instrumentNamesAlreadyRun)
 
     // Debug
-    console.log(`${fnName}: prompt: ${prompt}`)
+    // console.log(`${fnName}: prompt: ${prompt}`)
 
     // LLM request
     const { status, message, queryResults } = await
