@@ -53,7 +53,9 @@ export class TradeAnalysisMutateService {
     var prompt =
           `## Instructions\n` +
           `- Generate analysis results, in JSON, for 10 instruments of type ` +
-          `  ${type} as shown in the example section.\n`
+          `  ${type} as shown in the example section.\n` +
+          `- The instruments in your output must be currently listed on ` +
+          `  their exchange. Don't create fictional symbols.\n`
 
     // No thesis until pass 2
     if (pass === 2) {
@@ -111,7 +113,7 @@ export class TradeAnalysisMutateService {
       `\n` +
       `## Fields\n` +
       `Take note of these fields in the output:\n` +
-      `- tradeType: recommend a B (buy) or S (sell)\n`
+      `- tradeType: a B (buy) or S (sell) based on the thesis\n`
 
     if (pass === 2) {
 
