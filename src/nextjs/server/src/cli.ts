@@ -18,13 +18,13 @@ import { TestsService } from './services/tests/tests-service'
   const fnName = 'cli.ts'
 
   // Consts
-  const loadAnalyses = 'load-analyses'
+  const loadAnalysesCommand = 'load-analyses'
   const loadTechProviderApiKeysCommand = 'load-tech-provider-api-keys'
   const setupCommand = 'setup'
   const testsCommand = 'tests'
 
   const commands = [
-          loadAnalyses,
+          loadAnalysesCommand,
           loadTechProviderApiKeysCommand,
           setupCommand,
           testsCommand
@@ -60,7 +60,7 @@ import { TestsService } from './services/tests/tests-service'
   // Run the chosen command
   switch (command) {
 
-    case loadAnalyses: {
+    case loadAnalysesCommand: {
 
       await setupAnalysesService.setup(prisma)
 
