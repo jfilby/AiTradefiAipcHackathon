@@ -53,21 +53,40 @@ export class YFinanceMutateService {
     // Get ticker?
     if (instrument.yahooFinanceTicker == null) {
 
+      // Try to get the ticker
       const ticker =
               yFinanceUtilsService.getTicker(
                 instrument,
                 exchange)
 
-      instrument = await
-        instrumentModel.update(
-          prisma,
-          instrument.id,
-          undefined,  // exchangeId
-          BaseDataTypes.inactiveStatus,
-          undefined,  // symbol
-          undefined,  // type
-          undefined,  // name
-          ticker)
+      if (ticker != null) {
+
+        // Set ticker
+        instrument = await
+          instrumentModel.update(
+            prisma,
+            instrument.id,
+            undefined,  // exchangeId
+            BaseDataTypes.activeStatus,
+            undefined,  // symbol
+            undefined,  // type
+            undefined,  // name
+            ticker)
+      } else {
+        // Ticker not found
+        instrument = await
+          instrumentModel.update(
+            prisma,
+            instrument.id,
+            undefined,  // exchangeId
+            BaseDataTypes.inactiveStatus,
+            undefined,  // symbol
+            undefined,  // type
+            undefined,  // name
+            null)       // yahooFinanceTicker
+
+        return false
+      }
     }
 
     // Delete existing data
@@ -82,6 +101,20 @@ export class YFinanceMutateService {
               instrument)
 
     if (found === false) {
+
+      // Not found, set to inactive
+      instrument = await
+        instrumentModel.update(
+          prisma,
+          instrument.id,
+          undefined,  // exchangeId
+          BaseDataTypes.inactiveStatus,
+          undefined,  // symbol
+          undefined,  // type
+          undefined,  // name
+          null)       // yahooFinanceTicker
+
+      // Return not found
       return false
     }
 
