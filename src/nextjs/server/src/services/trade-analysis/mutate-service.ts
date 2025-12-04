@@ -222,7 +222,8 @@ export class TradeAnalysisMutateService {
         console.error(`${fnName}: error message:`, e?.message)
         console.error(`${fnName}: error stack:`, e?.stack)
         console.error(`${fnName}: raw error:`, e)
-        throw `Failed..`
+        // throw `Failed..`
+        continue
       }
 
       // Not found?
