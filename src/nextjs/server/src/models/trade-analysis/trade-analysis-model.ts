@@ -67,7 +67,8 @@ export class TradeAnalysisModel {
           techId: string | undefined = undefined,
           status: string | undefined = undefined,
           tradeType: string | undefined = undefined,
-          includeInstrument: boolean = false) {
+          includeInstrument: boolean = false,
+          sortByScore: boolean = false) {
 
     // Debug
     const fnName = `${this.clName}.filter()`
@@ -88,7 +89,12 @@ export class TradeAnalysisModel {
           techId: techId,
           status: status,
           tradeType: tradeType
-        }
+        },
+        orderBy: [
+          {
+            score: sortByScore ? 'desc' : undefined
+          }
+        ]
       })
     } catch(error: any) {
       console.error(`${fnName}: error: ${error}`)

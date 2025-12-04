@@ -74,6 +74,7 @@ export class SetupAnalysesService {
                 type,
                 BaseDataTypes.activeStatus,
                 definition.instrumentType,
+                ServerOnlyTypes.defaultMinScore,
                 definition.name,
                 definition.version,
                 definition.description,

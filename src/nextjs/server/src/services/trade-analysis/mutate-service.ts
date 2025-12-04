@@ -352,7 +352,8 @@ export class TradeAnalysisMutateService {
                 analysis.id,
                 day,
                 ServerOnlyTypes.tradeAnalysisEngineVersion,
-                BaseDataTypes.activeStatus)
+                BaseDataTypes.activeStatus,
+                analysis.defaultMinScore)
 
       // Get tech
       var tech = await

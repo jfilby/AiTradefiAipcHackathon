@@ -12,7 +12,8 @@ export class TradeAnalysesGroupModel {
           analysisId: string,
           day: Date,
           engineVersion: string,
-          status: string) {
+          status: string,
+          minScore: number) {
 
     // Debug
     const fnName = `${this.clName}.create()`
@@ -24,7 +25,8 @@ export class TradeAnalysesGroupModel {
           analysisId: analysisId,
           day: day,
           engineVersion: engineVersion,
-          status: status
+          status: status,
+          minScore: minScore
         }
       })
     } catch(error) {
@@ -149,6 +151,7 @@ export class TradeAnalysesGroupModel {
   async getLatest(
           prisma: PrismaClient,
           instrumentType: string | undefined,
+          minScore: number,
           limitBy: number = 100) {
 
     // Debug
@@ -160,7 +163,7 @@ export class TradeAnalysesGroupModel {
         take: limitBy,
         include: {
           analysis: true,
-          ofTradeAnalyses: {
+          /* ofTradeAnalyses: {
             include: {
               instrument: {
                 include: {
@@ -173,10 +176,10 @@ export class TradeAnalysesGroupModel {
                 score: 'desc'
               }
             ]
-          }
+          } */
         },
         where: {
-          ofTradeAnalyses: {
+          /* ofTradeAnalyses: {
             some: {
               instrument: {
                 status: BaseDataTypes.activeStatus,
@@ -184,11 +187,16 @@ export class TradeAnalysesGroupModel {
               },
               tradeType: 'B',
               score: {
-                gte: 0.75
+                gte: minScore
               }
             }
+          } */
+        },
+        orderBy: [
+          {
+            day: 'desc'
           }
-        }
+        ]
       })
     } catch(error: any) {
       if (!(error instanceof error.NotFound)) {
@@ -204,7 +212,8 @@ export class TradeAnalysesGroupModel {
           analysisId: string | undefined,
           day: Date | undefined,
           engineVersion: string | undefined,
-          status: string | undefined) {
+          status: string | undefined,
+          minScore: number | undefined) {
 
     // Debug
     const fnName = `${this.clName}.update()`
@@ -216,7 +225,8 @@ export class TradeAnalysesGroupModel {
           analysisId: analysisId,
           day: day,
           engineVersion: engineVersion,
-          status: status
+          status: status,
+          minScore: minScore
         },
         where: {
           id: id
@@ -234,7 +244,8 @@ export class TradeAnalysesGroupModel {
           analysisId: string | undefined,
           day: Date | undefined,
           engineVersion: string | undefined,
-          status: string | undefined) {
+          status: string | undefined,
+          minScore: number | undefined) {
 
     // Debug
     const fnName = `${this.clName}.upsert()`
@@ -279,6 +290,11 @@ export class TradeAnalysesGroupModel {
         throw 'Prisma error'
       }
 
+      if (minScore == null) {
+        console.error(`${fnName}: id is null and minScore is null`)
+        throw 'Prisma error'
+      }
+
       // Create
       return await
                this.create(
@@ -286,7 +302,8 @@ export class TradeAnalysesGroupModel {
                  analysisId,
                  day,
                  engineVersion,
-                 status)
+                 status,
+                 minScore)
     } else {
 
       // Update
@@ -297,7 +314,8 @@ export class TradeAnalysesGroupModel {
                  analysisId,
                  day,
                  engineVersion,
-                 status)
+                 status,
+                 minScore)
     }
   }
 }

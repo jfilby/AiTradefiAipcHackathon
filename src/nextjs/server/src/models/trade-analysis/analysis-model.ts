@@ -11,6 +11,7 @@ export class AnalysisModel {
           type: string,
           status: string,
           instrumentType: string,
+          defaultMinScore: number,
           name: string,
           version: string,
           description: string,
@@ -26,6 +27,7 @@ export class AnalysisModel {
           type: type,
           status: status,
           instrumentType: instrumentType,
+          defaultMinScore: defaultMinScore,
           name: name,
           version: version,
           description: description,
@@ -161,6 +163,7 @@ export class AnalysisModel {
           type: string | undefined,
           status: string | undefined,
           instrumentType: string | undefined,
+          defaultMinScore: number | undefined,
           name: string | undefined,
           version: string | undefined,
           description: string | undefined,
@@ -176,6 +179,7 @@ export class AnalysisModel {
           type: type,
           status: status,
           instrumentType: instrumentType,
+          defaultMinScore: defaultMinScore,
           name: name,
           version: version,
           description: description,
@@ -197,6 +201,7 @@ export class AnalysisModel {
           type: string | undefined,
           status: string | undefined,
           instrumentType: string | undefined,
+          defaultMinScore: number | undefined,
           name: string | undefined,
           version: string | undefined,
           description: string | undefined,
@@ -240,6 +245,11 @@ export class AnalysisModel {
         throw 'Prisma error'
       }
 
+      if (defaultMinScore == null) {
+        console.error(`${fnName}: id is null and defaultMinScore is null`)
+        throw 'Prisma error'
+      }
+
       if (name == null) {
         console.error(`${fnName}: id is null and name is null`)
         throw 'Prisma error'
@@ -267,6 +277,7 @@ export class AnalysisModel {
                  type,
                  status,
                  instrumentType,
+                 defaultMinScore,
                  name,
                  version,
                  description,
@@ -281,6 +292,7 @@ export class AnalysisModel {
                  type,
                  status,
                  instrumentType,
+                 defaultMinScore,
                  name,
                  version,
                  description,

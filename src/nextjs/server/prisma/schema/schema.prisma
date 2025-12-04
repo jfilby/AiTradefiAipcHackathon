@@ -247,6 +247,7 @@ model Analysis {
   type                         String               @db.Char(1)  // S (screener), E (evaluator)
   status                       String               @db.Char(1)
   instrumentType               String               @map("instrument_type")
+  defaultMinScore              Float                @map("default_min_score")
   name                         String
   version                      String
   description                  String
@@ -302,6 +303,7 @@ model TradeAnalysesGroup {
   analysis                     Analysis             @relation(fields: [analysisId], references: [id])
   day                          DateTime             @db.Date
   status                       String               @db.Char(1)
+  minScore                     Float                @map("min_score")
   engineVersion                String               @map("engine_version")
   created                      DateTime             @default(now())
 

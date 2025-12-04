@@ -53,6 +53,9 @@ export class ServerOnlyTypes {
   static evaluatorType = 'E'
   static screenerType = 'S'
 
+  // Default min score
+  static defaultMinScore = 0.75
+
   // Trade analysis
   static tradeAnalysisEngineVersion = '1.0.0'
 
