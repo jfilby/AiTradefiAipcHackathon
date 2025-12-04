@@ -69,7 +69,7 @@ model Instrument {
   exchangeId                   String               @map("exchange_id")
   exchange                     Exchange             @relation(fields: [exchangeId], references: [id])
   status                       String               @db.Char(1)
-  symbol                       String               @unique
+  symbol                       String
   type                         String               // E.g. stock
   name                         String
   yahooFinanceTicker           String?              @map("yahoo_finance_ticker")
@@ -83,7 +83,7 @@ model Instrument {
   ofYFinanceFins               YFinanceFin[]
   ofYFinanceQuotes             YFinanceQuote[]
 
-  @@unique([exchangeId, name])
+  @@unique([exchangeId, symbol])
   @@map("instrument")
   @@schema("public")
 }
