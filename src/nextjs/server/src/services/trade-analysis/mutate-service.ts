@@ -50,6 +50,13 @@ export class TradeAnalysisMutateService {
     // Debug
     const fnName = `${this.clName}.getPrompt()`
 
+    // Validate
+    if (pass === 2 &&
+        instrumentContextMap.size === 0) {
+
+      throw new CustomError(`${fnName}: pass 2 expects instruments as input`)
+    }
+
     // Start the prompt
     var prompt =
           `## Instructions\n` +
