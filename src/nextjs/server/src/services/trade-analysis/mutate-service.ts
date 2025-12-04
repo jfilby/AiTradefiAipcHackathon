@@ -57,6 +57,8 @@ export class TradeAnalysisMutateService {
           `  ${type} as shown in the example section.\n` +
           `- The instruments in your output must be currently listed on ` +
           `  their exchange. Don't create fictional symbols.\n` +
+          `- The "Analysis thesis" section specifies the requirements per ` +
+          `  instrument.\n` +
           `- Note that today is: ${tradeAnalysesGroup.day.toISOString()}\n`
 
     // No thesis until pass 2
@@ -199,11 +201,18 @@ export class TradeAnalysisMutateService {
       }
 
       // Enrich with Y! Finance data
-      const found = await
-              yFinanceMutateService.run(
-                prisma,
-                exchange,
-                instrument)
+      var found = false
+
+      try {
+        found = await
+          yFinanceMutateService.run(
+            prisma,
+            exchange,
+            instrument)
+      } catch(e) {
+        console.warn(`${fnName}: failed to run Y! Finance enrichment..`)
+        continue
+      }
 
       // Not found?
       if (found === false) {
