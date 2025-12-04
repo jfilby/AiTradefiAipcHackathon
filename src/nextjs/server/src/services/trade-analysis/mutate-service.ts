@@ -40,6 +40,7 @@ export class TradeAnalysisMutateService {
   // Code
   getPrompt(
     pass: number,
+    tradeAnalysesGroup: TradeAnalysesGroup,
     type: string,
     analysisPrompt: string,
     exchangeNames: string[],
@@ -55,14 +56,15 @@ export class TradeAnalysisMutateService {
           `- Generate analysis results, in JSON, for 10 instruments of type ` +
           `  ${type} as shown in the example section.\n` +
           `- The instruments in your output must be currently listed on ` +
-          `  their exchange. Don't create fictional symbols.\n`
+          `  their exchange. Don't create fictional symbols.\n` +
+          `- Note that today is: ${tradeAnalysesGroup.day.toISOString()}\n`
 
     // No thesis until pass 2
     if (pass === 2) {
 
       prompt +=
-        `- Don't refer to the analysis thesis or its requirements when ` +
-        `  writing your thesis.\n`
+        `- Don't refer to the given analysis thesis or its requirements ` +
+        `  when writing your theses.\n`
     }
 
     // Continue prompt
@@ -518,6 +520,7 @@ export class TradeAnalysisMutateService {
     const prompt =
             this.getPrompt(
               pass,
+              tradeAnalysesGroup,
               analysis.instrumentType,
               analysis.prompt,
               exchangeNames,
