@@ -34,8 +34,8 @@ export default function LatestResearchPage({
 
           <Typography
             style={{ marginBottom: '0.5em' }}
-            variant='h4'>
-            Stock research
+            variant='h3'>
+            Latest stock research
           </Typography>
 
           <ListTradeAnalysesGroups

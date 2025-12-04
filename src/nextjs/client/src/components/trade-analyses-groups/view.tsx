@@ -38,11 +38,20 @@ export default function ViewTradeAnalysesGroup({
       <div style={{ marginBottom: '2em' }}>
         <div style={{ display: 'block', marginBottom: '1em' }}>
 
-          <div style={{ marginBottom: '1em' }}>
+          <div style={{ background: '#ddffdd', marginBottom: '2em', padding: '0.5em' }}>
             <Typography
               style={{ display: 'inline-block' }}
               variant='h5'>
-              {(new Date(parseInt(tradeAnalysesGroup.day))).toDateString()}
+              {tradeAnalysesGroup.analysis.name}
+            </Typography>
+
+            <Typography
+              style={{ display: 'inline-block', float: 'right', marginTop: '0.5em' }}
+              variant='body2'>
+
+              <span>
+                {(new Date(parseInt(tradeAnalysesGroup.day))).toDateString()}
+              </span>
             </Typography>
           </div>
 
@@ -54,10 +63,6 @@ export default function ViewTradeAnalysesGroup({
           </div>
         </div>
       </div>
-
-      <Divider
-        variant='fullWidth'
-        style={{ marginBottom: '1em' }} />
     </div>
   )
 }
