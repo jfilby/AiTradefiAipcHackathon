@@ -5,12 +5,14 @@ import { ConsoleService } from '@/serene-core-server/services/console/service'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { AnalysisModel } from '@/models/trade-analysis/analysis-model'
 import { ServerOnlyTypes } from '@/types/server-only-types'
+import { SetupAnalysesTechService } from './setup-analyses-tech-service'
 
 // Models
 const analysisModel = new AnalysisModel()
 
 // Services
 const consoleService = new ConsoleService()
+const setupAnalysesTechService = new SetupAnalysesTechService()
 
 // Class
 export class SetupAnalysesService {
@@ -56,6 +58,7 @@ export class SetupAnalysesService {
           prisma: PrismaClient,
           definitions: any[]) {
 
+    // Load definitions
     for (const definition of definitions) {
 
       var type: string | undefined = undefined
@@ -67,6 +70,7 @@ export class SetupAnalysesService {
         type = ServerOnlyTypes.evaluatorType
       }
 
+      // Upsert Analysis
       const analysis = await
               analysisModel.upsert(
                 prisma,
@@ -79,6 +83,11 @@ export class SetupAnalysesService {
                 definition.version,
                 definition.description,
                 definition.prompt.join('\n'))
+
+      // Setup analysis tech
+      await setupAnalysesTechService.setupAnalysis(
+              prisma,
+              analysis)
     }
   }
 

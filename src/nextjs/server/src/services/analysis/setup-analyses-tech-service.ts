@@ -1,4 +1,4 @@
-import { PrismaClient, Tech } from '@prisma/client'
+import { Analysis, PrismaClient, Tech } from '@prisma/client'
 import { AiTechDefs } from '@/serene-ai-server/types/tech-defs'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { AnalysisModel } from '@/models/trade-analysis/analysis-model'
@@ -37,19 +37,11 @@ export class SetupAnalysesTechService {
   ]
 
   // Code
-  async setup(prisma: PrismaClient) {
+  async getAnalysisModelsInfo(prisma: PrismaClient) {
 
     // Debug
-    const fnName = `${this.clName}.setup()`
+    const fnName = `${this.clName}.getAnalysisModelsInfo()`
 
-    // Iterate Analyses
-    const analyses = await
-            analysisModel.filter(
-              prisma,
-              undefined,  // type
-              BaseDataTypes.activeStatus)
-
-    // Get tech for the models to be used
     var analysisModelsInfo: AnalysisModelInfo[] = []
 
     for (const analysisModelSpec of this.analysisModelSpecs) {
@@ -70,6 +62,24 @@ export class SetupAnalysesTechService {
       })
     }
 
+    return analysisModelsInfo
+  }
+
+  async setup(prisma: PrismaClient) {
+
+    // Debug
+    const fnName = `${this.clName}.setup()`
+
+    // Iterate Analyses
+    const analyses = await
+            analysisModel.filter(
+              prisma,
+              undefined,  // type
+              BaseDataTypes.activeStatus)
+
+    // Get tech for the models to be used
+    const analysisModelsInfo = await this.getAnalysisModelsInfo(prisma)
+
     // Get/create TechAnalysis records
     console.log(`${fnName}: ${analyses.length} analyses..`)
 
@@ -87,6 +97,31 @@ export class SetupAnalysesTechService {
                   BaseDataTypes.activeStatus,
                   analysisModelInfo.analysisModelSpec.leading)
       }
+    }
+  }
+
+  async setupAnalysis(
+          prisma: PrismaClient,
+          analysis: Analysis) {
+
+    // Debug
+    const fnName = `${this.clName}.setup()`
+
+    // Get tech for the models to be used
+    const analysisModelsInfo = await this.getAnalysisModelsInfo(prisma)
+
+    // Get/create TechAnalysis records
+    for (const analysisModelInfo of analysisModelsInfo) {
+
+      // Upsert
+      const analysisTech = await
+              analysisTechModel.upsert(
+                prisma,
+                undefined,  // id
+                analysis.id,
+                analysisModelInfo.tech.id,
+                BaseDataTypes.activeStatus,
+                analysisModelInfo.analysisModelSpec.leading)
     }
   }
 }
