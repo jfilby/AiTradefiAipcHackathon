@@ -50,6 +50,11 @@ export class YFinanceMutateService {
             exchange: Exchange,
             instrument: Instrument) {
 
+    // Debug
+    const fnName = `${this.clName}.run()`
+
+    console.log(`${fnName}: starting..`)
+
     // Get ticker?
     var ticker: string | undefined = undefined
 
@@ -61,8 +66,15 @@ export class YFinanceMutateService {
           instrument,
           exchange)
 
+      // Debug
+      console.log(`${fnName}: ticker: ` + JSON.stringify(ticker))
+
+      // Validate
       if (ticker == null ||
           ticker === '') {
+
+        // Debug
+        console.warn(`${fnName}: ticker not valid..`)
 
         // Ticker not found
         instrument = await
@@ -77,6 +89,20 @@ export class YFinanceMutateService {
             null)       // yahooFinanceTicker
 
         return false
+
+      } else if (instrument.yahooFinanceTicker !== ticker) {
+
+        // Set ticker
+        instrument = await
+          instrumentModel.update(
+            prisma,
+            instrument.id,
+            undefined,  // exchangeId
+            undefined,  // status
+            undefined,  // symbol
+            undefined,  // type
+            undefined,  // name
+            ticker)
       }
     }
 
@@ -85,6 +111,9 @@ export class YFinanceMutateService {
             prisma,
             instrument.id)
 
+    // Debug
+    console.log(`${fnName}: instrument: ` + JSON.stringify(instrument))
+
     // Save quote
     const found = await
               this.saveQuote(
@@ -92,6 +121,9 @@ export class YFinanceMutateService {
               instrument)
 
     if (found === false) {
+
+      // Debug
+      console.warn(`${fnName}: couldn't save quote for ${ticker}`)
 
       // Not found, set to inactive
       instrument = await

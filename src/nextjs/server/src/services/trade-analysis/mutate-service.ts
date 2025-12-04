@@ -86,7 +86,7 @@ export class TradeAnalysisMutateService {
 
       prompt +=
         `## Instruments\n` +
-        `Only for the instruments in this section.\n` +
+        `Your output must only be for the instruments in this section.\n` +
         `\n`
 
       for (const instrument of instrumentContextMap.keys()) {
@@ -210,9 +210,12 @@ export class TradeAnalysisMutateService {
             prisma,
             exchange,
             instrument)
-      } catch(e) {
+      } catch(e: any) {
         console.warn(`${fnName}: failed to run Y! Finance enrichment..`)
-        continue
+        console.error(`${fnName}: error message:`, e?.message)
+        console.error(`${fnName}: error stack:`, e?.stack)
+        console.error(`${fnName}: raw error:`, e)
+        throw `Failed..`
       }
 
       // Not found?
@@ -225,7 +228,7 @@ export class TradeAnalysisMutateService {
             instrument.id,
             undefined,  // exchangeId,
             BaseDataTypes.inactiveStatus,
-            undefined,  // smybol
+            undefined,  // symbol
             undefined,  // type
             undefined,  // name
             undefined)  // yahooFinanceTicker
@@ -244,7 +247,7 @@ export class TradeAnalysisMutateService {
             instrument.id,
             undefined,  // exchangeId,
             BaseDataTypes.activeStatus,
-            undefined,  // smybol
+            undefined,  // symbol
             undefined,  // type
             undefined,  // name
             undefined)  // yahooFinanceTicker
@@ -487,6 +490,16 @@ export class TradeAnalysisMutateService {
     // Validate
     if (pass < 1 || pass > 2) {
       throw new CustomError(`${fnName}: invalid pass: ${pass}`)
+    }
+
+    // Validate
+    if (pass === 2 &&
+        instrumentContextMap.size === 0) {
+
+      console.warn(`${fnName}: pass 2 requires at least one ` +
+                   `instrumentContextMap entry (safely aborting run..)`)
+
+      return new Map<string, YFinanceInstrumentContext | undefined>()
     }
 
     // Instrument type
