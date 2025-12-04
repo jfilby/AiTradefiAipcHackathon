@@ -151,6 +151,9 @@ export class TradeAnalysisMutateService {
           instrumentType: string,
           queryResults: any): Promise<InstrumentContextMap> {
 
+    // Debug
+    const fnName = `${this.clName}.processQueryResultsPass1()`
+
     // Process entries
     const instrumentsMap = new Map<string, YFinanceInstrumentContext | undefined>()
 
@@ -162,6 +165,10 @@ export class TradeAnalysisMutateService {
                 prisma,
                 entry.exchange)
 
+      if (exchange == null) {
+        throw new CustomError(`${fnName}: exchange == null`)
+      }
+
       // Get Instrument
       var instrument = await
             instrumentModel.getByUniqueKey(
@@ -170,6 +177,10 @@ export class TradeAnalysisMutateService {
               entry.instrument)
 
       if (instrument == null) {
+
+        // Debug
+        // console.log(`${fnName}: creating Instrument for exchangeId: ` +
+        //             `${exchange.id} symbol: ${entry.instrument}`)
 
         // Create (but not yet active)
         instrument = await
