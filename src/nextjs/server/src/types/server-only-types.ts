@@ -54,6 +54,7 @@ export class ServerOnlyTypes {
   static screenerType = 'S'
 
   // Screener runs
+  static instrumentsPerScreenerRun = 5  // 5 (testing), 10 (production)
   static maxScreenerRuns = 3
 
   // Default min score

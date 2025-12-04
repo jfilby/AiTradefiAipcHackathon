@@ -53,7 +53,8 @@ export class TradeAnalysisMutateService {
     // Start the prompt
     var prompt =
           `## Instructions\n` +
-          `- Generate analysis results, in JSON, for 10 instruments of type ` +
+          `- Generate analysis results, in JSON, for ` +
+          `${ServerOnlyTypes.instrumentsPerScreenerRun} instruments of type ` +
           `  ${type} as shown in the example section.\n` +
           `- The instruments in your output must be currently listed on ` +
           `  their exchange. Don't create fictional symbols.\n` +
@@ -404,7 +405,7 @@ export class TradeAnalysisMutateService {
           analysis.id,
           day,
           ServerOnlyTypes.tradeAnalysisEngineVersion,
-          BaseDataTypes.activeStatus,
+          BaseDataTypes.newStatus,
           analysis.defaultMinScore,
           0)          // screenerRuns
 
@@ -587,7 +588,7 @@ export class TradeAnalysisMutateService {
         undefined,  // analysisId
         undefined,  // day
         undefined,  // engineVersion
-        undefined,  // status
+        BaseDataTypes.activeStatus,  // Set to active status from the first run
         undefined,  // minScore
         tradeAnalysesGroup.screenerRuns + 1)
 
