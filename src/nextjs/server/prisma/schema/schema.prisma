@@ -300,7 +300,7 @@ model TradeAnalysesGroup {
   id                           String               @id @default(cuid())
   analysisId                   String               @map("analysis_id")
   analysis                     Analysis             @relation(fields: [analysisId], references: [id])
-  day                          DateTime
+  day                          DateTime             @db.Date
   status                       String               @db.Char(1)
   engineVersion                String               @map("engine_version")
   created                      DateTime             @default(now())

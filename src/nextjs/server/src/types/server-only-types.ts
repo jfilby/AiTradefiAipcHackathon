@@ -1,4 +1,5 @@
 import { BaseDataTypes } from '@/shared/types/base-data-types'
+import { Exchange } from '@prisma/client'
 
 export class ServerOnlyTypes {
 

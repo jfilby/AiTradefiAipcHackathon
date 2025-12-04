@@ -66,7 +66,8 @@ export class TradeAnalysisModel {
           instrumentId: string | undefined = undefined,
           techId: string | undefined = undefined,
           status: string | undefined = undefined,
-          tradeType: string | undefined = undefined) {
+          tradeType: string | undefined = undefined,
+          includeInstrument: boolean = false) {
 
     // Debug
     const fnName = `${this.clName}.filter()`
@@ -74,6 +75,13 @@ export class TradeAnalysisModel {
     // Query
     try {
       return await prisma.tradeAnalysis.findMany({
+        include: {
+          instrument: includeInstrument ? {
+            include: {
+              exchange: true
+            }
+          } : undefined
+        },
         where: {
           tradeAnalysesGroupId: tradeAnalysesGroupId,
           instrumentId: instrumentId,

@@ -1,4 +1,4 @@
-import { Analysis, Exchange, PrismaClient, Tech } from '@prisma/client'
+import { Analysis, Exchange, PrismaClient, Tech, TradeAnalysesGroup } from '@prisma/client'
 import { CustomError } from '@/serene-core-server/types/errors'
 import { TechModel } from '@/serene-core-server/models/tech/tech-model'
 import { UsersService } from '@/serene-core-server/services/users/service'
@@ -44,7 +44,7 @@ export class TradeAnalysisMutateService {
     analysisPrompt: string,
     exchangeNames: string[],
     instrumentContextMap: InstrumentContextMap,
-    instrumentNamesAlreadyRun: string[]) {
+    instrumentNamesAlreadyKnown: string[]) {
 
     // Debug
     const fnName = `${this.clName}.getPrompt()`
@@ -107,7 +107,7 @@ export class TradeAnalysisMutateService {
     prompt +=
       `## Don't include\n` +
       `Don't include any analysis for these instruments: ` +
-      instrumentNamesAlreadyRun.join(', ') + `\n` +
+      instrumentNamesAlreadyKnown.join(', ') + `\n` +
       `\n` +
       `## Fields\n` +
       `Take note of these fields in the output:\n` +
@@ -148,8 +148,6 @@ export class TradeAnalysisMutateService {
 
   async processQueryResultsPass1(
           prisma: PrismaClient,
-          analysisId: string,
-          techId: string,
           instrumentType: string,
           queryResults: any): Promise<InstrumentContextMap> {
 
@@ -245,22 +243,10 @@ export class TradeAnalysisMutateService {
   async processQueryResultsPass2(
           prisma: PrismaClient,
           analysisId: string,
+          tradeAnalysesGroup: TradeAnalysesGroup,
           techId: string,
           instrumentType: string,
           queryResults: any): Promise<InstrumentContextMap> {
-
-    // Get day
-    const day = new Date()
-
-    // Upsert a TradeAnalysisGroup
-    const tradeAnalysisGroup = await
-            tradeAnalysesGroupModel.upsert(
-              prisma,
-              undefined,  // id
-              analysisId,
-              day,
-              ServerOnlyTypes.tradeAnalysisEngineVersion,
-              BaseDataTypes.activeStatus)
 
     // Process each entry
     var instrumentsMap = new Map<string, YFinanceInstrumentContext | undefined>()
@@ -289,7 +275,7 @@ export class TradeAnalysisMutateService {
       const tradeAnalysis = await
               tradeAnalysisModel.getByUniqueKey(
                 prisma,
-                tradeAnalysisGroup.id,
+                tradeAnalysesGroup.id,
                 instrument.id,
                 techId)
 
@@ -300,7 +286,7 @@ export class TradeAnalysisMutateService {
       // Create TradeAnalysis
       await tradeAnalysisModel.create(
               prisma,
-              tradeAnalysisGroup.id,
+              tradeAnalysesGroup.id,
               instrument.id,
               techId,
               BaseDataTypes.activeStatus,
@@ -355,6 +341,19 @@ export class TradeAnalysisMutateService {
         throw new CustomError(`${fnName}: leadingAnalysisTechs.length === 0`)
       }
 
+      // Get day
+      const day = new Date()
+
+      // Upsert a TradeAnalysisGroup
+      const tradeAnalysesGroup = await
+              tradeAnalysesGroupModel.upsert(
+                prisma,
+                undefined,  // id
+                analysis.id,
+                day,
+                ServerOnlyTypes.tradeAnalysisEngineVersion,
+                BaseDataTypes.activeStatus)
+
       // Get tech
       var tech = await
             techModel.getById(
@@ -372,6 +371,7 @@ export class TradeAnalysisMutateService {
             prisma,
             adminUserProfile.id,
             analysis,
+            tradeAnalysesGroup,
             tech,
             i + 1,   // pass (starts at 1)
             instrumentContextMap)
@@ -403,6 +403,7 @@ export class TradeAnalysisMutateService {
                 prisma,
                 adminUserProfile.id,
                 analysis,
+                tradeAnalysesGroup,
                 tech,
                 2,  // pass 2
                 instrumentContextMap)
@@ -414,6 +415,7 @@ export class TradeAnalysisMutateService {
           prisma: PrismaClient,
           userProfileId: string,
           analysis: Analysis,
+          tradeAnalysesGroup: TradeAnalysesGroup,
           tech: Tech,
           pass: number,
           instrumentContextMap: InstrumentContextMap): Promise<InstrumentContextMap> {
@@ -447,18 +449,21 @@ export class TradeAnalysisMutateService {
               (exchange: Exchange) => exchange.name)
 
     // Don't rerun an existing instrument for an analysis for at least 90 days
-    const instrumentsAlreadyRun = await
-            instrumentModel.getWithRecentTradeAnalysis(
+    const instrumentsAlreadyKnown = await
+            tradeAnalysisModel.filter(
               prisma,
-              ServerOnlyTypes.stockType,
-              analysis.id,
-              90)  // daysAgo
+              tradeAnalysesGroup.id,
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              true)  // includeInstrument
 
-    const instrumentNamesAlreadyRun =
-            instrumentsAlreadyRun.map(
-              (instrumentAlreadyRun) =>
-                `${instrumentAlreadyRun.name}:` +
-                `${instrumentAlreadyRun.exchange.name}`)
+    const instrumentNamesAlreadyKnown =
+            instrumentsAlreadyKnown.map(
+              (instrumentAlreadyKnown: any) =>
+                `${instrumentAlreadyKnown.instrument.name}:` +
+                `${instrumentAlreadyKnown.instrument.exchange.name}`)
 
     // Get the prompt
     const prompt =
@@ -468,7 +473,7 @@ export class TradeAnalysisMutateService {
               analysis.prompt,
               exchangeNames,
               instrumentContextMap,
-              instrumentNamesAlreadyRun)
+              instrumentNamesAlreadyKnown)
 
     // Debug
     // console.log(`${fnName}: prompt: ${prompt}`)
@@ -498,8 +503,6 @@ export class TradeAnalysisMutateService {
       newInstrumentContextMap = await
         this.processQueryResultsPass1(
           prisma,
-          analysis.id,
-          tech.id,
           instrumentType,
           queryResults)
 
@@ -509,6 +512,7 @@ export class TradeAnalysisMutateService {
         this.processQueryResultsPass2(
           prisma,
           analysis.id,
+          tradeAnalysesGroup,
           tech.id,
           instrumentType,
           queryResults)
