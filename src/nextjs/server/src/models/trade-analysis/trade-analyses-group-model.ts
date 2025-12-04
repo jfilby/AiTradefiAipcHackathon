@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-import { BaseDataTypes } from '@/shared/types/base-data-types'
 
 export class TradeAnalysesGroupModel {
 
@@ -13,7 +12,8 @@ export class TradeAnalysesGroupModel {
           day: Date,
           engineVersion: string,
           status: string,
-          minScore: number) {
+          minScore: number,
+          screenerRuns: number) {
 
     // Debug
     const fnName = `${this.clName}.create()`
@@ -26,7 +26,8 @@ export class TradeAnalysesGroupModel {
           day: day,
           engineVersion: engineVersion,
           status: status,
-          minScore: minScore
+          minScore: minScore,
+          screenerRuns: screenerRuns
         }
       })
     } catch(error) {
@@ -213,7 +214,8 @@ export class TradeAnalysesGroupModel {
           day: Date | undefined,
           engineVersion: string | undefined,
           status: string | undefined,
-          minScore: number | undefined) {
+          minScore: number | undefined,
+          screenerRuns: number | undefined) {
 
     // Debug
     const fnName = `${this.clName}.update()`
@@ -226,7 +228,8 @@ export class TradeAnalysesGroupModel {
           day: day,
           engineVersion: engineVersion,
           status: status,
-          minScore: minScore
+          minScore: minScore,
+          screenerRuns: screenerRuns
         },
         where: {
           id: id
@@ -245,7 +248,8 @@ export class TradeAnalysesGroupModel {
           day: Date | undefined,
           engineVersion: string | undefined,
           status: string | undefined,
-          minScore: number | undefined) {
+          minScore: number | undefined,
+          screenerRuns: number | undefined) {
 
     // Debug
     const fnName = `${this.clName}.upsert()`
@@ -295,6 +299,11 @@ export class TradeAnalysesGroupModel {
         throw 'Prisma error'
       }
 
+      if (screenerRuns == null) {
+        console.error(`${fnName}: id is null and minScore is null`)
+        throw 'Prisma error'
+      }
+
       // Create
       return await
                this.create(
@@ -303,7 +312,8 @@ export class TradeAnalysesGroupModel {
                  day,
                  engineVersion,
                  status,
-                 minScore)
+                 minScore,
+                 screenerRuns)
     } else {
 
       // Update
@@ -315,7 +325,8 @@ export class TradeAnalysesGroupModel {
                  day,
                  engineVersion,
                  status,
-                 minScore)
+                 minScore,
+                 screenerRuns)
     }
   }
 }

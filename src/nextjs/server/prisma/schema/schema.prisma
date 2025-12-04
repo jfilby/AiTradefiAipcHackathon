@@ -302,9 +302,10 @@ model TradeAnalysesGroup {
   analysisId                   String               @map("analysis_id")
   analysis                     Analysis             @relation(fields: [analysisId], references: [id])
   day                          DateTime             @db.Date
+  engineVersion                String               @map("engine_version")
   status                       String               @db.Char(1)
   minScore                     Float                @map("min_score")
-  engineVersion                String               @map("engine_version")
+  screenerRuns                 Int                  @map("screener_runs")
   created                      DateTime             @default(now())
 
   ofTradeAnalyses              TradeAnalysis[]

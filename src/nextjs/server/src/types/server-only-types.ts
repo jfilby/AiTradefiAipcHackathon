@@ -53,6 +53,9 @@ export class ServerOnlyTypes {
   static evaluatorType = 'E'
   static screenerType = 'S'
 
+  // Screener runs
+  static maxScreenerRuns = 3
+
   // Default min score
   static defaultMinScore = 0.75
 

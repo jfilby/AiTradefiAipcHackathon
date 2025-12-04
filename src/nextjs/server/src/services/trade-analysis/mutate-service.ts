@@ -343,87 +343,10 @@ export class TradeAnalysisMutateService {
 
     for (const analysis of analyses) {
 
-      // Get leading analysis tech
-      const leadingAnalysisTechs = await
-              analysisTechModel.filter(
-                prisma,
-                analysis.id,
-                undefined,  // techId
-                BaseDataTypes.activeStatus,
-                true)       // isLeaderTech
-
-      if (leadingAnalysisTechs.length === 0) {
-        throw new CustomError(`${fnName}: leadingAnalysisTechs.length === 0`)
-      }
-
-      // Get day
-      const day = new Date()
-
-      // Upsert a TradeAnalysisGroup
-      const tradeAnalysesGroup = await
-              tradeAnalysesGroupModel.upsert(
-                prisma,
-                undefined,  // id
-                analysis.id,
-                day,
-                ServerOnlyTypes.tradeAnalysisEngineVersion,
-                BaseDataTypes.activeStatus,
-                analysis.defaultMinScore)
-
-      // Get tech
-      var tech = await
-            techModel.getById(
+      await this.runAnalysis(
               prisma,
-              leadingAnalysisTechs[0].techId)
-
-      // Run the analysis for the leading techId
-      var instrumentContextMap =
-            new Map<string, YFinanceInstrumentContext | undefined>()
-
-      for (var i = 0; i < 2; i++) {
-
-        instrumentContextMap = await
-          this.runAnalysis(
-            prisma,
-            adminUserProfile.id,
-            analysis,
-            tradeAnalysesGroup,
-            tech,
-            i + 1,   // pass (starts at 1)
-            instrumentContextMap)
-      }
-
-      // Get non-leading analysis tech
-      const nonLeadingAnalysisTechs = await
-              analysisTechModel.filter(
-                prisma,
-                analysis.id,
-                undefined,  // techId
-                BaseDataTypes.activeStatus,
-                false)      // isLeaderTech
-
-      if (leadingAnalysisTechs.length === 0) {
-        throw new CustomError(`${fnName}: leadingAnalysisTechs.length === 0`)
-      }
-
-      // Generate for techs that mirror the leading one
-      for (const nonLeadingAnalysisTech of nonLeadingAnalysisTechs) {
-
-        // Get tech
-        tech = await
-          techModel.getById(
-            prisma,
-            nonLeadingAnalysisTech.techId)
-
-        await this.runAnalysis(
-                prisma,
-                adminUserProfile.id,
-                analysis,
-                tradeAnalysesGroup,
-                tech,
-                2,  // pass 2
-                instrumentContextMap)
-      }
+              adminUserProfile.id,
+              analysis)
     }
 
     // Debug
@@ -433,6 +356,113 @@ export class TradeAnalysisMutateService {
   async runAnalysis(
           prisma: PrismaClient,
           userProfileId: string,
+          analysis: Analysis) {
+
+    // Debug
+    const fnName = `${this.clName}.runAnalysis()`
+
+    // Get leading analysis tech
+    const leadingAnalysisTechs = await
+            analysisTechModel.filter(
+              prisma,
+              analysis.id,
+              undefined,  // techId
+              BaseDataTypes.activeStatus,
+              true)       // isLeaderTech
+
+    if (leadingAnalysisTechs.length === 0) {
+      throw new CustomError(`${fnName}: leadingAnalysisTechs.length === 0`)
+    }
+
+    // Get day
+    const day = new Date()
+
+    // Try to get TradeAnalysisGroup
+    var tradeAnalysesGroup = await
+          tradeAnalysesGroupModel.getByUniqueKey(
+            prisma,
+            analysis.id,
+            day)
+
+    // Create TradeAnalysisGroup if needed
+    if (tradeAnalysesGroup == null) {
+
+      tradeAnalysesGroup = await
+        tradeAnalysesGroupModel.create(
+          prisma,
+          analysis.id,
+          day,
+          ServerOnlyTypes.tradeAnalysisEngineVersion,
+          BaseDataTypes.activeStatus,
+          analysis.defaultMinScore,
+          0)          // screenerRuns
+
+    } else {
+      // Ensure not at max screen runs
+      if (tradeAnalysesGroup.screenerRuns >= ServerOnlyTypes.maxScreenerRuns) {
+        return
+      }
+    }
+
+    // Get tech
+    var tech = await
+          techModel.getById(
+            prisma,
+            leadingAnalysisTechs[0].techId)
+
+    // Run the analysis for the leading techId
+    var instrumentContextMap =
+          new Map<string, YFinanceInstrumentContext | undefined>()
+
+    for (var i = 0; i < 2; i++) {
+
+      instrumentContextMap = await
+        this.runTradeAnalysesGroup(
+          prisma,
+          userProfileId,
+          analysis,
+          tradeAnalysesGroup,
+          tech,
+          i + 1,   // pass (starts at 1)
+          instrumentContextMap)
+    }
+
+    // Get non-leading analysis tech
+    const nonLeadingAnalysisTechs = await
+            analysisTechModel.filter(
+              prisma,
+              analysis.id,
+              undefined,  // techId
+              BaseDataTypes.activeStatus,
+              false)      // isLeaderTech
+
+    if (leadingAnalysisTechs.length === 0) {
+      throw new CustomError(`${fnName}: leadingAnalysisTechs.length === 0`)
+    }
+
+    // Generate for techs that mirror the leading one
+    for (const nonLeadingAnalysisTech of nonLeadingAnalysisTechs) {
+
+      // Get tech
+      tech = await
+        techModel.getById(
+          prisma,
+          nonLeadingAnalysisTech.techId)
+
+      await this.runTradeAnalysesGroup(
+              prisma,
+              userProfileId,
+              analysis,
+              tradeAnalysesGroup,
+              tech,
+              2,  // pass 2
+              instrumentContextMap)
+    }
+  }
+
+  async runTradeAnalysesGroup(
+          prisma: PrismaClient,
+          userProfileId: string,
           analysis: Analysis,
           tradeAnalysesGroup: TradeAnalysesGroup,
           tech: Tech,
@@ -440,7 +470,7 @@ export class TradeAnalysisMutateService {
           instrumentContextMap: InstrumentContextMap): Promise<InstrumentContextMap> {
 
     // Debug
-    const fnName = `${this.clName}.runAnalysis()`
+    const fnName = `${this.clName}.runTradeAnalysesGroup()`
 
     // Validate
     if (pass < 1 || pass > 2) {
@@ -536,6 +566,18 @@ export class TradeAnalysisMutateService {
           instrumentType,
           queryResults)
     }
+
+    // Update screenerRuns
+    tradeAnalysesGroup = await
+      tradeAnalysesGroupModel.update(
+        prisma,
+        tradeAnalysesGroup.id,
+        undefined,  // analysisId
+        undefined,  // day
+        undefined,  // engineVersion
+        undefined,  // status
+        undefined,  // minScore
+        tradeAnalysesGroup.screenerRuns + 1)
 
     // Return
     return newInstrumentContextMap!
