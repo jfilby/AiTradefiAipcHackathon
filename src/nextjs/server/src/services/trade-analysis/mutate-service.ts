@@ -309,6 +309,8 @@ export class TradeAnalysisMutateService {
     // Debug
     const fnName = `${this.clName}.run()`
 
+    console.log(`${fnName}: starting..`)
+
     // Get the admin UserProfile
     const adminUserProfile = await
             usersService.getUserProfileByEmail(
@@ -410,6 +412,9 @@ export class TradeAnalysisMutateService {
                 instrumentContextMap)
       }
     }
+
+    // Debug
+    console.log(`${fnName}: completed`)
   }
 
   async runAnalysis(
