@@ -51,28 +51,19 @@ export class YFinanceMutateService {
             instrument: Instrument) {
 
     // Get ticker?
+    var ticker: string | undefined = undefined
+
     if (instrument.yahooFinanceTicker == null) {
 
       // Try to get the ticker
-      const ticker =
-              yFinanceUtilsService.getTicker(
-                instrument,
-                exchange)
+      ticker =
+        yFinanceUtilsService.getTicker(
+          instrument,
+          exchange)
 
-      if (ticker != null) {
+      if (ticker == null ||
+          ticker === '') {
 
-        // Set ticker
-        instrument = await
-          instrumentModel.update(
-            prisma,
-            instrument.id,
-            undefined,  // exchangeId
-            BaseDataTypes.activeStatus,
-            undefined,  // symbol
-            undefined,  // type
-            undefined,  // name
-            ticker)
-      } else {
         // Ticker not found
         instrument = await
           instrumentModel.update(
@@ -112,11 +103,23 @@ export class YFinanceMutateService {
           undefined,  // symbol
           undefined,  // type
           undefined,  // name
-          null)       // yahooFinanceTicker
+          ticker)
 
       // Return not found
       return false
     }
+
+    // Set ticker and status to active
+    instrument = await
+      instrumentModel.update(
+        prisma,
+        instrument.id,
+        undefined,  // exchangeId
+        BaseDataTypes.activeStatus,
+        undefined,  // symbol
+        undefined,  // type
+        undefined,  // name
+        ticker)
 
     // Save financials
     await this.saveFinancials(

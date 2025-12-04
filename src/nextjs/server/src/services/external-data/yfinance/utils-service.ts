@@ -34,6 +34,6 @@ export class YFinanceUtilsService {
     instrument: Instrument,
     exchange: Exchange) {
 
-    return `${instrument.name}${exchange.yahooFinanceSuffix}`
+    return `${instrument.symbol}${exchange.yahooFinanceSuffix}`
   }
 }
