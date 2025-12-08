@@ -252,6 +252,8 @@ model Analysis {
   version                      String
   description                  String
   prompt                       String
+  created                      DateTime             @default(now())
+  updated                      DateTime             @updatedAt
 
   ofAnalysesTech               AnalysisTech[]
   ofTradeAnalysesGroups        TradeAnalysesGroup[]

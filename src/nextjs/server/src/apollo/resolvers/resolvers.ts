@@ -13,6 +13,7 @@ import { getUserPreferences } from '@/serene-core-server/apollo/resolvers/querie
 import { upsertUserPreference } from '@/serene-core-server/apollo/resolvers/mutations/user-preferences'
 
 // Concept queries imports
+import { getAnalyses, getAnalysisById } from './queries/analyses'
 // import { filterInstances, filterProjectInstances, instanceById } from './queries/instances'
 import { getInstrumentById, getInstruments } from './queries/instruments'
 import { getLatestTradeAnalysesGroups, getTradeAnalysesGroupById, getTradeAnalysisById } from './queries/trade-analyses-group'
@@ -56,6 +57,10 @@ const Query = {
 
   // AiTradefi
   // ---
+
+  // Analyses
+  getAnalysisById,
+  getAnalyses,
 
   // Instances
   // filterInstances,

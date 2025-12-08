@@ -5,7 +5,7 @@ import { ConsoleService } from '@/serene-core-server/services/console/service'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { AnalysisModel } from '@/models/trade-analysis/analysis-model'
 import { ServerOnlyTypes } from '@/types/server-only-types'
-import { SetupAnalysesTechService } from './setup-analyses-tech-service'
+import { SetupAnalysesTechService } from './setup-tech-service'
 
 // Models
 const analysisModel = new AnalysisModel()

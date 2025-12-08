@@ -7,7 +7,7 @@ import { TechProviderMutateService } from '@/serene-core-server/services/tech/te
 import { UsersService } from '@/serene-core-server/services/users/service'
 import { ServerTestTypes } from './types/server-test-types'
 import { FinnHubApiServiceTests } from './services/external-data/finnhub/api-service-tests'
-import { SetupAnalysesService } from './services/analysis/setup-analyses-service'
+import { SetupAnalysesService } from './services/analysis/setup-service'
 import { SetupService } from './services/setup/setup'
 import { TestsService } from './services/tests/tests-service'
 

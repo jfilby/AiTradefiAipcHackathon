@@ -11,7 +11,7 @@ import { DocSourceModel } from '@/models/documents/doc-source-model'
 import { InstrumentModel } from '@/models/instruments/instrument-model'
 import { WindowTypeModel } from '@/models/instruments/window-type-model'
 import { AgentUserService } from '@/services/agents/agent-user-service'
-import { SetupAnalysesTechService } from '../analysis/setup-analyses-tech-service'
+import { SetupAnalysesTechService } from '../analysis/setup-tech-service'
 import { YFinanceUtilsService } from '../external-data/yfinance/utils-service'
 
 // Models

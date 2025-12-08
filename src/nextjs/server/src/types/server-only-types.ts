@@ -39,6 +39,12 @@ export class ServerOnlyTypes {
 
   // Instrument types
   static stockType = 'stock'
+  static cryptoType = 'crypto'
+
+  static allInstrumentTypes = [
+    this.cryptoType,
+    this.stockType
+  ]
 
   // Trading types
   static buyTradeType = 'B'

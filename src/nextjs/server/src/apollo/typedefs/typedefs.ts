@@ -113,7 +113,28 @@ export const typeDefs = `#graphql
 
   type Analysis {
     id: String!
+    type: String!
+    status: String!
+    instrumentType: String!
+    defaultMinScore: Float!
     name: String!
+    version: String!
+    description: String
+    prompt: String
+    created: String!
+    updated: String!
+  }
+
+  type AnalysisResults {
+    status: Boolean!
+    message: String
+    analysis: Analysis
+  }
+
+  type AnalysesResults {
+    status: Boolean!
+    message: String
+    analyses: [Analysis]
   }
 
   type Exchange {
@@ -242,6 +263,16 @@ export const typeDefs = `#graphql
 
     # AiTradefi
     # ---
+
+    # Analyses
+    getAnalysisById(
+      userProfileId: String!,
+      instanceId: String,
+      analysisId: String!): AnalysisResults
+    getAnalyses(
+      userProfileId: String!,
+      instanceId: String,
+      instrumentType: String): AnalysesResults
 
     # Instances
     filterInstances(
