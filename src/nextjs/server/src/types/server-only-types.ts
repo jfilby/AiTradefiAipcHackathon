@@ -37,15 +37,6 @@ export class ServerOnlyTypes {
     this.nyseExchangeName
   ]
 
-  // Instrument types
-  static stockType = 'stock'
-  static cryptoType = 'crypto'
-
-  static allInstrumentTypes = [
-    this.cryptoType,
-    this.stockType
-  ]
-
   // Trading types
   static buyTradeType = 'B'
   static sellTradeType = 'S'
@@ -54,10 +45,6 @@ export class ServerOnlyTypes {
     this.buyTradeType,
     this.sellTradeType
   ]
-
-  // Analysis types
-  static evaluatorType = 'E'
-  static screenerType = 'S'
 
   // Screener runs
   static instrumentsPerScreenerRun = 5  // 5 (testing), 10 (production)

@@ -56,6 +56,7 @@ export class SetupAnalysesService {
 
   async loadJson(
           prisma: PrismaClient,
+          userProfileId: string,
           definitions: any[]) {
 
     // Load definitions
@@ -64,10 +65,10 @@ export class SetupAnalysesService {
       var type: string | undefined = undefined
 
       if (definition.type === 'screener') {
-        type = ServerOnlyTypes.screenerType
+        type = BaseDataTypes.screenerType
 
       } else if (definition.type === 'evaluator') {
-        type = ServerOnlyTypes.evaluatorType
+        type = BaseDataTypes.evaluatorType
       }
 
       // Upsert Analysis
@@ -75,6 +76,7 @@ export class SetupAnalysesService {
               analysisModel.upsert(
                 prisma,
                 undefined,  // id
+                userProfileId,
                 type,
                 BaseDataTypes.activeStatus,
                 definition.instrumentType,
@@ -91,7 +93,9 @@ export class SetupAnalysesService {
     }
   }
 
-  async setup(prisma: PrismaClient) {
+  async setup(
+          prisma: PrismaClient,
+          userProfileId: string) {
 
     // Debug
     const fnName = `${this.clName}.setup()`
@@ -116,6 +120,7 @@ export class SetupAnalysesService {
 
       await this.loadJson(
               prisma,
+              userProfileId,
               json)
     }
   }

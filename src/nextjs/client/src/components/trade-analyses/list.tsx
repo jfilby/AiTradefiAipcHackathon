@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material'
-import ViewTradeAnalysis from './view'
+import TradeAnalysisCard from './card'
 
 interface Props {
   instanceId?: string
@@ -19,7 +19,7 @@ export default function ListTradeAnalyses({
           {tradeAnalyses.length > 0 ?
             <>
               {tradeAnalyses.map(tradeAnalysis => (
-                <ViewTradeAnalysis
+                <TradeAnalysisCard
                   key={tradeAnalysis.id}
                   instanceId={instanceId}
                   tradeAnalysis={tradeAnalysis} />

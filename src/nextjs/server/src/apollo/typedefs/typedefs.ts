@@ -328,6 +328,19 @@ export const typeDefs = `#graphql
     # Serene Core
     # ---
 
+    # Analysis
+    upsertAnalysis(
+      id: String,
+      userProfileId: String!,
+      type: String!,
+      status: String!,
+      instrumentType: String!
+      defaultMinScore: Float!,
+      name: String!,
+      version: String!,
+      description: String!,
+      prompt: String!): StatusAndMessage!
+
     # Users
     createBlankUser: UserProfile!
     createUserByEmail(email: String!): UserProfile!

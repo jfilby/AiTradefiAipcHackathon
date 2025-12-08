@@ -65,7 +65,9 @@ export class SetupAnalysesTechService {
     return analysisModelsInfo
   }
 
-  async setup(prisma: PrismaClient) {
+  async setup(
+          prisma: PrismaClient,
+          userProfileId: string) {
 
     // Debug
     const fnName = `${this.clName}.setup()`
@@ -74,6 +76,7 @@ export class SetupAnalysesTechService {
     const analyses = await
             analysisModel.filter(
               prisma,
+              userProfileId,
               undefined,  // type
               BaseDataTypes.activeStatus)
 

@@ -40,13 +40,13 @@ export default function ViewTradeAnalysesGroup({
 
           <div style={{ background: '#ddffdd', marginBottom: '2em', padding: '0.5em' }}>
             <Typography
-              style={{ display: 'inline-block' }}
+              style={{ display: 'inline-block', width: '80%' }}
               variant='h5'>
               {tradeAnalysesGroup.analysis.name}
             </Typography>
 
             <Typography
-              style={{ display: 'inline-block', float: 'right', marginTop: '0.5em' }}
+              style={{ display: 'inline-block', marginTop: '0.5em', textAlign: 'right', width: '20%' }}
               variant='body2'>
 
               <span>

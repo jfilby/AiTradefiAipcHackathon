@@ -4,7 +4,7 @@ import { loadServerPage } from '@/services/page/load-server-page'
 import Layout from '@/components/layouts/layout'
 import { Typography } from '@mui/material'
 import LoadInstrumentById from '@/components/instruments/load-by-id'
-import ViewInstrument from '@/components/instruments/view'
+import InstrumentCard from '@/components/instruments/card'
 
 interface Props {
   userProfile: any
@@ -38,7 +38,7 @@ export default function InstrumentsPage({
             Stocks
           </Typography>
 
-          <ViewInstrument
+          <InstrumentCard
             instanceId={undefined}
             instrument={instrument} />
         </div>

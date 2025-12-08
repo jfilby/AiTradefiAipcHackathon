@@ -20,6 +20,7 @@ export class AnalysesQueryService {
     const analyses = await
             analysisModel.filter(
               prisma,
+              userProfileId,
               undefined,  // type
               status,
               instrumentType)

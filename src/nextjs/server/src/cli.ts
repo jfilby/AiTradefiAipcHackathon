@@ -62,7 +62,9 @@ import { TestsService } from './services/tests/tests-service'
 
     case loadAnalysesCommand: {
 
-      await setupAnalysesService.setup(prisma)
+      await setupAnalysesService.setup(
+              prisma,
+              adminUserProfile.id)
 
       break
     }

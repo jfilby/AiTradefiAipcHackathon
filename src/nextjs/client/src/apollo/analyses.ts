@@ -57,3 +57,35 @@ export const getAnalysesQuery = gql`
     }
   }
 `
+
+export const upsertAnalysisMutation = gql`
+  mutation upsertAnalysis(
+             $id: String,
+             $userProfileId: String!,
+             $type: String!,
+             $status: String!,
+             $instrumentType: String!
+             $defaultMinScore: Float!,
+             $name: String!,
+             $version: String!,
+             $description: String!,
+             $prompt: String!)
+  {
+    upsertAnalysis(
+      id: $id,
+      userProfileId: $userProfileId,
+      type: $type,
+      status: $status,
+      instrumentType: $instrumentType,
+      defaultMinScore: $defaultMinScore,
+      name: $name,
+      version: $version,
+      description: $description,
+      prompt: $prompt) {
+
+      status
+      message
+    }
+  }
+
+`

@@ -1,18 +1,18 @@
 import { useState } from 'react'
-import { Alert, Divider, Typography } from '@mui/material'
+import { Alert, Divider, Link, Typography } from '@mui/material'
 
 interface Props {
   instanceId?: string
   analysis: any
 }
 
-export default function ViewAnalysis({
+export default function AnalysisCard({
                           instanceId,
                           analysis
                         }: Props) {
 
   // Consts
-  const pathsUrl = `/i/${instanceId}/analyses/${analysis.id}`
+  const viewUrl = `/i/analysis/${analysis.id}`
 
   // State
   const [alertSeverity, setAlertSeverity] = useState<any>('')
@@ -34,28 +34,28 @@ export default function ViewAnalysis({
 
       {/*<p>analysis: {JSON.stringify(analysis)}</p>*/}
 
-      <div style={{ marginBottom: '2em' }}>
+      <div
+        onClick={(e) => window.location.href = viewUrl}
+        style={{ marginBottom: '2em' }}>
+
         <div style={{ display: 'block', marginBottom: '1em' }}>
 
-          <div style={{ background: '#ddffdd', marginBottom: '2em', padding: '0.5em' }}>
+          <Link href={viewUrl}>
             <Typography
-              style={{ display: 'inline-block' }}
+              style={{ marginBottom: '0.5em' }}
               variant='h5'>
               {analysis.name}
             </Typography>
+          </Link>
 
-            <Typography
-              style={{ display: 'inline-block', float: 'right', marginTop: '0.5em' }}
-              variant='body2'>
-
-              <span>
-                {(new Date(parseInt(analysis.updated))).toDateString()}
-              </span>
-            </Typography>
-          </div>
+          <Typography variant='body1'>
+            {analysis.description}
+          </Typography>
 
         </div>
       </div>
+
+      <Divider variant='fullWidth' />
     </div>
   )
 }

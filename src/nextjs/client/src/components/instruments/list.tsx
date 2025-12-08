@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material'
-import ViewInstrument from './view'
+import InstrumentCard from './card'
 
 interface Props {
   instanceId?: string
@@ -19,7 +19,7 @@ export default function ListInstruments({
           {instruments.length > 0 ?
             <>
               {instruments.map(instrument => (
-                <ViewInstrument
+                <InstrumentCard
                   key={instrument.id}
                   instanceId={instanceId}
                   instrument={instrument} />

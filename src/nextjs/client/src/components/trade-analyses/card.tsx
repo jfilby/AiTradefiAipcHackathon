@@ -6,7 +6,7 @@ interface Props {
   tradeAnalysis: any
 }
 
-export default function ViewTradeAnalysis({
+export default function TradeAnalysisCard({
                           instanceId,
                           tradeAnalysis
                         }: Props) {

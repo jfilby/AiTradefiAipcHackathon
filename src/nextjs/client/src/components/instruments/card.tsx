@@ -6,7 +6,7 @@ interface Props {
   instrument: any
 }
 
-export default function ViewInstrument({
+export default function InstrumentCard({
                           instanceId,
                           instrument
                         }: Props) {

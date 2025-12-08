@@ -44,4 +44,28 @@ export class BaseDataTypes {
       agentRole: this.aiTradefiAgentRole
     }
   ]
+
+  // Instrument types
+  static stocksType = 'stocks'
+  static cryptoType = 'crypto'
+
+  static allInstrumentTypes = [
+    // this.cryptoType,
+    this.stocksType
+  ]
+
+  static instrumentTypesMap = {
+    [this.stocksType]: 'Stocks'
+  }
+
+  static instrumentTypesArray = [
+    {
+      value: this.stocksType,
+      name: 'Stocks'
+    }
+  ]
+
+  // Analysis types
+  static evaluatorType = 'E'
+  static screenerType = 'S'
 }

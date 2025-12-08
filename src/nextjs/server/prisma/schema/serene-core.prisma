@@ -91,6 +91,8 @@ model UserProfile {
   ofBatchJobs                 BatchJob[]
   ofUserAccounts              UserAccount[]
 
+  ofAnalyses                  Analysis[]
+
   @@map("user_profile")
   @@schema("public")
 }

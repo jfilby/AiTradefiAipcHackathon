@@ -4,7 +4,7 @@ import { loadServerPage } from '@/services/page/load-server-page'
 import Layout from '@/components/layouts/layout'
 import { Typography } from '@mui/material'
 import LoadTradeAnalysisById from '@/components/trade-analyses/load-by-id'
-import ViewTradeAnalysis from '@/components/trade-analyses/view'
+import TradeAnalysisCard from '@/components/trade-analyses/card'
 
 interface Props {
   userProfile: any
@@ -38,7 +38,7 @@ export default function TradeAnalysisPage({
             Stock research
           </Typography>
 
-          <ViewTradeAnalysis
+          <TradeAnalysisCard
             instanceId={undefined}
             tradeAnalysis={tradeAnalysis} />
         </div>
