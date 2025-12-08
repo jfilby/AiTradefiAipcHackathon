@@ -33,7 +33,7 @@ export default function LoadAnalysesByFilter({
     // Debug
     const fnName = `getAnalyses()`
 
-    console.log(`${fnName}: userProfileId: ${userProfileId}`)
+    // console.log(`${fnName}: userProfileId: ${userProfileId}`)
 
     // Query
     const { data } = await
