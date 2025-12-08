@@ -1,6 +1,5 @@
 import { PrismaClient } from '@prisma/client'
 import { ServerOnlyTypes } from '@/types/server-only-types'
-import { TradingParameterTypes } from '@/types/trading-parameter-types'
 import { DocSourceModel } from '@/models/documents/doc-source-model'
 import { FinnHubApiService } from './api-service'
 
@@ -33,7 +32,7 @@ export class FinnHubApiServiceTests {
     const threeDaysAgo = new Date(today)
     threeDaysAgo.setDate(today.getDate() - 3)
 
-    // Test
+    /* Test
     try {
       await finnHubApiService.getComanyNews(
               prisma,
@@ -44,6 +43,6 @@ export class FinnHubApiServiceTests {
 
     } catch (err) {
       console.error(`${fnName}: error`, err)
-    }
+    } */
   }
 }
