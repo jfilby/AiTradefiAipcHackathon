@@ -81,7 +81,7 @@ export default function LaunchedDetails({}: Props) {
   // Render
   return (
     <>
-      <Typography
+      {/* <Typography
         style={{ display: 'inline' }}
         variant='body1'>
         Join the&nbsp;
@@ -114,24 +114,36 @@ export default function LaunchedDetails({}: Props) {
         &nbsp;to learn more about the platform.
       </Typography>
 
-      <div style={{ marginBottom: '5em' }} />
+      <div style={{ marginBottom: '5em' }} /> */}
 
       <h1>AI stock research</h1>
 
       <Typography
         style={{ marginBottom: '1em' }}
         variant='body1'>
-        Proven research methodologies backed by the latest AI.
+        Research stocks with AI.
       </Typography>
-
-      <div style={{ marginBottom: '5em' }} />
-
-      <h1>One subscription</h1>
 
       <Typography
         style={{ marginBottom: '1em' }}
         variant='body1'>
-        All you need to make better decisions when trading stocks.
+        Get AI generated audio and video reports.
+      </Typography>
+
+      <div style={{ marginBottom: '5em' }} />
+
+      <h1>Powered by Google and ElevenLabs</h1>
+
+      <Typography
+        style={{ marginBottom: '1em' }}
+        variant='body1'>
+        Audio and video by ElevenLabs.
+      </Typography>
+
+      <Typography
+        style={{ marginBottom: '1em' }}
+        variant='body1'>
+        AI by Google Gemini, hosted on GCP.
       </Typography>
 
       <div style={{ marginBottom: '5em' }} />

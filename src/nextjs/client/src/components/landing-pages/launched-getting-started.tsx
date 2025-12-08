@@ -15,7 +15,7 @@ export default function GettingStartedDetails({
   return (
     <>
       <div style={{ marginBottom: '2em' }}/>
-      <h1>Get started</h1>
+      <h1>Save your work by signing-up</h1>
 
       <div style={{ marginBottom: '2em' }}>
         {authSession == null ?
@@ -46,15 +46,15 @@ export default function GettingStartedDetails({
         :
           <></>
         }
-        <Button
+        {/* <Button
           style={{ marginLeft: '1em' }}
           onClick={(e: any) => window.location.href = `/account/subscription`}
           variant='contained'>
           Pricing
-        </Button>
+        </Button> */}
       </div>
 
-      {authSession == null ?
+      {/* {authSession == null ?
         <Typography
           style={{ marginBottom: '1em' }}
           variant='body1'>
@@ -62,7 +62,7 @@ export default function GettingStartedDetails({
         </Typography>
       :
         <></>
-      }
+      } */}
     </>
   )
 }
