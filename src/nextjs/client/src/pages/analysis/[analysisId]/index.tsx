@@ -5,16 +5,19 @@ import Layout from '@/components/layouts/layout'
 import { Typography } from '@mui/material'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import EditAnalysis from '@/components/analyses/edit'
+import LoadAnalysisById from '@/components/analyses/load-by-id'
 import SaveAnalysis from '@/components/analyses/save'
 
 interface Props {
   userProfile: any
   instance: any
+  analysisId: string
 }
 
-export default function CreateAnalysesPage({
+export default function EditAnalysesPage({
                           userProfile,
-                          instance
+                          instance,
+                          analysisId
                         }: Props) {
 
   // State
@@ -34,41 +37,52 @@ export default function CreateAnalysesPage({
   return (
     <>
       <Head>
-        <title>{process.env.NEXT_PUBLIC_APP_NAME} - Create analysis</title>
+        <title>{process.env.NEXT_PUBLIC_APP_NAME} - Edit analysis</title>
       </Head>
 
       <Layout userProfile={userProfile}>
 
         <div style={{ textAlign: 'left', marginBottom: '2em' }}>
 
-          {/* <p>userProfileId: {userProfile.id}</p> */}
+          {/* <p>userProfileId: {userProfile.id}</p>
+          <p>analysis: {JSON.stringify(analysis)}</p> */}
 
           <div style={{ width: '80%' }}>
             <Typography
               style={{ marginBottom: '0.5em' }}
               variant='h4'>
-              Create Analysis
+              Edit Analysis
             </Typography>
           </div>
 
-          <EditAnalysis
-            userProfileId={userProfile.id}
-            instanceId={undefined}
-            alertSeverity={alertSeverity}
-            setAlertSeverity={setAlertSeverity}
-            message={message}
-            setMessage={setMessage}
-            analysis={analysis}
-            setAnalysis={setAnalysis}
-            setLoadAction={undefined}
-            setSaveAction={setSaveAction} />
+          {analysis != null ?
+            <EditAnalysis
+              userProfileId={userProfile.id}
+              instanceId={undefined}
+              alertSeverity={alertSeverity}
+              setAlertSeverity={setAlertSeverity}
+              message={message}
+              setMessage={setMessage}
+              analysis={analysis}
+              setAnalysis={setAnalysis}
+              setLoadAction={undefined}
+              setSaveAction={setSaveAction} />
+          :
+            <></>
+          }
         </div>
+
+        <LoadAnalysisById
+          userProfileId={userProfile.id}
+          instanceId={undefined}
+          analysisId={analysisId}
+          setAnalysis={setAnalysis} />
 
         <SaveAnalysis
           userProfileId={userProfile.id}
           instanceId={undefined}
           analysis={analysis}
-          isAdd={true}
+          isAdd={false}
           setAlertSeverity={setAlertSeverity}
           setMessage={setMessage}
           saveAction={saveAction}

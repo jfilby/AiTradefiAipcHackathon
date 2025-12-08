@@ -27,7 +27,7 @@ export default function SaveAnalysis({
                         }: Props) {
 
   // Consts
-  const indexUrl = `/i/analyses`
+  const indexUrl = `/analyses`
 
   // GraphQL
   const [sendUpsertAnalysisMutation] =
@@ -80,9 +80,7 @@ export default function SaveAnalysis({
     if (results.status === true) {
       // setEditMode(false)
 
-      if (isAdd === true) {
-        window.location.href = indexUrl
-      }
+      window.location.href = indexUrl
     }
   }
 

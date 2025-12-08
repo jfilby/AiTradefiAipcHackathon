@@ -12,7 +12,7 @@ export default function AnalysisCard({
                         }: Props) {
 
   // Consts
-  const viewUrl = `/i/analysis/${analysis.id}`
+  const viewUrl = `/analysis/${analysis.id}`
 
   // State
   const [alertSeverity, setAlertSeverity] = useState<any>('')
