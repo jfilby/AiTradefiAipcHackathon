@@ -281,6 +281,25 @@ model AnalysisTech {
   @@schema("public")
 }
 
+model GenerationsSettings {
+  id                           String               @id @default(cuid())
+  userProfileId                String               @map("user_profile_id")
+  userProfile                  UserProfile          @relation(fields: [userProfileId], references: [id])
+  status                       String               @db.Char(1)
+  sharedPublicly               Boolean
+  name                         String
+  slideshowSettings            Json?                @map("slideshow_settings") @db.JsonB
+  videoSettings                Json?                @map("video_settings") @db.JsonB
+  created                      DateTime             @default(now())
+  updated                      DateTime             @updatedAt
+
+  ofAnalyses                   Analysis[]
+
+  @@unique([userProfileId, name])
+  @@map("generations_settings")
+  @@schema("public")
+}
+
 model TradeAnalysis {
   id                           String               @id @default(cuid())
   tradeAnalysesGroupId         String               @map("trade_analyses_group_id")
@@ -300,25 +319,6 @@ model TradeAnalysis {
 
   @@unique([tradeAnalysesGroupId, instrumentId, techId])
   @@map("trade_analysis")
-  @@schema("public")
-}
-
-model GenerationsSettings {
-  id                           String               @id @default(cuid())
-  userProfileId                String               @map("user_profile_id")
-  userProfile                  UserProfile          @relation(fields: [userProfileId], references: [id])
-  status                       String               @db.Char(1)
-  sharedPublicly               Boolean
-  name                         String
-  slideshowSettings            Json?                @map("slideshow_settings") @db.JsonB
-  videoSettings                Json?                @map("video_settings") @db.JsonB
-  created                      DateTime             @default(now())
-  updated                      DateTime             @updatedAt
-
-  ofAnalyses                   Analysis[]
-
-  @@unique([userProfileId, name])
-  @@map("generations_settings")
   @@schema("public")
 }
 
