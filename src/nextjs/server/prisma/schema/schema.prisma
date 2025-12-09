@@ -315,6 +315,7 @@ model TradeAnalysis {
   created                      DateTime             @default(now())
   updated                      DateTime             @updatedAt
 
+  ofSlideshows                 Slideshow[]
   ofTrades                     Trade[]
 
   @@unique([tradeAnalysesGroupId, instrumentId, techId])
@@ -407,5 +408,43 @@ model YFinanceQuote {
   updated                      DateTime             @updatedAt
 
   @@map("yfinance_quote")
+  @@schema("public")
+}
+
+// AiTradefi: Slideshows
+
+model Slide {
+  // The slideshowId/index, with a separate slideNo field, allows slides to be
+  // set to delete pending (status).
+  id                           String               @id @default(cuid())
+  slideshowId                  String               @map("slideshow_id")
+  slideshow                    Slideshow            @relation(fields: [slideshowId], references: [id])
+  index                        Int
+  slideNo                      Int                  @map("slide_no")
+  status                       String               @db.Char(1)
+  type                         String               @db.Char(3) // E.g. INT (intro), REQ (requirements), FIN (financials), OUT (outro)
+  title                        String
+  text                         String?
+  audioPath                    String?              @map("audio_path")
+  imagePath                    String?              @map("image_path")
+  created                      DateTime             @default(now())
+  updated                      DateTime             @updatedAt
+
+  @@unique([slideshowId, index])
+  @@map("slide")
+  @@schema("public")
+}
+
+model Slideshow {
+  id                           String               @id @default(cuid())
+  tradeAnalysisId              String               @map("trade_analysis_id") @unique
+  tradeAnalysis                TradeAnalysis        @relation(fields: [tradeAnalysisId], references: [id])
+  status                       String               @db.Char(1)
+  created                      DateTime             @default(now())
+  updated                      DateTime             @updatedAt
+
+  ofSlides                     Slide[]
+
+  @@map("slideshow")
   @@schema("public")
 }
