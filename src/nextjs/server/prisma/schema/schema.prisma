@@ -310,7 +310,7 @@ model GenerationsSettings {
   status                       String               @db.Char(1)
   sharedPublicly               Boolean
   name                         String
-  slideShowSettings            Json?                @map("slideshow_settings") @db.JsonB
+  slideshowSettings            Json?                @map("slideshow_settings") @db.JsonB
   videoSettings                Json?                @map("video_settings") @db.JsonB
   created                      DateTime             @default(now())
   updated                      DateTime             @updatedAt

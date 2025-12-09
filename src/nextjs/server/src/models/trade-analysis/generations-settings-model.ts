@@ -12,7 +12,7 @@ export class GenerationsSettingsModel {
           status: string,
           sharedPublicly: boolean,
           name: string,
-          slideShowSettings: any,
+          slideshowSettings: any,
           videoSettings: any) {
 
     // Debug
@@ -28,7 +28,7 @@ export class GenerationsSettingsModel {
           status: status,
           sharedPublicly: sharedPublicly,
           name: name,
-          slideShowSettings: slideShowSettings,
+          slideshowSettings: slideshowSettings,
           videoSettings: videoSettings
         }
       })
@@ -200,7 +200,7 @@ export class GenerationsSettingsModel {
           status: string | undefined,
           sharedPublicly: boolean | undefined,
           name: string | undefined,
-          slideShowSettings: any,
+          slideshowSettings: any,
           videoSettings: any) {
 
     // Debug
@@ -214,7 +214,7 @@ export class GenerationsSettingsModel {
           status: status,
           sharedPublicly: sharedPublicly,
           name: name,
-          slideShowSettings: slideShowSettings,
+          slideshowSettings: slideshowSettings,
           videoSettings: videoSettings
         },
         where: {
@@ -234,7 +234,7 @@ export class GenerationsSettingsModel {
           status: string | undefined,
           sharedPublicly: boolean | undefined,
           name: string | undefined,
-          slideShowSettings: any,
+          slideshowSettings: any,
           videoSettings: any) {
 
     // Debug
@@ -282,8 +282,8 @@ export class GenerationsSettingsModel {
         throw 'Prisma error'
       }
 
-      if (slideShowSettings === undefined) {
-        console.error(`${fnName}: id is null and slideShowSettings is undefined`)
+      if (slideshowSettings === undefined) {
+        console.error(`${fnName}: id is null and slideshowSettings is undefined`)
         throw 'Prisma error'
       }
 
@@ -300,7 +300,7 @@ export class GenerationsSettingsModel {
                  status,
                  sharedPublicly,
                  name,
-                 slideShowSettings,
+                 slideshowSettings,
                  videoSettings)
     } else {
 
@@ -313,7 +313,7 @@ export class GenerationsSettingsModel {
                  status,
                  sharedPublicly,
                  name,
-                 slideShowSettings,
+                 slideshowSettings,
                  videoSettings)
     }
   }
