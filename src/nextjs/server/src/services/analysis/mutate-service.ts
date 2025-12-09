@@ -1,8 +1,12 @@
 import { PrismaClient } from '@prisma/client'
 import { AnalysisModel } from '@/models/trade-analysis/analysis-model'
+import { GenerationsSettingsQueryService } from '../generations-settings/query-service'
 
 // Models
 const analysisModel = new AnalysisModel()
+
+// Services
+const generationsSettingsQueryService = new GenerationsSettingsQueryService()
 
 // Class
 export class AnalysesMutateService {
@@ -24,6 +28,9 @@ export class AnalysesMutateService {
           description: string,
           prompt: string) {
 
+    // Debug
+    const fnName = `${this.clName}.upsert()`
+
     // Get id
     if (id != null &&
         id === '') {
@@ -31,11 +38,16 @@ export class AnalysesMutateService {
       id = undefined
     }
 
+    // Get the default GenerationsSettings
+    const generationsSettings = await
+            generationsSettingsQueryService.getDefault(prisma)
+
     // Upsert Analysis
     const analysis = await
             analysisModel.upsert(
               prisma,
               id ?? undefined,
+              generationsSettings.id,
               userProfileId,
               type,
               status,

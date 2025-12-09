@@ -361,6 +361,8 @@ export class TradeAnalysisMutateService {
     const analyses = await
             analysisModel.filter(
               prisma,
+              undefined,  // userProfileId
+              undefined,  // generationsSettingsId
               undefined,  // type
               BaseDataTypes.activeStatus)
 
@@ -511,7 +513,7 @@ export class TradeAnalysisMutateService {
     }
 
     // Instrument type
-    const instrumentType = ServerOnlyTypes.stockType
+    const instrumentType = BaseDataTypes.stocksType
 
     // Get exchanges
     const exchanges = await
