@@ -22,8 +22,6 @@ export class AnalysisModel {
     // Debug
     const fnName = `${this.clName}.create()`
 
-    console.log(`${fnName}: starting..`)
-
     // Create record
     try {
       return await prisma.analysis.create({
