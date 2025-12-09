@@ -58,4 +58,7 @@ export class ServerOnlyTypes {
 
   // News sources
   static finnHubNewsSourceName = 'FinnHub'
+
+  // Generations settings
+  static defaultGenerationsSettingsName = 'Default'
 }

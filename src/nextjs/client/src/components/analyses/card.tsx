@@ -20,7 +20,7 @@ export default function AnalysisCard({
 
   // Render
   return (
-    <div style={{ minWidth: 275 }}>
+    <div style={{ marginBottom: '2em', minWidth: 275 }}>
 
       {message != null ?
         <Alert

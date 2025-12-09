@@ -142,6 +142,18 @@ export const typeDefs = `#graphql
     name: String!
   }
 
+  type GenerationsSettingsListItem {
+    id: String!
+    publiclyShared: Boolean!
+    name: String!
+  }
+
+  type GenerationsSettingsListResults {
+    status: Boolean!
+    message: String
+    generationsSettingsList: [GenerationsSettingsListItem]
+  }
+
   type Instrument {
     id: String!
     exchange: Exchange!
@@ -268,11 +280,15 @@ export const typeDefs = `#graphql
     getAnalysisById(
       userProfileId: String!,
       instanceId: String,
-      analysisId: String!): AnalysisResults
+      analysisId: String!): AnalysisResults!
     getAnalyses(
       userProfileId: String!,
       instanceId: String,
-      instrumentType: String): AnalysesResults
+      instrumentType: String): AnalysesResults!
+
+    # Generations settings
+    getGenerationsSettingsList(
+      userProfileId: String!): GenerationsSettingsListResults!
 
     # Instances
     filterInstances(
@@ -310,17 +326,17 @@ export const typeDefs = `#graphql
     getTradeAnalysisById(
       userProfileId: String!,
       instanceId: String,
-      tradeAnalysisId: String!): TradeAnalysisResults
+      tradeAnalysisId: String!): TradeAnalysisResults!
 
     getTradeAnalysesGroupById(
       userProfileId: String!,
       instanceId: String,
-      tradeAnalysesGroupId: String): TradeAnalysesGroupResults
+      tradeAnalysesGroupId: String): TradeAnalysesGroupResults!
 
     getLatestTradeAnalysesGroups(
       userProfileId: String!,
       instanceId: String,
-      instrumentType: String): TradeAnalysesGroupsResults
+      instrumentType: String): TradeAnalysesGroupsResults!
   }
 
   type Mutation {

@@ -243,24 +243,26 @@ model UserAccount {
 // AiTradefi: Trade analysis
 
 model Analysis {
-  id                           String               @id @default(cuid())
-  userProfileId                String               @map("user_profile_id")
-  userProfile                  UserProfile          @relation(fields: [userProfileId], references: [id])
-  type                         String               @db.Char(1)  // S (screener), E (evaluator)
-  status                       String               @db.Char(1)
-  instrumentType               String               @map("instrument_type")
-  defaultMinScore              Float                @map("default_min_score")
+  id                           String                 @id @default(cuid())
+  userProfileId                String                 @map("user_profile_id")
+  userProfile                  UserProfile            @relation(fields: [userProfileId], references: [id])
+  generationsSettingsId        String?                @map("generations_settings_id")
+  generationsSettings          GenerationsSettings?   @relation(fields: [generationsSettingsId], references: [id])
+  type                         String                 @db.Char(1)  // S (screener), E (evaluator)
+  status                       String                 @db.Char(1)
+  instrumentType               String                 @map("instrument_type")
+  defaultMinScore              Float                  @map("default_min_score")
   name                         String
   version                      String
   description                  String
   prompt                       String
-  created                      DateTime             @default(now())
-  updated                      DateTime             @updatedAt
+  created                      DateTime               @default(now())
+  updated                      DateTime               @updatedAt
 
   ofAnalysesTech               AnalysisTech[]
   ofTradeAnalysesGroups        TradeAnalysesGroup[]
 
-  @@unique([name, version])
+  @@unique([userProfileId, name, version])
   @@map("analysis")
   @@schema("public")
 }
@@ -298,6 +300,25 @@ model TradeAnalysis {
 
   @@unique([tradeAnalysesGroupId, instrumentId, techId])
   @@map("trade_analysis")
+  @@schema("public")
+}
+
+model GenerationsSettings {
+  id                           String               @id @default(cuid())
+  userProfileId                String               @map("user_profile_id")
+  userProfile                  UserProfile          @relation(fields: [userProfileId], references: [id])
+  status                       String               @db.Char(1)
+  sharedPublicly               Boolean
+  name                         String
+  slideShowSettings            Json?                @map("slideshow_settings") @db.JsonB
+  videoSettings                Json?                @map("video_settings") @db.JsonB
+  created                      DateTime             @default(now())
+  updated                      DateTime             @updatedAt
+
+  ofAnalyses                   Analysis[]
+
+  @@unique([userProfileId, name])
+  @@map("generations_settings")
   @@schema("public")
 }
 

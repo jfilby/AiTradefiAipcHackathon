@@ -69,29 +69,30 @@ model UserProfile {
   updated                   DateTime      @updatedAt
   deletePending             DateTime?     @map("delete_pending")  // Start date/time of delete pending
 
-  ofAgentUsers                AgentUser[]
-  ofChatMessagesCreated       ChatMessageCreated[]
-  ofChatParticipants          ChatParticipant[]
-  ofChatSessions              ChatSession[]
-  ofChatSettings              ChatSettings[]
-  ofExternalUserIntegrations  ExternalUserIntegration[]
-  ofFeatureFlags              FeatureFlag[]
-  ofInstances                 Instance[]
-  ofRateLimitedApiEvents      RateLimitedApiEvent[]
-  ofResourceQuotaTotals       ResourceQuotaTotal[]
-  ofResourceQuotaUsages       ResourceQuotaUsage[]
-  ofTipGotIts                 TipGotIt[]
-  ofUserGroups                UserGroup[]
-  ofUserGroupMembers          UserGroupMember[]
-  ofUserPreferences           UserPreference[]
-  ofUserErrors                UserError[]
-  ofEndUserErrors             UserError[]                @relation("end_user_profile")
-  ofUserErrorSummaries        UserErrorSummary[]
+  ofAgentUsers                  AgentUser[]
+  ofChatMessagesCreated         ChatMessageCreated[]
+  ofChatParticipants            ChatParticipant[]
+  ofChatSessions                ChatSession[]
+  ofChatSettings                ChatSettings[]
+  ofExternalUserIntegrations    ExternalUserIntegration[]
+  ofFeatureFlags                FeatureFlag[]
+  ofInstances                   Instance[]
+  ofRateLimitedApiEvents        RateLimitedApiEvent[]
+  ofResourceQuotaTotals         ResourceQuotaTotal[]
+  ofResourceQuotaUsages         ResourceQuotaUsage[]
+  ofTipGotIts                   TipGotIt[]
+  ofUserGroups                  UserGroup[]
+  ofUserGroupMembers            UserGroupMember[]
+  ofUserPreferences             UserPreference[]
+  ofUserErrors                  UserError[]
+  ofEndUserErrors               UserError[]                @relation("end_user_profile")
+  ofUserErrorSummaries          UserErrorSummary[]
 
-  ofBatchJobs                 BatchJob[]
-  ofUserAccounts              UserAccount[]
+  ofBatchJobs                   BatchJob[]
+  ofUserAccounts                UserAccount[]
 
-  ofAnalyses                  Analysis[]
+  ofAnalyses                    Analysis[]
+  ofGenerationsSettings         GenerationsSettings[]
 
   @@map("user_profile")
   @@schema("public")

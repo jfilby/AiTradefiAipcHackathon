@@ -5,12 +5,12 @@ import { AgentUserModel } from '@/serene-ai-server/models/agents/agent-user-mode
 import { SereneAiSetup } from '@/serene-ai-server/services/setup/setup-service'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { ServerOnlyTypes } from '@/types/server-only-types'
-import { TradingParameterTypes } from '@/types/trading-parameter-types'
 import { ExchangeModel } from '@/models/instruments/exchange-model'
 import { DocSourceModel } from '@/models/documents/doc-source-model'
 import { InstrumentModel } from '@/models/instruments/instrument-model'
 import { WindowTypeModel } from '@/models/instruments/window-type-model'
 import { AgentUserService } from '@/services/agents/agent-user-service'
+import { GenerationsSettingsSetupService } from '../generations-settings/setup-service'
 import { SetupAnalysesTechService } from '../analysis/setup-tech-service'
 import { YFinanceUtilsService } from '../external-data/yfinance/utils-service'
 
@@ -24,6 +24,7 @@ const windowTypeModel = new WindowTypeModel()
 
 // Services
 const agentUserService = new AgentUserService()
+const generationsSettingsSetupService = new GenerationsSettingsSetupService()
 const sereneAiSetup = new SereneAiSetup()
 const setupAnalysesTechService = new SetupAnalysesTechService()
 const yFinanceUtilsService = new YFinanceUtilsService()
@@ -99,7 +100,14 @@ export class SetupService {
             adminUserProfile)
 
     // Setup analysis tech
-    await setupAnalysesTechService.setup(prisma)
+    await setupAnalysesTechService.setup(
+            prisma,
+            adminUserProfile.id)
+
+    // Setup generations settings
+    await generationsSettingsSetupService.setup(
+            prisma,
+            adminUserProfile.id)
   }
 
   async setupBaseData(
@@ -115,7 +123,7 @@ export class SetupService {
                 undefined,  // id
                 exchangeName,
                 'US',
-                [ServerOnlyTypes.stockType],
+                [BaseDataTypes.stocksType],
                 yFinanceUtilsService.getExhangeSuffix(exchangeName))
     }
 
@@ -124,46 +132,6 @@ export class SetupService {
             exchangeModel.getByUniqueKey(
               prisma,
               ServerOnlyTypes.nasdaqExchangeName)
-
-    // Demo data
-    for (const entry of TradingParameterTypes.nasdaqStocks) {
-
-      var instrument = await
-            instrumentModel.getByUniqueKey(
-              prisma,
-              nasdaqExchange.id,
-              entry.symbol)
-
-      if (instrument != null) {
-        continue
-      }
-
-      instrument = await
-        instrumentModel.upsert(
-          prisma,
-          undefined,  // id
-          nasdaqExchange.id,
-          BaseDataTypes.activeStatus,
-          entry.symbol,
-          entry.type,
-          entry.name,
-          null)       // yahooFinanceTicker
-    }
-
-    // Upserts for WindowType
-    for (const entry of TradingParameterTypes.defaultWindowTypes) {
-
-      const windowType = await
-              windowTypeModel.upsert(
-                prisma,
-                undefined,  // id
-                BaseDataTypes.activeStatus,
-                entry.name,
-                entry.fromTimeUnit,
-                entry.fromTimeValue,
-                entry.toTimeUnit,
-                entry.toTimeValue)
-    }
 
     // Upsert on NewsSource
     const finnHubNewsSource = await
