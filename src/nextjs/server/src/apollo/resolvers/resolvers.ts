@@ -14,6 +14,7 @@ import { upsertUserPreference } from '@/serene-core-server/apollo/resolvers/muta
 
 // Concept queries imports
 import { getAnalyses, getAnalysisById } from './queries/analyses'
+import { getGenerationsSettingsList } from './queries/generations-settings'
 // import { filterInstances, filterProjectInstances, instanceById } from './queries/instances'
 import { getInstrumentById, getInstruments } from './queries/instruments'
 import { getLatestTradeAnalysesGroups, getTradeAnalysesGroupById, getTradeAnalysisById } from './queries/trade-analyses-group'
@@ -62,6 +63,9 @@ const Query = {
   // Analyses
   getAnalysisById,
   getAnalyses,
+
+  // Generations settings
+  getGenerationsSettingsList,
 
   // Instances
   // filterInstances,
