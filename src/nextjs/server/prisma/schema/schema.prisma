@@ -260,6 +260,7 @@ model Analysis {
   updated                      DateTime               @updatedAt
 
   ofAnalysesTech               AnalysisTech[]
+  ofSlideTemplates             SlideTemplate[]
   ofTradeAnalysesGroups        TradeAnalysesGroup[]
 
   @@unique([userProfileId, name, version])
@@ -419,10 +420,10 @@ model Slide {
   id                           String               @id @default(cuid())
   slideshowId                  String               @map("slideshow_id")
   slideshow                    Slideshow            @relation(fields: [slideshowId], references: [id])
+  slideTemplateId              String               @map("slide_template_id")
+  slideTemplate                SlideTemplate        @relation(fields: [slideTemplateId], references: [id])
   index                        Int
-  slideNo                      Int                  @map("slide_no")
   status                       String               @db.Char(1)
-  type                         String               @db.Char(3) // E.g. INT (intro), REQ (requirements), FIN (financials), OUT (outro)
   title                        String
   text                         String?
   audioPath                    String?              @map("audio_path")
@@ -430,6 +431,7 @@ model Slide {
   created                      DateTime             @default(now())
   updated                      DateTime             @updatedAt
 
+  @@unique([slideshowId, slideTemplateId])
   @@unique([slideshowId, index])
   @@map("slide")
   @@schema("public")
@@ -446,5 +448,23 @@ model Slideshow {
   ofSlides                     Slide[]
 
   @@map("slideshow")
+  @@schema("public")
+}
+
+model SlideTemplate {
+  id                           String               @id @default(cuid())
+  analysisId                   String               @map("analysis_id")
+  analysis                     Analysis             @relation(fields: [analysisId], references: [id])
+  slideNo                      Int                  @map("slide_no")
+  type                         String               @db.Char(3)  // E.g. INT (intro), REQ (requirements), FIN (financials), OUT (outro)
+  title                        String
+  textPrompt                   String?              @map("text_prompt")
+  audioPrompt                  String?              @map("audio_prompt")
+  imagePrompt                  String?              @map("image_prompt")
+
+  ofSlides                     Slide[]
+
+  @@unique([analysisId, slideNo])
+  @@map("slide_template")
   @@schema("public")
 }

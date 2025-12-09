@@ -62,3 +62,12 @@ export class ServerOnlyTypes {
   // Generations settings
   static defaultGenerationsSettingsName = 'Default'
 }
+
+export enum SlideTypes {
+  annualFinancials = 'AFN',
+  dailyChart = 'DCH',
+  intro = 'INT',
+  outro = 'OUT',
+  quarterlyFinancials = 'QFN',
+  requirements = 'REQ'
+}

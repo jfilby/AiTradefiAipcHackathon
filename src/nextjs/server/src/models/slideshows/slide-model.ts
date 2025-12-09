@@ -1,4 +1,5 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Slide } from '@prisma/client'
+import { BaseDataTypes } from '@/shared/types/base-data-types'
 
 export class SlideModel {
 
@@ -9,10 +10,9 @@ export class SlideModel {
   async create(
           prisma: PrismaClient,
           slideshowId: string,
+          slideTemplateId: string,
           index: number,
-          slideNo: number,
           status: string,
-          type: string,
           title: string,
           text: string | null,
           audioPath: string | null,
@@ -26,10 +26,9 @@ export class SlideModel {
       return await prisma.slide.create({
         data: {
           slideshowId: slideshowId,
+          slideTemplateId: slideTemplateId,
           index: index,
-          slideNo: slideNo,
           status: status,
-          type: type,
           title: title,
           text: text,
           audioPath: audioPath,
@@ -67,10 +66,9 @@ export class SlideModel {
   async filter(
           prisma: PrismaClient,
           slideshowId: string | undefined = undefined,
+          slideTemplateId: string | undefined = undefined,
           index: number | undefined = undefined,
-          slideNo: number | undefined = undefined,
-          status: string | undefined = undefined,
-          type: string | undefined = undefined) {
+          status: string | undefined = undefined) {
 
     // Debug
     const fnName = `${this.clName}.filter()`
@@ -80,10 +78,9 @@ export class SlideModel {
       return await prisma.slide.findMany({
         where: {
           slideshowId: slideshowId,
+          slideTemplateId: slideTemplateId,
           index: index,
-          slideNo: slideNo,
-          status: status,
-          type: type
+          status: status
         }
       })
     } catch(error: any) {
@@ -119,13 +116,53 @@ export class SlideModel {
     return slide
   }
 
-  async getByUniqueKey(
+  async getByUniqueKey1(
+          prisma: PrismaClient,
+          slideshowId: string,
+          slideTemplateId: string) {
+
+    // Debug
+    const fnName = `${this.clName}.getByUniqueKey1()`
+
+    // Validate
+    if (slideshowId == null) {
+      console.error(`${fnName}: slideshowId == null`)
+      throw 'Validation error'
+    }
+
+    if (slideTemplateId == null) {
+      console.error(`${fnName}: slideTemplateId == null`)
+      throw 'Validation error'
+    }
+
+    // Query
+    var slide: any = null
+
+    try {
+      slide = await prisma.slide.findFirst({
+        where: {
+          slideshowId: slideshowId,
+          slideTemplateId: slideTemplateId
+        }
+      })
+    } catch(error: any) {
+      if (!(error instanceof error.NotFound)) {
+        console.error(`${fnName}: error: ${error}`)
+        throw 'Prisma error'
+      }
+    }
+
+    // Return
+    return slide
+  }
+
+  async getByUniqueKey2(
           prisma: PrismaClient,
           slideshowId: string,
           index: number) {
 
     // Debug
-    const fnName = `${this.clName}.getByUniqueKey()`
+    const fnName = `${this.clName}.getByUniqueKey2()`
 
     // Validate
     if (slideshowId == null) {
@@ -159,14 +196,47 @@ export class SlideModel {
     return slide
   }
 
+  async getLastSlides(
+          prisma: PrismaClient,
+          slideshowId: string,
+          limitBy: number = 1) {
+
+    // Debug
+    const fnName = `${this.clName}.getLastSlides()`
+
+    // Validate
+    if (slideshowId == null) {
+      console.error(`${fnName}: slideshowId == null`)
+      throw 'Validation error'
+    }
+
+    // Query
+    try {
+      return await prisma.slide.findMany({
+        take: limitBy,
+        where: {
+          slideshowId: slideshowId,
+          status: BaseDataTypes.activeStatus
+        },
+        orderBy: [
+          {
+            index: 'desc'
+          }
+        ]
+      })
+    } catch(error: any) {
+      console.error(`${fnName}: error: ${error}`)
+      throw 'Prisma error'
+    }
+  }
+
   async update(
           prisma: PrismaClient,
           id: string,
           slideshowId: string | undefined,
+          slideTemplateId: string | undefined,
           index: number | undefined,
-          slideNo: number | undefined,
           status: string | undefined,
-          type: string | undefined,
           title: string | undefined,
           text: string | null | undefined,
           audioPath: string | null | undefined,
@@ -180,10 +250,9 @@ export class SlideModel {
       return await prisma.slide.update({
         data: {
           slideshowId: slideshowId,
+          slideTemplateId: slideTemplateId,
           index: index,
-          slideNo: slideNo,
           status: status,
-          type: type,
           title: title,
           text: text,
           audioPath: audioPath,
@@ -203,10 +272,9 @@ export class SlideModel {
           prisma: PrismaClient,
           id: string | undefined,
           slideshowId: string | undefined,
+          slideTemplateId: string | undefined,
           index: number | undefined,
-          slideNo: number | undefined,
           status: string | undefined,
-          type: string | undefined,
           title: string | undefined,
           text: string | null | undefined,
           audioPath: string | null | undefined,
@@ -218,15 +286,28 @@ export class SlideModel {
     console.log(`${fnName}: starting with id: ` + JSON.stringify(id))
 
     // If id isn't specified, but the unique keys are, try to get the record
-    if (id == null &&
-        slideshowId != null &&
-        index != null) {
+    if (id == null) {
 
-      const slide = await
-              this.getByUniqueKey(
-                prisma,
-                slideshowId,
-                index)
+      var slide: Slide | undefined = undefined
+
+      if (slideshowId != null &&
+          slideTemplateId != null) {
+
+        slide = await
+          this.getByUniqueKey1(
+            prisma,
+            slideshowId,
+            slideTemplateId)
+
+      } else if (slideshowId != null &&
+                 index != null) {
+
+        slide = await
+          this.getByUniqueKey2(
+            prisma,
+            slideshowId,
+            index)
+      }
 
       if (slide != null) {
         id = slide.id
@@ -242,23 +323,18 @@ export class SlideModel {
         throw 'Prisma error'
       }
 
+      if (slideTemplateId == null) {
+        console.error(`${fnName}: id is null and slideTemplateId is null`)
+        throw 'Prisma error'
+      }
+
       if (index == null) {
         console.error(`${fnName}: id is null and index is null`)
         throw 'Prisma error'
       }
 
-      if (slideNo == null) {
-        console.error(`${fnName}: id is null and slideNo is null`)
-        throw 'Prisma error'
-      }
-
       if (status == null) {
         console.error(`${fnName}: id is null and status is null`)
-        throw 'Prisma error'
-      }
-
-      if (type == null) {
-        console.error(`${fnName}: id is null and type is null`)
         throw 'Prisma error'
       }
 
@@ -287,10 +363,9 @@ export class SlideModel {
                this.create(
                  prisma,
                  slideshowId,
+                 slideTemplateId,
                  index,
-                 slideNo,
                  status,
-                 type,
                  title,
                  text,
                  audioPath,
@@ -303,10 +378,9 @@ export class SlideModel {
                  prisma,
                  id,
                  slideshowId,
+                 slideTemplateId,
                  index,
-                 slideNo,
                  status,
-                 type,
                  title,
                  text,
                  audioPath,
