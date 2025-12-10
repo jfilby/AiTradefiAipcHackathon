@@ -42,6 +42,9 @@ export class GenSlideTextService {
               tradeAnalysis,
               slideTemplates)
 
+    // Debug
+    console.log(`${fnName}: prompt: ${prompt}`)
+
     // Get adminUserProfile
     const adminUserProfile = await
             usersService.getUserProfileByEmail(
@@ -57,12 +60,17 @@ export class GenSlideTextService {
             getTechService.getStandardLlmTech(prisma)
 
     // Generate with an LLM
-    const { queryResults } = await
+    const { status, message, queryResults } = await
             genSlideTextLlmService.llmRequest(
               prisma,
               adminUserProfile.id,
               tech,
               prompt)
+
+    // Validate
+    if (status === false) {
+      throw new CustomError(`${fnName}: llmRequest() failed: ${message}`)
+    }
 
     // Process queryResults
     const texts = await

@@ -27,6 +27,33 @@ export class YFinanceMutateService {
   // Consts
   clName = 'YFinanceMutateService'
 
+  importantFinanceFields = [
+    'totalRevenue',
+    'costOfRevenue',
+    'grossProfit',
+    'operatingIncome',
+    'netIncome',
+    'eps',
+    'epsDiluted',
+    'totalAssets',
+    'totalLiabilities',
+    'totalStockholderEquity',
+    'longTermDebt',
+    'shortTermDebt',
+    'cash',
+    'operatingCashflow',
+    'capitalExpenditures',
+    'freeCashFlow',
+    'marketCap',
+    'trailingPE',
+    'forwardPE',
+    'priceToBook',
+    'beta',
+    'dividendYield',
+    'date',
+    'currency',
+  ]
+
   // Code
   async deleteFinanceData(
           prisma: PrismaClient,
@@ -275,6 +302,9 @@ export class YFinanceMutateService {
           prisma: PrismaClient,
           instrument: Instrument) {
 
+    // Debug
+    const fnName = `${this.clName}.saveFinancialsLast3Quarters()`
+
     // Compute period1 = ~400 days ago (covers at least 4 quarters even around year boundaries)
     const period1Date = new Date(Date.now() - 400 * 24 * 60 * 60 * 1000)
     const period1 = period1Date.toISOString().split('T')[0]
@@ -289,6 +319,14 @@ export class YFinanceMutateService {
                 module: 'all'
               })
 
+    // Validate
+    if (!Array.isArray(data)) {
+      throw new CustomError(`${fnName}: expected data to be an array`)
+    }
+
+    // Strip out non-important fields
+    const keyData = this.stripNonImportantFinanceFields(data)
+
     // Save
     const yFinanceFin = await
             yFinanceFinModel.upsert(
@@ -297,12 +335,15 @@ export class YFinanceMutateService {
               instrument.id,
               YFinanceFinTypes.quarterly,
               period1Date,
-              data)
+              keyData)
   }
 
   async saveFinancialsLast3Years(
           prisma: PrismaClient,
           instrument: Instrument) {
+
+    // Debug
+    const fnName = `${this.clName}.saveFinancialsLast3Years()`
 
     // Compute period1 = 3 years ago, but on the 1st day of the year
     const period1Date = new Date(new Date().getFullYear() - 3, 0, 1)
@@ -318,6 +359,14 @@ export class YFinanceMutateService {
                 module: 'all'
               })
 
+    // Validate
+    if (!Array.isArray(data)) {
+      throw new CustomError(`${fnName}: expected data to be an array`)
+    }
+
+    // Strip out non-important fields
+    const keyData = this.stripNonImportantFinanceFields(data)
+
     // Save
     const yFinanceFin = await
             yFinanceFinModel.upsert(
@@ -326,7 +375,7 @@ export class YFinanceMutateService {
               instrument.id,
               YFinanceFinTypes.annual,
               period1Date,
-              data)
+              keyData)
   }
 
   async saveQuote(
@@ -334,7 +383,7 @@ export class YFinanceMutateService {
           instrument: Instrument): Promise<boolean> {
 
     // Debug
-    const fnName = `${this.clName}.runByNames()`
+    const fnName = `${this.clName}.saveQuote()`
 
     // Get a quote for the Y! Finance symbol
     const quote = await
@@ -359,5 +408,29 @@ export class YFinanceMutateService {
 
     // Return OK
     return true
+  }
+
+  stripNonImportantFinanceFields(data: any[]) {
+
+    const outArray: any[] = []
+
+    // Iterate entries of data
+    for (const entry of data) {
+
+      // Only important fields
+      const out: any = {}
+
+      for (const key of this.importantFinanceFields) {
+
+        if (entry[key] !== undefined) {
+          out[key] = entry[key]
+        }
+      }
+
+      // Add to outArray
+      outArray.push(out)
+    }
+
+    return outArray
   }
 }
