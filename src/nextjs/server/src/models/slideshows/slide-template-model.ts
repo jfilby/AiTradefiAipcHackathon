@@ -101,7 +101,8 @@ export class SlideTemplateModel {
           prisma: PrismaClient,
           analysisId: string | undefined = undefined,
           slideNo: number | undefined = undefined,
-          type: string | undefined = undefined) {
+          type: string | undefined = undefined,
+          sortBySlideNo: boolean = false) {
 
     // Debug
     const fnName = `${this.clName}.filter()`
@@ -113,7 +114,12 @@ export class SlideTemplateModel {
           analysisId: analysisId,
           slideNo: slideNo,
           type: type
-        }
+        },
+        orderBy: [
+          {
+            slideNo: sortBySlideNo ? 'asc' : undefined
+          }
+        ]
       })
     } catch(error: any) {
       console.error(`${fnName}: error: ${error}`)

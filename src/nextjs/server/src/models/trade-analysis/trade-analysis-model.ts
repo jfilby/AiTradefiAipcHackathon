@@ -104,7 +104,8 @@ export class TradeAnalysisModel {
 
   async getById(
           prisma: PrismaClient,
-          id: string) {
+          id: string,
+          includeTradeAnalysesGroup: boolean = false) {
 
     // Debug
     const fnName = `${this.clName}.getById()`
@@ -114,6 +115,13 @@ export class TradeAnalysisModel {
 
     try {
       tradeAnalysis = await prisma.tradeAnalysis.findUnique({
+        include: {
+          tradeAnalysesGroup: includeTradeAnalysesGroup ? {
+            include: {
+              analysis: true
+            }
+          } : undefined
+        },
         where: {
           id: id
         }
