@@ -396,7 +396,9 @@ export class TradeAnalysisMutateService {
               true)       // isLeaderTech
 
     if (leadingAnalysisTechs.length === 0) {
-      throw new CustomError(`${fnName}: leadingAnalysisTechs.length === 0`)
+      throw new CustomError(
+        `${fnName}: leadingAnalysisTechs.length === 0 for analysisId: ` +
+        `${analysis.id}`)
     }
 
     // Get day
