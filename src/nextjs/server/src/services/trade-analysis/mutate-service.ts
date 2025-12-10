@@ -403,7 +403,8 @@ export class TradeAnalysisMutateService {
         `${analysis.id}`)
     }
 
-    // Don't run another group until at least a week
+    // Don't rerun the current group after max screener runs.
+    // Don't run another group of an analysis until at least a week.
     const canRun = await
             tradeAnalysisQueryService.canRunTradeAnalysis(
               prisma,
