@@ -13,6 +13,8 @@ export async function upsertAnalysis(
   // Debug
   const fnName = `upsertAnalysis()`
 
+  // console.log(`${fnName}: args: ` + JSON.stringify(args))
+
   // Get instruments
   const results = await
           analysesMutateService.upsert(

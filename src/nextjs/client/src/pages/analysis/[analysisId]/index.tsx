@@ -31,6 +31,7 @@ export default function EditAnalysesPage({
     defaultMinScore: 0.75
   })
 
+  const [loaded, setLoaded] = useState<boolean>(false)
   const [saveAction, setSaveAction] = useState<boolean>(false)
 
   // Render
@@ -55,7 +56,8 @@ export default function EditAnalysesPage({
             </Typography>
           </div>
 
-          {analysis != null ?
+          {analysis != null &&
+           loaded === true ?
             <EditAnalysis
               userProfileId={userProfile.id}
               instanceId={undefined}
@@ -76,7 +78,8 @@ export default function EditAnalysesPage({
           userProfileId={userProfile.id}
           instanceId={undefined}
           analysisId={analysisId}
-          setAnalysis={setAnalysis} />
+          setAnalysis={setAnalysis}
+          setLoaded={setLoaded} />
 
         <SaveAnalysis
           userProfileId={userProfile.id}

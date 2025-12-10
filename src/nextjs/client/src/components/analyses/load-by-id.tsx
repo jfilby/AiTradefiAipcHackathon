@@ -7,13 +7,15 @@ interface Props {
   instanceId?: string
   analysisId: string
   setAnalysis: any
+  setLoaded: any
 }
 
 export default function LoadAnalysisById({
                           userProfileId,
                           instanceId,
                           analysisId,
-                          setAnalysis
+                          setAnalysis,
+                          setLoaded
                         }: Props) {
 
   // GraphQL
@@ -42,6 +44,7 @@ export default function LoadAnalysisById({
     const results = data.getAnalysisById
 
     setAnalysis(results.analysis)
+    setLoaded(true)
   }
 
   // Effects
