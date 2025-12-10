@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { BaseDataTypes } from '@/shared/types/base-data-types'
 
 export class TradeAnalysisModel {
 
@@ -95,6 +96,44 @@ export class TradeAnalysisModel {
             score: sortByScore ? 'desc' : undefined
           }
         ]
+      })
+    } catch(error: any) {
+      console.error(`${fnName}: error: ${error}`)
+      throw 'Prisma error'
+    }
+  }
+
+  async filterWithoutActiveSlideshows(prisma: PrismaClient) {
+
+    // Debug
+    const fnName = `${this.clName}.filterWithoutActiveSlideshows()`
+
+    // Query
+    try {
+      return await prisma.tradeAnalysis.findMany({
+        include: {
+          tradeAnalysesGroup: {
+            include: {
+              analysis: true
+            }
+          }
+        },
+        where: {
+          OR: [
+            {
+              ofSlideshows: {
+                none: {}
+              }
+            },
+            {
+              ofSlideshows: {
+                some: {
+                  status: BaseDataTypes.newStatus
+                }
+              }
+            }
+          ]
+        }
       })
     } catch(error: any) {
       console.error(`${fnName}: error: ${error}`)

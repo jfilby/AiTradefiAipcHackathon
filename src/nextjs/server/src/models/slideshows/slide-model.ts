@@ -283,7 +283,7 @@ export class SlideModel {
     // Debug
     const fnName = `${this.clName}.upsert()`
 
-    console.log(`${fnName}: starting with id: ` + JSON.stringify(id))
+    // console.log(`${fnName}: starting with id: ` + JSON.stringify(id))
 
     // If id isn't specified, but the unique keys are, try to get the record
     if (id == null) {

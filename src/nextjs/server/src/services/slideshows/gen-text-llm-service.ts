@@ -181,7 +181,15 @@ export class GenSlideTextLlmService {
     // console.log(`${fnName}: entry: ` + JSON.stringify(entry))
 
     // Validate
-    ;
+    if (entry.title == null) {
+      console.log(`${fnName}: entry.title == null`)
+      return false
+    }
+
+    if (entry.text == null) {
+      console.log(`${fnName}: entry.text == null`)
+      return false
+    }
 
     // Validated OK
     return true

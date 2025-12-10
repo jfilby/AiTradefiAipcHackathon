@@ -1,4 +1,4 @@
-import { PrismaClient, Slide, SlideTemplate } from '@prisma/client'
+import { PrismaClient, Slide, SlideTemplate, TradeAnalysis } from '@prisma/client'
 import { CustomError } from '@/serene-core-server/types/errors'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { SlideModel } from '@/models/slideshows/slide-model'
@@ -27,22 +27,15 @@ export class SlideshowMutateService {
   clName = 'SlideshowMutateService'
 
   // Code
-  async getOrCreate(
+  async createSlides(
           prisma: PrismaClient,
-          tradeAnalysisId: string) {
-
-    // Get TradeAnalysis
-    const tradeAnalysis = await
-            tradeAnalysisModel.getById(
-              prisma,
-              tradeAnalysisId,
-              true)  // includeAnalysis
+          tradeAnalysis: TradeAnalysis) {
 
     // Try to get an existing record
     var slideshow = await
           slideshowModel.getByUniqueKey(
             prisma,
-            tradeAnalysisId)
+            tradeAnalysis.id)
 
     if (slideshow != null) {
       return
@@ -52,14 +45,14 @@ export class SlideshowMutateService {
     slideshow = await
       slideshowModel.create(
         prisma,
-        tradeAnalysisId,
+        tradeAnalysis.id,
         BaseDataTypes.newStatus)
 
     // Get SlideTemplates
     const slideTemplates = await
             slideTemplateModel.filter(
               prisma,
-              tradeAnalysis.tradeAnalysesGroup.analysisId,
+              (tradeAnalysis as any).tradeAnalysesGroup.analysisId,
               undefined,  // slideNo
               undefined,  // type
               true)       // sortBySlideNo
@@ -68,6 +61,7 @@ export class SlideshowMutateService {
     await genSlideTextService.generate(
             prisma,
             slideshow.id,
+            tradeAnalysis,
             slideTemplates)
 
     // Create all slides
@@ -79,7 +73,7 @@ export class SlideshowMutateService {
       var slide = await
             slideModel.getByUniqueKey2(
               prisma,
-              slideshow,
+              slideshow.id,
               index)
 
       // Skip ahead if slide already active
@@ -98,6 +92,38 @@ export class SlideshowMutateService {
 
       index += 1
     }
+
+    // Set slideshow to active status
+    slideshow = await
+      slideshowModel.update(
+        prisma,
+        slideshow.id,
+        undefined,  // tradeAnalysisId
+        BaseDataTypes.activeStatus)
+  }
+
+  async run(prisma: PrismaClient) {
+
+    // Debug
+    const fnName = `${this.clName}.run()`
+
+    // Debug
+    console.log(`${fnName}: starting..`)
+
+    // Get TradeAnalysis records without completed slideshows
+    const tradeAnalyses = await
+            tradeAnalysisModel.filterWithoutActiveSlideshows(prisma)
+
+    // Update/finish slideshows for TradeAnalyses
+    for (const tradeAnalysis of tradeAnalyses) {
+
+      await this.createSlides(
+              prisma,
+              tradeAnalysis)
+    }
+
+    // Debug
+    console.log(`${fnName}: completed`)
   }
 
   async upsertSlide(
@@ -110,7 +136,7 @@ export class SlideshowMutateService {
     // Debug
     const fnName = `${this.clName}.upsertSlide()`
 
-    // Upsert new Slide (with new status)
+    // Upsert Slide (with new status)
     slide = await
       slideModel.upsert(
         prisma,

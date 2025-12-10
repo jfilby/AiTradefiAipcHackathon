@@ -9,6 +9,7 @@ import { FeatureFlagModel } from '@/serene-core-server/models/feature-flags/feat
 import { BatchTypes } from '@/types/batch-types'
 import { ServerOnlyTypes } from '@/types/server-only-types'
 import { BatchJobModel } from '@/models/batch/batch-job-model'
+import { SlideshowMutateService } from '@/services/slideshows/mutate-service'
 import { SlideTemplatesMutateService } from '@/services/slide-templates/mutate-service'
 import { TradeAnalysisMutateService } from '@/services/trade-analysis/mutate-service'
 
@@ -16,6 +17,7 @@ import { TradeAnalysisMutateService } from '@/services/trade-analysis/mutate-ser
 const featureFlagModel = new FeatureFlagModel()
 
 // Services
+const slideshowMutateService = new SlideshowMutateService()
 const slideTemplatesMutateService = new SlideTemplatesMutateService()
 const tradeAnalysisMutateService = new TradeAnalysisMutateService()
 
@@ -103,6 +105,9 @@ async function interval15m(prisma: PrismaClient) {
 
   // Create slide templates
   await slideTemplatesMutateService.run(prisma)
+
+  // Create slideshows
+  await slideshowMutateService.run(prisma)
 
   // Trade analysis
   await tradeAnalysisMutateService.run(prisma)

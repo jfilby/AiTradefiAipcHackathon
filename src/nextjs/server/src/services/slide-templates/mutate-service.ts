@@ -41,7 +41,7 @@ export class SlideTemplatesMutateService {
       `[\n` +
       `  {\n` +
       `    "type": "INT"\n` +
-      `    "title": "NVDA: 1 year outlook"\n` +
+      `    "title": "<name>: 1 year outlook"\n` +
       `    "textPrompt": "Summarize NVDA"\n` +
       `    "audioPrompt": "Narrate an introduction to NVDA"\n` +
       `    "imagePrompt": "The logo for Nvidia with a bullish upward sign"\n` +
