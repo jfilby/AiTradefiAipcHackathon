@@ -87,15 +87,34 @@ export class GenSlideTextService {
       `- Generate slide data based on the slide templates plus instrument ` +
       `  data.\n` +
       `\n` +
+      `## Example\n` +
+      `[\n` +
+      `  {\n` +
+      `    "slideNo": 1,\n` +
+      `    "title": ".."\n` +
+      `    "text": ".."\n` +
+      `  }\n` +
+      `]\n` +
+      `\n` +
       `## Slide templates\n`
 
     // Slide templates
-    prompt +=
-      JSON.stringify(slideTemplates)
+    prompt += `[\n`
+
+    for (const slideTemplate of slideTemplates) {
+
+      prompt +=
+        `  {\n` +
+        `  "  slideNo": ${slideTemplate.slideNo},\n` +
+        `  "  title": "${slideTemplate.title}",\n` +
+        `  "  textPrompt": "${slideTemplate.textPrompt}"\n` +
+        `  }\n`
+    }
+
+    prompt += `]\n\n`
 
     // Continue the prompt
     prompt +=
-      `\n` +
       `## Instrument\n`
 
     // Instrument data
@@ -106,18 +125,6 @@ export class GenSlideTextService {
 
     prompt +=
       JSON.stringify(yFinanceContext)
-
-    // Continue the prompt
-    prompt +=
-      `\n` +
-      `## Example\n` +
-      `[\n` +
-      `  {\n` +
-      `    "slideNo": 1,\n` +
-      `    "title": ".."\n` +
-      `    "text": ".."\n` +
-      `  }\n` +
-      `]\n`
 
     // Return
     return prompt
