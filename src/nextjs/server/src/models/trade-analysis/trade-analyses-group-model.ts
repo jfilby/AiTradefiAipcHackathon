@@ -151,8 +151,7 @@ export class TradeAnalysesGroupModel {
 
   async getLatest(
           prisma: PrismaClient,
-          instrumentType: string | undefined,
-          minScore: number,
+          analysisId: string,
           limitBy: number = 100) {
 
     // Debug
@@ -164,34 +163,9 @@ export class TradeAnalysesGroupModel {
         take: limitBy,
         include: {
           analysis: true,
-          /* ofTradeAnalyses: {
-            include: {
-              instrument: {
-                include: {
-                  exchange: true
-                }
-              }
-            },
-            orderBy: [
-              {
-                score: 'desc'
-              }
-            ]
-          } */
         },
         where: {
-          /* ofTradeAnalyses: {
-            some: {
-              instrument: {
-                status: BaseDataTypes.activeStatus,
-                type: instrumentType
-              },
-              tradeType: 'B',
-              score: {
-                gte: minScore
-              }
-            }
-          } */
+          analysisId: analysisId
         },
         orderBy: [
           {

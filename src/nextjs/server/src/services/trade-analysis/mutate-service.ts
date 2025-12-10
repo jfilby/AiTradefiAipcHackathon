@@ -13,6 +13,7 @@ import { InstrumentModel } from '@/models/instruments/instrument-model'
 import { TradeAnalysesGroupModel } from '@/models/trade-analysis/trade-analyses-group-model'
 import { TradeAnalysisModel } from '@/models/trade-analysis/trade-analysis-model'
 import { TradeAnalysisLlmService } from './llm-service'
+import { TradeAnalysisQueryService } from './query-service'
 import { YFinanceMutateService } from '../external-data/yfinance/mutate-service'
 import { YFinanceQueryService } from '../external-data/yfinance/query-service'
 
@@ -27,6 +28,7 @@ const tradeAnalysisModel = new TradeAnalysisModel()
 
 // Services
 const tradeAnalysisLlmService = new TradeAnalysisLlmService()
+const tradeAnalysisQueryService = new TradeAnalysisQueryService()
 const usersService = new UsersService()
 const yFinanceMutateService = new YFinanceMutateService()
 const yFinanceQueryService = new YFinanceQueryService()
@@ -401,6 +403,16 @@ export class TradeAnalysisMutateService {
         `${analysis.id}`)
     }
 
+    // Don't run another group until at least a week
+    const canRun = await
+            tradeAnalysisQueryService.canRunTradeAnalysis(
+              prisma,
+              analysis.id)
+
+    if (canRun === false) {
+      return
+    }
+
     // Get day
     const day = new Date()
 
@@ -424,11 +436,6 @@ export class TradeAnalysisMutateService {
           analysis.defaultMinScore,
           0)          // screenerRuns
 
-    } else {
-      // Ensure not at max screen runs
-      if (tradeAnalysesGroup.screenerRuns >= ServerOnlyTypes.maxScreenerRuns) {
-        return
-      }
     }
 
     // Get tech

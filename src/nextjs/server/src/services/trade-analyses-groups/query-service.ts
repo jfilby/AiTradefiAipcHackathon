@@ -44,7 +44,7 @@ export class TradeAnalysesGroupQueryService {
     const tradeAnalysesGroups = await
             tradeAnalysesGroupModel.getLatest(
               prisma,
-              instrumentType ?? undefined,
+              // instrumentType ?? undefined,
               3)  // limitBy
 
     // Validate
