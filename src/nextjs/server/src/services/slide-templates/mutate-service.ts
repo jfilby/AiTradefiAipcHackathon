@@ -40,35 +40,35 @@ export class SlideTemplatesMutateService {
       `## Example\n` +
       `[\n` +
       `  {\n` +
-      `    "slideType": "INT"\n` +
+      `    "type": "INT"\n` +
       `    "title": "NVDA: 1 year outlook"\n` +
       `    "textPrompt": "Summarize NVDA"\n` +
       `    "audioPrompt": "Narrate an introduction to NVDA"\n` +
       `    "imagePrompt": "The logo for Nvidia with a bullish upward sign"\n` +
       `  },\n` +
       `  {\n` +
-      `    "slideType": "REQ"\n` +
+      `    "type": "REQ"\n` +
       `    "title": "Requirements"\n` +
       `    "textPrompt": "Summarize the analysis requirements"\n` +
       `    "audioPrompt": "Narrate a summary of the analysis requirements"\n` +
       `    "imagePrompt": "A magnifying glass"\n` +
       `  },\n` +
       `  {\n` +
-      `    "slideType": "FIN"\n` +
+      `    "type": "FIN"\n` +
       `    "title": "Financials"\n` +
       `    "textPrompt": "Summarize the last 3 years of the financials"\n` +
       `    "audioPrompt": "Narrate a summary of the last 3 years of the financials"\n` +
       `    "imagePrompt": null\n` +
       `  },\n` +
       `  {\n` +
-      `    "slideType": "DCH"\n` +
+      `    "type": "DCH"\n` +
       `    "title": "Daily chart"\n` +
       `    "textPrompt": "Summarize the daily chart"\n` +
       `    "audioPrompt": "Narrate a summary of the daily chart"\n` +
       `    "imagePrompt": null\n` +
       `  },\n` +
       `  {\n` +
-      `    "slideType": "OUT"\n` +
+      `    "type": "OUT"\n` +
       `    "title": "Conclusion"\n` +
       `    "textPrompt": "Summarize the trading report"\n` +
       `    "audioPrompt": "Narrate the trading report summary"\n` +
@@ -130,10 +130,12 @@ export class SlideTemplatesMutateService {
 
     // Run each active analysis pending slide templates
     const analyses = await
-            analysisModel.filterByNotExistsSlideTemplates(
-              prisma,
-              BaseDataTypes.activeStatus)
+            analysisModel.filterByNotExistsSlideTemplates(prisma)
 
+    // Debug
+    console.log(`${fnName}: analyses: ${analyses.length}`)
+
+    // Process each Analysis record
     for (const analysis of analyses) {
 
       await this.runAnalysis(

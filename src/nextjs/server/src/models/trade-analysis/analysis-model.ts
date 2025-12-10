@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { BaseDataTypes } from '@/shared/types/base-data-types'
 
 export class AnalysisModel {
 
@@ -99,21 +100,20 @@ export class AnalysisModel {
   }
 
   async filterByNotExistsSlideTemplates(
-          prisma: PrismaClient,
-          id: string) {
+          prisma: PrismaClient) {
 
     // Debug
     const fnName = `${this.clName}.filterByNotExistsSlideTemplates()`
 
     // Query
-    var analysis: any = null
+    var analyses: any = null
 
     try {
-      analysis = await prisma.analysis.findMany({
+      analyses = await prisma.analysis.findMany({
         where: {
-          id: id,
+          status: BaseDataTypes.activeStatus,
           ofSlideTemplates: {
-            some: {}
+            none: {}
           }
         }
       })
@@ -125,7 +125,7 @@ export class AnalysisModel {
     }
 
     // Return
-    return analysis
+    return analyses
   }
 
   async getById(
