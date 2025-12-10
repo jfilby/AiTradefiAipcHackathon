@@ -109,7 +109,7 @@ export class AnalysisModel {
     var analysis: any = null
 
     try {
-      analysis = await prisma.analysis.findUnique({
+      analysis = await prisma.analysis.findMany({
         where: {
           id: id,
           ofSlideTemplates: {
