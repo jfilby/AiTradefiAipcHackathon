@@ -11,7 +11,7 @@ export class SlideModel {
           prisma: PrismaClient,
           slideshowId: string,
           slideTemplateId: string,
-          index: number,
+          slideNo: number,
           status: string,
           title: string,
           text: string | null,
@@ -27,7 +27,7 @@ export class SlideModel {
         data: {
           slideshowId: slideshowId,
           slideTemplateId: slideTemplateId,
-          index: index,
+          slideNo: slideNo,
           status: status,
           title: title,
           text: text,
@@ -67,7 +67,7 @@ export class SlideModel {
           prisma: PrismaClient,
           slideshowId: string | undefined = undefined,
           slideTemplateId: string | undefined = undefined,
-          index: number | undefined = undefined,
+          slideNo: number | undefined = undefined,
           status: string | undefined = undefined) {
 
     // Debug
@@ -79,7 +79,7 @@ export class SlideModel {
         where: {
           slideshowId: slideshowId,
           slideTemplateId: slideTemplateId,
-          index: index,
+          slideNo: slideNo,
           status: status
         }
       })
@@ -159,7 +159,7 @@ export class SlideModel {
   async getByUniqueKey2(
           prisma: PrismaClient,
           slideshowId: string,
-          index: number) {
+          slideNo: number) {
 
     // Debug
     const fnName = `${this.clName}.getByUniqueKey2()`
@@ -170,8 +170,8 @@ export class SlideModel {
       throw 'Validation error'
     }
 
-    if (index == null) {
-      console.error(`${fnName}: index == null`)
+    if (slideNo == null) {
+      console.error(`${fnName}: slideNo == null`)
       throw 'Validation error'
     }
 
@@ -182,7 +182,7 @@ export class SlideModel {
       slide = await prisma.slide.findFirst({
         where: {
           slideshowId: slideshowId,
-          index: index
+          slideNo: slideNo
         }
       })
     } catch(error: any) {
@@ -220,7 +220,7 @@ export class SlideModel {
         },
         orderBy: [
           {
-            index: 'desc'
+            slideNo: 'desc'
           }
         ]
       })
@@ -235,7 +235,7 @@ export class SlideModel {
           id: string,
           slideshowId: string | undefined,
           slideTemplateId: string | undefined,
-          index: number | undefined,
+          slideNo: number | undefined,
           status: string | undefined,
           title: string | undefined,
           text: string | null | undefined,
@@ -251,7 +251,7 @@ export class SlideModel {
         data: {
           slideshowId: slideshowId,
           slideTemplateId: slideTemplateId,
-          index: index,
+          slideNo: slideNo,
           status: status,
           title: title,
           text: text,
@@ -273,7 +273,7 @@ export class SlideModel {
           id: string | undefined,
           slideshowId: string | undefined,
           slideTemplateId: string | undefined,
-          index: number | undefined,
+          slideNo: number | undefined,
           status: string | undefined,
           title: string | undefined,
           text: string | null | undefined,
@@ -300,13 +300,13 @@ export class SlideModel {
             slideTemplateId)
 
       } else if (slideshowId != null &&
-                 index != null) {
+                 slideNo != null) {
 
         slide = await
           this.getByUniqueKey2(
             prisma,
             slideshowId,
-            index)
+            slideNo)
       }
 
       if (slide != null) {
@@ -328,8 +328,8 @@ export class SlideModel {
         throw 'Prisma error'
       }
 
-      if (index == null) {
-        console.error(`${fnName}: id is null and index is null`)
+      if (slideNo == null) {
+        console.error(`${fnName}: id is null and slideNo is null`)
         throw 'Prisma error'
       }
 
@@ -364,7 +364,7 @@ export class SlideModel {
                  prisma,
                  slideshowId,
                  slideTemplateId,
-                 index,
+                 slideNo,
                  status,
                  title,
                  text,
@@ -379,7 +379,7 @@ export class SlideModel {
                  id,
                  slideshowId,
                  slideTemplateId,
-                 index,
+                 slideNo,
                  status,
                  title,
                  text,

@@ -422,7 +422,7 @@ model Slide {
   slideshow                    Slideshow            @relation(fields: [slideshowId], references: [id])
   slideTemplateId              String               @map("slide_template_id")
   slideTemplate                SlideTemplate        @relation(fields: [slideTemplateId], references: [id])
-  index                        Int
+  slideNo                      Int                  @map("slide_no")
   status                       String               @db.Char(1)
   title                        String
   text                         String?
@@ -432,7 +432,7 @@ model Slide {
   updated                      DateTime             @updatedAt
 
   @@unique([slideshowId, slideTemplateId])
-  @@unique([slideshowId, index])
+  @@unique([slideshowId, slideNo])
   @@map("slide")
   @@schema("public")
 }

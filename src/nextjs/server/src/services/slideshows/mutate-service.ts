@@ -65,16 +65,14 @@ export class SlideshowMutateService {
             slideTemplates)
 
     // Create all slides
-    var index = 0
-
     for (const slideTemplate of slideTemplates) {
 
       // Try to get an existing slide
       var slide = await
-            slideModel.getByUniqueKey2(
+            slideModel.getByUniqueKey1(
               prisma,
               slideshow.id,
-              index)
+              slideTemplate.id)
 
       // Skip ahead if slide already active
       if (slide?.status === BaseDataTypes.activeStatus) {
@@ -87,10 +85,7 @@ export class SlideshowMutateService {
           prisma,
           slideshow.id,
           slide,
-          slideTemplate,
-          index)
-
-      index += 1
+          slideTemplate)
     }
 
     // Set slideshow to active status
@@ -130,8 +125,7 @@ export class SlideshowMutateService {
           prisma: PrismaClient,
           slideshowId: string,
           slide: Slide | undefined,
-          slideTemplate: SlideTemplate,
-          index: number) {
+          slideTemplate: SlideTemplate) {
 
     // Debug
     const fnName = `${this.clName}.upsertSlide()`
@@ -143,7 +137,7 @@ export class SlideshowMutateService {
         slide?.id,
         slideshowId,
         slideTemplate.id,
-        index,
+        slideTemplate.slideNo,
         BaseDataTypes.newStatus,
         slideTemplate.title,
         null,         // text
@@ -169,7 +163,7 @@ export class SlideshowMutateService {
         slide.id,
         slideshowId,
         slideTemplate.id,
-        index,
+        slideTemplate.slideNo,
         BaseDataTypes.activeStatus,
         slideTemplate.title,
         undefined,  // text

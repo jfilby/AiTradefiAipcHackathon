@@ -133,8 +133,6 @@ export class GenSlideTextService {
     const fnName = `${this.clName}.generate()`
 
     // Process entries
-    var index = 0
-
     for (const entry of queryResults.json) {
 
       // Get SlideTemplate
@@ -150,8 +148,8 @@ export class GenSlideTextService {
                 prisma,
                 undefined,    // id
                 slideshowId,
-                undefined,    // slideTemplateId
-                index,
+                slideTemplate.id,
+                entry.slideNo,
                 BaseDataTypes.newStatus,
                 entry.title,
                 entry.text,
