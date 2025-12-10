@@ -101,17 +101,26 @@ export class GenSlideTextService {
     // Slide templates
     prompt += `[\n`
 
+    var first = true
+
     for (const slideTemplate of slideTemplates) {
+
+      if (first === true) {
+        first = false
+      } else {
+        prompt += `,\n`
+        first = false
+      }
 
       prompt +=
         `  {\n` +
-        `  "  slideNo": ${slideTemplate.slideNo},\n` +
-        `  "  title": "${slideTemplate.title}",\n` +
-        `  "  textPrompt": "${slideTemplate.textPrompt}"\n` +
-        `  }\n`
+        `    "slideNo": ${slideTemplate.slideNo},\n` +
+        `    "title": "${slideTemplate.title}",\n` +
+        `    "textPrompt": "${slideTemplate.textPrompt}"\n` +
+        `  }`
     }
 
-    prompt += `]\n\n`
+    prompt += `\n]\n\n`
 
     // Continue the prompt
     prompt +=
