@@ -98,6 +98,36 @@ export class AnalysisModel {
     }
   }
 
+  async filterByNotExistsSlideTemplates(
+          prisma: PrismaClient,
+          id: string) {
+
+    // Debug
+    const fnName = `${this.clName}.filterByNotExistsSlideTemplates()`
+
+    // Query
+    var analysis: any = null
+
+    try {
+      analysis = await prisma.analysis.findUnique({
+        where: {
+          id: id,
+          ofSlideTemplates: {
+            some: {}
+          }
+        }
+      })
+    } catch(error: any) {
+      if (!(error instanceof error.NotFound)) {
+        console.error(`${fnName}: error: ${error}`)
+        throw 'Prisma error'
+      }
+    }
+
+    // Return
+    return analysis
+  }
+
   async getById(
           prisma: PrismaClient,
           id: string) {

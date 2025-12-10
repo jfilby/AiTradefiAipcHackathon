@@ -9,12 +9,14 @@ import { FeatureFlagModel } from '@/serene-core-server/models/feature-flags/feat
 import { BatchTypes } from '@/types/batch-types'
 import { ServerOnlyTypes } from '@/types/server-only-types'
 import { BatchJobModel } from '@/models/batch/batch-job-model'
+import { SlideTemplatesMutateService } from '@/services/slide-templates/mutate-service'
 import { TradeAnalysisMutateService } from '@/services/trade-analysis/mutate-service'
 
 // Models
 const featureFlagModel = new FeatureFlagModel()
 
 // Services
+const slideTemplatesMutateService = new SlideTemplatesMutateService()
 const tradeAnalysisMutateService = new TradeAnalysisMutateService()
 
 // Settings
@@ -98,6 +100,9 @@ async function interval15m(prisma: PrismaClient) {
   const fnName = 'interval15m'
 
   // console.log(`${fnName}: starting..`)
+
+  // Create slide templates
+  await slideTemplatesMutateService.run(prisma)
 
   // Trade analysis
   await tradeAnalysisMutateService.run(prisma)
