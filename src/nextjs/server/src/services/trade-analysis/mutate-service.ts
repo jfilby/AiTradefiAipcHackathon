@@ -59,6 +59,16 @@ export class TradeAnalysisMutateService {
       throw new CustomError(`${fnName}: pass 2 expects instruments as input`)
     }
 
+    // Determine the number of instruments to generate
+    var instrumentsToGenerate = ServerOnlyTypes.instrumentsPerScreenerRun
+
+    if (pass === 1) {
+      // Pass 1 needs to generate more than expected as several of them will
+      // likely be screened out by pass 2.
+      instrumentsToGenerate =
+        instrumentsToGenerate * ServerOnlyTypes.instrumentsPass1Factor
+    }
+
     // Start the prompt
     var prompt =
           `## Instructions\n` +
