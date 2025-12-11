@@ -468,3 +468,38 @@ model SlideTemplate {
   @@map("slide_template")
   @@schema("public")
 }
+
+// Audio
+
+model GeneratedAudio {
+  // uniqueHash: hash of voice + quality + prompt (very likely unique, but not
+  // set to a unique key just in case)
+  id                           String               @id @default(cuid())
+  status                       String               @db.Char(1)
+  voice                        String
+  quality                      String
+  uniqueHash                   String               @map("unique_hash")
+  prompt                       String
+  path                         String?
+
+  @@index([uniqueHash])
+  @@map("generated_audio")
+  @@schema("public")
+}
+
+// Images
+
+model GeneratedImage {
+  // uniqueHash: hash of model + prompt (very likely unique, but not set to a
+  // unique key just in case)
+  id                           String               @id @default(cuid())
+  status                       String               @db.Char(1)
+  model                        String
+  uniqueHash                   String               @map("unique_hash")
+  prompt                       String
+  path                         String?
+
+  @@index([uniqueHash])
+  @@map("generated_image")
+  @@schema("public")
+}
