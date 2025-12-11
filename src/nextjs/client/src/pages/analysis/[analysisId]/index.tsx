@@ -90,7 +90,8 @@ export default function EditAnalysesPage({
           setMessage={setMessage}
           saveAction={saveAction}
           setSaveAction={setSaveAction}
-          setEditMode={undefined} />
+          setEditMode={undefined}
+          redirectToIndexOnSave={true} />
 
       </Layout>
     </>

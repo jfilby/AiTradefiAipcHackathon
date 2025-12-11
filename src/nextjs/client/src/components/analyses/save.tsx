@@ -12,6 +12,7 @@ interface Props {
   saveAction: boolean
   setSaveAction: any
   setEditMode: any
+  redirectToIndexOnSave: boolean
 }
 
 export default function SaveAnalysis({
@@ -23,7 +24,8 @@ export default function SaveAnalysis({
                           setMessage,
                           saveAction,
                           setSaveAction,
-                          setEditMode
+                          setEditMode,
+                          redirectToIndexOnSave
                         }: Props) {
 
   // Consts
@@ -77,7 +79,8 @@ export default function SaveAnalysis({
     // Done
     setSaveAction(false)
 
-    if (results.status === true) {
+    if (results.status === true &&
+        redirectToIndexOnSave === true) {
       // setEditMode(false)
 
       window.location.href = indexUrl

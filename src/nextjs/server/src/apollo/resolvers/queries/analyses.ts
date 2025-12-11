@@ -42,7 +42,7 @@ export async function getAnalyses(
           analysesQueryService.filter(
             prisma,
             args.userProfileId,
-            BaseDataTypes.activeStatus,
+            undefined,  // BaseDataTypes.activeStatus,
             args.instrumentType ?? undefined)
 
   // Return

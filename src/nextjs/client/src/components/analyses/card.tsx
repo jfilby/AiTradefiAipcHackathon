@@ -1,12 +1,21 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import DeleteIcon from '@mui/icons-material/Delete'
+import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash'
 import { Alert, Divider, Link, Typography } from '@mui/material'
+import LabeledIconButton from '@/serene-core-client/components/buttons/labeled-icon-button'
+import { BaseDataTypes } from '@/shared/types/base-data-types'
+import DeleteDialog from '../dialogs/delete-dialog'
+import UndeleteDialog from '../dialogs/undelete-dialog'
+import SaveAnalysis from './save'
 
 interface Props {
+  userProfileId: string
   instanceId?: string
   analysis: any
 }
 
 export default function AnalysisCard({
+                          userProfileId,
                           instanceId,
                           analysis
                         }: Props) {
@@ -17,6 +26,38 @@ export default function AnalysisCard({
   // State
   const [alertSeverity, setAlertSeverity] = useState<any>('')
   const [message, setMessage] = useState<string | undefined>(undefined)
+  const [thisAnalysis, setThisAnalysis] = useState<any>(analysis)
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [undeleteDialogOpen, setUndeleteDialogOpen] = useState(false)
+  const [deleteAction, setDeleteAction] = useState(false)
+  const [undeleteAction, setUndeleteAction] = useState(false)
+  const [saveAction, setSaveAction] = useState(false)
+
+  // Effects
+  useEffect(() => {
+
+    if (deleteAction === true) {
+
+      thisAnalysis.status = BaseDataTypes.deletePendingStatus
+      setThisAnalysis(thisAnalysis)
+      setSaveAction(true)
+      setDeleteAction(false)
+    }
+
+  }, [deleteAction])
+
+  useEffect(() => {
+
+    if (undeleteAction === true) {
+
+      thisAnalysis.status = BaseDataTypes.activeStatus
+      setThisAnalysis(thisAnalysis)
+      setSaveAction(true)
+      setUndeleteAction(false)
+    }
+
+  }, [undeleteAction])
 
   // Render
   return (
@@ -34,28 +75,85 @@ export default function AnalysisCard({
 
       {/*<p>analysis: {JSON.stringify(analysis)}</p>*/}
 
-      <div
-        onClick={(e) => window.location.href = viewUrl}
-        style={{ marginBottom: '2em' }}>
+      <div style={{ marginBottom: '2em' }}>
 
-        <div style={{ display: 'block', marginBottom: '1em' }}>
+        <div
+          onClick={(e) => window.location.href = viewUrl}
+          style={{ display: 'inline-block', marginBottom: '1em', width: '80%' }}>
 
+          {thisAnalysis.status === BaseDataTypes.activeStatus ?
           <Link href={viewUrl}>
             <Typography
               style={{ marginBottom: '0.5em' }}
               variant='h5'>
-              {analysis.name}
+              {thisAnalysis.name}
             </Typography>
           </Link>
+          :
+            <>
+              <Typography
+                style={{ color: 'gray' }}
+                variant='h6'>
+                {thisAnalysis.name}
+              </Typography>
+              <Typography
+                style={{ color: 'gray' }}
+                variant='body2'>
+                <i>Deleted</i>
+              </Typography>
+            </>
+          }
 
           <Typography variant='body1'>
             {analysis.description}
           </Typography>
 
         </div>
+        <div style={{ display: 'inline-block', height: '2em', textAlign: 'right', width: '20%' }}>
+          <>
+            {thisAnalysis.status === BaseDataTypes.activeStatus ?
+
+              <LabeledIconButton
+                icon={DeleteIcon}
+                label='Delete'
+                onClick={(e: any) => setDeleteDialogOpen(true)}
+                style={{ marginRight: '1em' }} />
+            :
+              <LabeledIconButton
+                icon={RestoreFromTrashIcon}
+                label='Undelete'
+                onClick={(e: any) => setUndeleteDialogOpen(true)}
+                style={{ marginRight: '1em' }} />
+            }
+          </>
+        </div>
       </div>
 
       <Divider variant='fullWidth' />
+
+      <SaveAnalysis
+        userProfileId={userProfileId}
+        analysis={thisAnalysis}
+        isAdd={false}
+        setAlertSeverity={setAlertSeverity}
+        setMessage={setMessage}
+        saveAction={saveAction}
+        setSaveAction={setSaveAction}
+        setEditMode={undefined}
+        redirectToIndexOnSave={false} />
+
+      <DeleteDialog
+        open={deleteDialogOpen}
+        type='analysis'
+        name={analysis.name}
+        setOpen={setDeleteDialogOpen}
+        setDeleteConfirmed={setDeleteAction} />
+
+      <UndeleteDialog
+        open={undeleteDialogOpen}
+        name={analysis.name}
+        setOpen={setUndeleteDialogOpen}
+        setUndeleteConfirmed={setUndeleteAction} />
     </div>
   )
 }

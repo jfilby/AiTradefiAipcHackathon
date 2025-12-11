@@ -73,7 +73,8 @@ export default function CreateAnalysesPage({
           setMessage={setMessage}
           saveAction={saveAction}
           setSaveAction={setSaveAction}
-          setEditMode={undefined} />
+          setEditMode={undefined}
+          redirectToIndexOnSave={true} />
 
       </Layout>
     </>

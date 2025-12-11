@@ -51,6 +51,7 @@ export default function AnalysesPage({
           </div>
 
           <ListAnalyses
+            userProfileId={userProfile.id}
             instanceId={undefined}
             analyses={analyses} />
         </div>

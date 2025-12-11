@@ -2,11 +2,13 @@ import { Typography } from '@mui/material'
 import AnalysisCard from './card'
 
 interface Props {
+  userProfileId: string
   instanceId?: string
   analyses: any[]
 }
 
 export default function ListAnalyses({
+                          userProfileId,
                           instanceId,
                           analyses
                         }: Props) {
@@ -20,6 +22,7 @@ export default function ListAnalyses({
             <>
               {analyses.map(analysis => (
                 <AnalysisCard
+                  userProfileId={userProfileId}
                   analysis={analysis} />
               ))}
             </>
