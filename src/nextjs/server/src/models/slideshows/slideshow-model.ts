@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { BaseDataTypes } from '@/shared/types/base-data-types'
 
 export class SlideshowModel {
 
@@ -8,6 +9,7 @@ export class SlideshowModel {
   // Code
   async create(
           prisma: PrismaClient,
+          userProfileId: string,
           tradeAnalysisId: string,
           status: string) {
 
@@ -18,6 +20,7 @@ export class SlideshowModel {
     try {
       return await prisma.slideshow.create({
         data: {
+          userProfileId: userProfileId,
           tradeAnalysisId: tradeAnalysisId,
           status: status
         }
@@ -52,8 +55,10 @@ export class SlideshowModel {
 
   async filter(
           prisma: PrismaClient,
+          userProfileId: string | undefined = undefined,
           tradeAnalysisId: string | undefined = undefined,
-          status: string | undefined = undefined) {
+          status: string | undefined = undefined,
+          includeSlides: boolean = false) {
 
     // Debug
     const fnName = `${this.clName}.filter()`
@@ -61,7 +66,11 @@ export class SlideshowModel {
     // Query
     try {
       return await prisma.slideshow.findMany({
+        include: {
+          ofSlides: true
+        },
         where: {
+          userProfileId: userProfileId,
           tradeAnalysisId: tradeAnalysisId,
           status: status
         }
@@ -74,7 +83,8 @@ export class SlideshowModel {
 
   async getById(
           prisma: PrismaClient,
-          id: string) {
+          id: string,
+          includeSlides: boolean = false) {
 
     // Debug
     const fnName = `${this.clName}.getById()`
@@ -84,6 +94,9 @@ export class SlideshowModel {
 
     try {
       slideshow = await prisma.slideshow.findUnique({
+        include: {
+          ofSlides: true
+        },
         where: {
           id: id
         }
@@ -97,6 +110,50 @@ export class SlideshowModel {
 
     // Return
     return slideshow
+  }
+
+  async getByLatest(
+          prisma: PrismaClient,
+          userProfileId: string | undefined,
+          analysisId: string | undefined) {
+
+    // Debug
+    const fnName = `${this.clName}.getByLatest()`
+
+    console.log(`${fnName}: userProfileId: ${userProfileId}`)
+
+    // Query
+    try {
+      return await prisma.slideshow.findMany({
+        // distinct: ['tradeAnalysisId'],
+        include: {
+          tradeAnalysis: true,
+          ofSlides: true,
+        },
+        where: {
+          userProfileId: userProfileId,
+          tradeAnalysis: {
+            tradeAnalysesGroup: {
+              analysisId: analysisId
+            }
+          },
+          status: BaseDataTypes.activeStatus
+        },
+        orderBy: [
+          {
+            tradeAnalysis: {
+              instrumentId: 'asc'
+            }
+          },
+          {
+            created: 'desc'
+          }
+        ]
+      })
+    } catch(error: any) {
+      console.error(`${fnName}: error: ${error}`)
+      throw 'Prisma error'
+    }
   }
 
   async getByUniqueKey(
@@ -135,6 +192,7 @@ export class SlideshowModel {
   async update(
           prisma: PrismaClient,
           id: string,
+          userProfileId: string | undefined,
           tradeAnalysisId: string | undefined,
           status: string | undefined) {
 
@@ -145,6 +203,7 @@ export class SlideshowModel {
     try {
       return await prisma.slideshow.update({
         data: {
+          userProfileId: userProfileId,
           tradeAnalysisId: tradeAnalysisId,
           status: status
         },
@@ -161,6 +220,7 @@ export class SlideshowModel {
   async upsert(
           prisma: PrismaClient,
           id: string | undefined,
+          userProfileId: string | undefined,
           tradeAnalysisId: string | undefined,
           status: string | undefined) {
 
@@ -187,6 +247,11 @@ export class SlideshowModel {
     if (id == null) {
 
       // Validate for create (mainly for type validation of the create call)
+      if (userProfileId == null) {
+        console.error(`${fnName}: id is null and userProfileId is null`)
+        throw 'Prisma error'
+      }
+
       if (tradeAnalysisId == null) {
         console.error(`${fnName}: id is null and tradeAnalysisId is null`)
         throw 'Prisma error'
@@ -201,6 +266,7 @@ export class SlideshowModel {
       return await
                this.create(
                  prisma,
+                 userProfileId,
                  tradeAnalysisId,
                  status)
     } else {
@@ -210,6 +276,7 @@ export class SlideshowModel {
                this.update(
                  prisma,
                  id,
+                 userProfileId,
                  tradeAnalysisId,
                  status)
     }

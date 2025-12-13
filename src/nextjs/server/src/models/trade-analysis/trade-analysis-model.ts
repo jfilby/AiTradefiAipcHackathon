@@ -176,6 +176,35 @@ export class TradeAnalysisModel {
     return tradeAnalysis
   }
 
+  /* async getByLatest(
+          prisma: PrismaClient,
+          analysisId: string) {
+
+    // Debug
+    const fnName = `${this.clName}.getByLatest()`
+
+    // Query
+    try {
+      return await prisma.tradeAnalysis.findMany({
+        include: {
+          tradeAnalysesGroup: {
+            include: {
+              analysis: true
+            }
+          }
+        },
+        where: {
+          tradeAnalysesGroup: {
+            analysisId: analysisId
+          }
+        }
+      })
+    } catch(error: any) {
+      console.error(`${fnName}: error: ${error}`)
+      throw 'Prisma error'
+    }
+  } */
+
   async getByMinScore(
           prisma: PrismaClient,
           tradeAnalysesGroupId: string,

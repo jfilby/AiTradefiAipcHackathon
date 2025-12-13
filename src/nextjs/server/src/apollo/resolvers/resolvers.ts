@@ -17,6 +17,7 @@ import { getAnalyses, getAnalysisById } from './queries/analyses'
 import { getGenerationsSettingsList } from './queries/generations-settings'
 // import { filterInstances, filterProjectInstances, instanceById } from './queries/instances'
 import { getInstrumentById, getInstruments } from './queries/instruments'
+import { getSlideshowById, getSlideshows } from './queries/slideshows'
 import { getLatestTradeAnalysesGroups, getTradeAnalysesGroupById, getTradeAnalysisById } from './queries/trade-analyses-group'
 
 // Concept mutations imports
@@ -77,6 +78,10 @@ const Query = {
   // Instruments
   getInstrumentById,
   getInstruments,
+
+  // Slideshows
+  getSlideshowById,
+  getSlideshows,
 
   // Trade analyses
   getLatestTradeAnalysesGroups,

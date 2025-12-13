@@ -181,6 +181,35 @@ export const typeDefs = `#graphql
     chatSession: ChatSession
   }
 
+  type Slide {
+    id: String!
+    title: String!
+    text: String
+    audioPath: String
+    imagePath: String
+  }
+
+  type Slideshow {
+    id: String!
+    userProfileId: String!
+    tradeAnalysisId: String!
+    status: String!
+
+    slides: [Slide]
+  }
+
+  type SlideshowResults {
+    status: Boolean!
+    message: String
+    slideshow: Slideshow
+  }
+
+  type SlideshowsResults {
+    status: Boolean!
+    message: String
+    slideshows: [Slideshow]
+  }
+
   type TradeAnalysesGroup {
     id: String
     analysis: Analysis!
@@ -321,6 +350,16 @@ export const typeDefs = `#graphql
     # Instruments
     getInstrumentById(instrumentId: String): InstrumentResults
     getInstruments(type: String): InstrumentsResults
+
+    # Slideshows
+    getSlideshowById(
+      userProfileId: String!,
+      instanceId: String,
+      slideshowId: String!): SlideshowResults!
+    getSlideshows(
+      userProfileId: String!,
+      instanceId: String,
+      analysisId: String): SlideshowsResults!
 
     # Trade analyses
     getTradeAnalysisById(

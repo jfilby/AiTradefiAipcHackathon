@@ -93,6 +93,7 @@ model UserProfile {
 
   ofAnalyses                    Analysis[]
   ofGenerationsSettings         GenerationsSettings[]
+  ofSlideshows                  Slideshow[]
 
   @@map("user_profile")
   @@schema("public")

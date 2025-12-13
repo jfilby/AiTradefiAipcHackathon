@@ -136,6 +136,7 @@ export class AnalysisToSlidesTestDataService {
             slideshowModel.upsert(
               prisma,
               undefined,  // id
+              adminUserProfileId,
               tradeAnalysis.id,
               BaseDataTypes.activeStatus)
 

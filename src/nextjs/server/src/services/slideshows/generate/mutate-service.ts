@@ -45,6 +45,7 @@ export class SlideshowMutateService {
     slideshow = await
       slideshowModel.create(
         prisma,
+        (tradeAnalysis as any).analysis.userProfileId,
         tradeAnalysis.id,
         BaseDataTypes.newStatus)
 
@@ -93,6 +94,7 @@ export class SlideshowMutateService {
       slideshowModel.update(
         prisma,
         slideshow.id,
+        undefined,  // userProfileId
         undefined,  // tradeAnalysisId
         BaseDataTypes.activeStatus)
   }

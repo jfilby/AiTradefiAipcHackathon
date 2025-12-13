@@ -439,6 +439,8 @@ model Slide {
 
 model Slideshow {
   id                           String               @id @default(cuid())
+  userProfileId                String               @map("user_profile_id")
+  userProfile                  UserProfile          @relation(fields: [userProfileId], references: [id])
   tradeAnalysisId              String               @map("trade_analysis_id") @unique
   tradeAnalysis                TradeAnalysis        @relation(fields: [tradeAnalysisId], references: [id])
   status                       String               @db.Char(1)
