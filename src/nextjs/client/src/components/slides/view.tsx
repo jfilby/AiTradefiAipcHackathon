@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
+import ReplayIcon from '@mui/icons-material/Replay'
 import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash'
 import { Alert, Divider, Link, Typography } from '@mui/material'
 import LabeledIconButton from '@/serene-core-client/components/buttons/labeled-icon-button'
@@ -19,9 +20,6 @@ export default function ViewSlide({
                           instanceId,
                           slide
                         }: Props) {
-
-  // Consts
-  const viewUrl = `/slideshow/${slide.slideshow}`
 
   // State
   const [alertSeverity, setAlertSeverity] = useState<any>('')
@@ -76,22 +74,19 @@ export default function ViewSlide({
       {/* <p>thisSlide: {JSON.stringify(thisSlide)}</p> */}
 
       <div style={{ marginBottom: '2em' }}>
-
-        <div
-          onClick={(e) => window.location.href = viewUrl}
-          style={{ display: 'inline-block', marginBottom: '1em', width: '80%' }}>
+        <div style={{ marginBottom: '1em', width: '80%' }}>
 
           {thisSlide.status === BaseDataTypes.activeStatus ?
             <Typography
               style={{ marginBottom: '0.5em' }}
-              variant='h5'>
+              variant='h1'>
               <>{thisSlide.title}</>
             </Typography>
           :
             <>
               <Typography
                 style={{ color: 'gray' }}
-                variant='h6'>
+                variant='h1'>
                 <>{thisSlide.title}</>
               </Typography>
               <Typography
@@ -102,6 +97,27 @@ export default function ViewSlide({
             </>
           }
         </div>
+      </div>
+
+      <div style={{ /* border: '1px solid #eee', */ minHeight: '30em', textAlign: 'left' }}>
+        <Typography variant='h3'>
+          {thisSlide.text}
+        </Typography>
+      </div>
+
+      <div style={{ width: '100%' }}>
+        <div style={{ display: 'inline-block', height: '2em', width: '80%' }}>
+          {slide.audioPath != null?
+            <LabeledIconButton
+              icon={ReplayIcon}
+              label='Replay audio'
+              onClick={(e: any) => {}}
+              style={{ marginRight: '1em' }} />
+          :
+            <></>
+          }
+        </div>
+
         <div style={{ display: 'inline-block', height: '2em', textAlign: 'right', width: '20%' }}>
           <>
             {thisSlide.status === BaseDataTypes.activeStatus ?
@@ -121,10 +137,6 @@ export default function ViewSlide({
           </>
         </div>
       </div>
-
-      <Typography variant='h4'>
-        {thisSlide.text}
-      </Typography>
 
       {/* <SaveSlide
         userProfileId={userProfileId}
