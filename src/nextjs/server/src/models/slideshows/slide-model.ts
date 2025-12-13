@@ -15,8 +15,8 @@ export class SlideModel {
           status: string,
           title: string,
           text: string | null,
-          audioPath: string | null,
-          imagePath: string | null) {
+          generatedAudioId: string | null,
+          generatedImageId: string | null) {
 
     // Debug
     const fnName = `${this.clName}.create()`
@@ -31,8 +31,8 @@ export class SlideModel {
           status: status,
           title: title,
           text: text,
-          audioPath: audioPath,
-          imagePath: imagePath
+          generatedAudioId: generatedAudioId,
+          generatedImageId: generatedImageId
         }
       })
     } catch(error) {
@@ -239,8 +239,8 @@ export class SlideModel {
           status: string | undefined,
           title: string | undefined,
           text: string | null | undefined,
-          audioPath: string | null | undefined,
-          imagePath: string | null | undefined) {
+          generatedAudioId: string | null | undefined,
+          generatedImageId: string | null | undefined) {
 
     // Debug
     const fnName = `${this.clName}.update()`
@@ -255,8 +255,8 @@ export class SlideModel {
           status: status,
           title: title,
           text: text,
-          audioPath: audioPath,
-          imagePath: imagePath
+          generatedAudioId: generatedAudioId,
+          generatedImageId: generatedImageId
         },
         where: {
           id: id
@@ -277,8 +277,8 @@ export class SlideModel {
           status: string | undefined,
           title: string | undefined,
           text: string | null | undefined,
-          audioPath: string | null | undefined,
-          imagePath: string | null | undefined) {
+          generatedAudioId: string | null | undefined,
+          generatedImageId: string | null | undefined) {
 
     // Debug
     const fnName = `${this.clName}.upsert()`
@@ -348,13 +348,13 @@ export class SlideModel {
         throw 'Prisma error'
       }
 
-      if (audioPath === undefined) {
-        console.error(`${fnName}: id is null and audioPath is undefined`)
+      if (generatedAudioId === undefined) {
+        console.error(`${fnName}: id is null and generatedAudioId is undefined`)
         throw 'Prisma error'
       }
 
-      if (imagePath === undefined) {
-        console.error(`${fnName}: id is null and imagePath is undefined`)
+      if (generatedImageId === undefined) {
+        console.error(`${fnName}: id is null and generatedImageId is undefined`)
         throw 'Prisma error'
       }
 
@@ -368,8 +368,8 @@ export class SlideModel {
                  status,
                  title,
                  text,
-                 audioPath,
-                 imagePath)
+                 generatedAudioId,
+                 generatedImageId)
     } else {
 
       // Update
@@ -383,8 +383,8 @@ export class SlideModel {
                  status,
                  title,
                  text,
-                 audioPath,
-                 imagePath)
+                 generatedAudioId,
+                 generatedImageId)
     }
   }
 }

@@ -177,8 +177,8 @@ export class GenSlideTextService {
                 BaseDataTypes.newStatus,
                 entry.title,
                 entry.text,
-                null,         // audioPath
-                null)         // imagePath
+                null,         // generatedAudioId
+                null)         // generatedImageId
     }
   }
 }

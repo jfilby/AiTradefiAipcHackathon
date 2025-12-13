@@ -426,8 +426,10 @@ model Slide {
   status                       String               @db.Char(1)
   title                        String
   text                         String?
-  audioPath                    String?              @map("audio_path")
-  imagePath                    String?              @map("image_path")
+  generatedAudioId             String?              @map("generated_audio_id")
+  generatedAudio               GeneratedAudio?      @relation(fields: [generatedAudioId], references: [id])
+  generatedImageId             String?              @map("generated_image_id")
+  generatedImage               GeneratedImage?      @relation(fields: [generatedImageId], references: [id])
   created                      DateTime             @default(now())
   updated                      DateTime             @updatedAt
 
@@ -500,6 +502,8 @@ model GeneratedAudio {
   prompt                       String
   relativePath                 String               @map("relative_path") @unique
 
+  ofSlides                     Slide[]
+
   @@map("generated_audio")
   @@schema("public")
 }
@@ -514,6 +518,8 @@ model GeneratedImage {
   model                        String
   prompt                       String
   relativePath                 String               @map("relative_path") @unique
+
+  ofSlides                     Slide[]
 
   @@map("generated_image")
   @@schema("public")

@@ -186,8 +186,8 @@ export const typeDefs = `#graphql
     status: String!
     title: String!
     text: String
-    audioPath: String
-    imagePath: String
+    generatedAudioId: String
+    generatedImageId: String
   }
 
   type Slideshow {

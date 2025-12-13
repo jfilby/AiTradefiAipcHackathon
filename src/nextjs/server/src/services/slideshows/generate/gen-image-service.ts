@@ -10,6 +10,6 @@ export class GenSlideImageService {
           prisma: PrismaClient,
           slideTemplate: SlideTemplate) {
 
-    return undefined
+    return null
   }
 }

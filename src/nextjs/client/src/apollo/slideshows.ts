@@ -22,8 +22,8 @@ export const getSlideshowQuery = gql`
           status
           title
           text
-          audioPath
-          imagePath
+          generatedAudioId
+          generatedImageId
         }
       }
     }
@@ -52,8 +52,8 @@ export const getSlideshowsQuery = gql`
           status
           title
           text
-          audioPath
-          imagePath
+          generatedAudioId
+          generatedImageId
         }
       }
     }

@@ -143,17 +143,17 @@ export class SlideshowMutateService {
         BaseDataTypes.newStatus,
         slideTemplate.title,
         null,         // text
-        null,         // audioPath
-        null)         // imagePath
+        null,         // generatedAudioId
+        null)         // generatedImageId
 
     // Generate audio
-    const audioPath = await
+    const generatedAudioId = await
             genSlideAudioService.generate(
               prisma,
               slideTemplate)
 
     // Generate image
-    const imagePath = await
+    const generatedImageId = await
             genSlideImageService.generate(
               prisma,
               slideTemplate)
@@ -169,7 +169,7 @@ export class SlideshowMutateService {
         BaseDataTypes.activeStatus,
         slideTemplate.title,
         undefined,  // text
-        audioPath,
-        imagePath)
+        generatedAudioId,
+        generatedImageId)
   }
 }

@@ -10,6 +10,6 @@ export class GenSlideAudioService {
           prisma: PrismaClient,
           slideTemplate: SlideTemplate) {
 
-    return undefined
+    return null
   }
 }

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
 import ReplayIcon from '@mui/icons-material/Replay'
 import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash'
-import { Alert, Divider, Link, Typography } from '@mui/material'
+import { Alert, Typography } from '@mui/material'
 import LabeledIconButton from '@/serene-core-client/components/buttons/labeled-icon-button'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 // import DeleteDialog from '../dialogs/delete-dialog'
@@ -21,6 +21,10 @@ export default function ViewSlide({
                           slide
                         }: Props) {
 
+  // Const
+  const audioUrl =
+    `${process.env.NEXT_PUBLIC_API_URL}/api/audio/${slide.generatedAudioId}/get`
+
   // State
   const [alertSeverity, setAlertSeverity] = useState<any>('')
   const [message, setMessage] = useState<string | undefined>(undefined)
@@ -32,7 +36,21 @@ export default function ViewSlide({
   const [undeleteAction, setUndeleteAction] = useState(false)
   const [saveAction, setSaveAction] = useState(false)
 
+  // Functions
+  async function playAudio() {
+
+    console.log(`playing..`)
+
+    const audio = new Audio(audioUrl)
+    audio.play()
+  }
+
   // Effects
+  useEffect(() => {
+
+    playAudio()
+  }, [])
+
   useEffect(() => {
 
     if (deleteAction === true) {
@@ -107,11 +125,11 @@ export default function ViewSlide({
 
       <div style={{ width: '100%' }}>
         <div style={{ display: 'inline-block', height: '2em', width: '80%' }}>
-          {slide.audioPath != null?
+          {slide.generatedAudioId != null?
             <LabeledIconButton
               icon={ReplayIcon}
               label='Replay audio'
-              onClick={(e: any) => {}}
+              onClick={(e: any) => playAudio()}
               style={{ marginRight: '1em' }} />
           :
             <></>

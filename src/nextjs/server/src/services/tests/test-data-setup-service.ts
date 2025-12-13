@@ -179,7 +179,7 @@ export class AnalysisToSlidesTestDataService {
               slideTemplates[0].title,
               slideTemplates[0].textPrompt,
               generatedAudio.id,
-              null)       // imagePath
+              null)       // generatedImageId
   }
 
   async setupSlideTemplates(
