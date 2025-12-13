@@ -4,7 +4,7 @@ import { loadServerPage } from '@/services/page/load-server-page'
 import Layout from '@/components/layouts/layout'
 // import EditSlide from '@/components/slide/edit'
 import LoadSlideshowById from '@/components/slideshows/load-by-id'
-import ViewSlide from '@/components/slides/view'
+import PlaySlide from '@/components/slides/play'
 // import SaveSlide from '@/components/slide/save'
 
 interface Props {
@@ -62,7 +62,7 @@ export default function ViewSlideshowPage({
 
           {slide != null &&
            loaded === true ?
-            <ViewSlide
+            <PlaySlide
               userProfileId={userProfile.id}
               instanceId={undefined}
               slide={slide} />
