@@ -89,7 +89,8 @@ import { TestsService } from './services/tests/tests-service'
 
       await testsService.tests(
               prisma,
-              regularTestUserProfile)
+              regularTestUserProfile,
+              adminUserProfile)
 
       break
     }

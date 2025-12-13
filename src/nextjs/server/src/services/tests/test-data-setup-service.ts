@@ -8,6 +8,7 @@ import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { ServerOnlyTypes, SlideTypes } from '@/types/server-only-types'
 import { ServerTestTypes } from '@/types/server-test-types'
 import { AnalysisModel } from '@/models/trade-analysis/analysis-model'
+import { ExchangeModel } from '@/models/instruments/exchange-model'
 import { GenerationsSettingsModel } from '@/models/trade-analysis/generations-settings-model'
 import { InstrumentModel } from '@/models/instruments/instrument-model'
 import { SlideshowModel } from '@/models/slideshows/slideshow-model'
@@ -17,9 +18,11 @@ import { TradeAnalysesGroupModel } from '@/models/trade-analysis/trade-analyses-
 import { TradeAnalysisModel } from '@/models/trade-analysis/trade-analysis-model'
 import { GeneratedAudioModel } from '@/models/generated-media/generated-audio-model'
 import { GeneratedImageModel } from '@/models/generated-media/generated-image-model'
+import { GetTechService } from '../tech/get-tech-service'
 
 // Models
 const analysisModel = new AnalysisModel()
+const exchangeModel = new ExchangeModel()
 const generatedAudioModel = new GeneratedAudioModel()
 const generatedImageModel = new GeneratedImageModel()
 const generationsSettingsModel = new GenerationsSettingsModel()
@@ -30,11 +33,14 @@ const slideTemplateModel = new SlideTemplateModel()
 const tradeAnalysesGroupModel = new TradeAnalysesGroupModel()
 const tradeAnalysisModel = new TradeAnalysisModel()
 
+// Services
+const getTechService = new GetTechService()
+
 // Class
-export class TestDataSetupService {
+export class AnalysisToSlidesTestDataService {
 
   // Consts
-  clName = 'TestDataSetupService'
+  clName = 'AnalysisToSlidesTestDataService'
 
   // Code
   async run(prisma: PrismaClient,
@@ -153,7 +159,7 @@ export class TestDataSetupService {
 
     // Get the audioPath for slideNo 1
     const generatedAudio = await
-            generatedAudioModel.getByRelativePath(
+            generatedAudioModel.getByUniqueKey(
               prisma,
               `/audio/nvda-test/overview.mp3`)
 
@@ -204,7 +210,7 @@ export class TestDataSetupService {
               `What we're looking for`,
               `Large caps that have a strong possible upside`,
               `Narrate the text, whispering "upside".`,
-              undefined)  // imagePath
+              null)       // imagePath
 
     // Create a financials slide template
     const annualFinancialsSlideTemplate = await
@@ -217,7 +223,7 @@ export class TestDataSetupService {
               `Annual financials`,
               `The last few years`,
               `Narrate a summary of the annual financials`,
-              undefined)  // imagePath
+              null)       // imagePath
 
     // Create a daily chart slide template
     const dailyChartSlideTemplate = await
@@ -230,7 +236,7 @@ export class TestDataSetupService {
               `Daily chart`,
               `Stock performance (daily timeframe)`,
               `Narrate a summary of the daily chart`,
-              undefined)  // imagePath
+              null)       // imagePath
 
     // Create an outro slide template
     const outroChartSlideTemplate = await
@@ -243,7 +249,7 @@ export class TestDataSetupService {
               `Summary`,
               `A solid investment decision`,
               `Narrate a brief summary of the investment potential`,
-              undefined)  // imagePath
+              null)       // imagePath
   }
 
   async setupTradeAnalysis(
@@ -269,16 +275,13 @@ export class TestDataSetupService {
               analysis.defaultMinScore,  // minScore
               1)                         // screenerRuns
 
-    // Get Instrument
+    // Setup Instrument
     const instrument = await
-            instrumentModel.getByUniqueKey(
-              prisma,
-              ServerOnlyTypes.nasdaqExchangeName,
-              ServerTestTypes.nvdaSymbol)
+            this.setupInstrument(prisma)
 
-    if (instrument == null) {
-      throw new CustomError(`${fnName}: instrument == null`)
-    }
+    // Get tech
+    const tech = await
+            getTechService.getStandardLlmTech(prisma)
 
     // Upsert TradeAnalysis
     const tradeAnalysis = await
@@ -287,7 +290,7 @@ export class TestDataSetupService {
               undefined,  // id
               tradeAnalysesGroup.id,
               instrument.id,
-              undefined,  // techId
+              tech.id,
               BaseDataTypes.activeStatus,
               ServerOnlyTypes.buyTradeType,
               0.85,       // score,
@@ -296,5 +299,38 @@ export class TestDataSetupService {
 
     // Return
     return tradeAnalysis
+  }
+
+  async setupInstrument(prisma: PrismaClient) {
+
+    // Debug
+    const fnName = `${this.clName}.setupInstrument`
+
+    // Get exchange
+    const exchange = await
+            exchangeModel.getByUniqueKey(
+              prisma,
+              ServerOnlyTypes.nasdaqExchangeName)
+
+    if (exchange == null) {
+      throw new CustomError(`${fnName}: exchange == null`)
+    }
+
+    // Get Instrument
+    const symbol = ServerTestTypes.nvdaSymbol
+
+    const instrument = await
+            instrumentModel.upsert(
+              prisma,
+              undefined,  // id
+              exchange.id,
+              BaseDataTypes.activeStatus,
+              symbol,
+              BaseDataTypes.stocksType,
+              'Nvidia',
+              null)       // yahooFinanceTicker
+
+    // Return
+    return instrument
   }
 }
