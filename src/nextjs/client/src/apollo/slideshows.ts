@@ -42,6 +42,7 @@ export const getSlideshowsQuery = gql`
       status
       message
       slideshows {
+        id
         userProfileId
         tradeAnalysisId
         status

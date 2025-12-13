@@ -1,10 +1,8 @@
 import { PrismaClient } from '@prisma/client'
 import { SlideshowModel } from '@/models/slideshows/slideshow-model'
-import { TradeAnalysisModel } from '@/models/trade-analysis/trade-analysis-model'
 
 // Models
 const slideshowModel = new SlideshowModel()
-const tradeAnalysisModel = new TradeAnalysisModel()
 
 // Class
 export class SlideshowsQueryService {
@@ -52,7 +50,7 @@ export class SlideshowsQueryService {
               analysisId)
 
     // Debug
-    console.log(`${fnName}: slideshows: ` + JSON.stringify(slideshows))
+    // console.log(`${fnName}: slideshows: ` + JSON.stringify(slideshows))
 
     // Adjust slides name
     for (const slideshow of slideshows) {

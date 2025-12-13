@@ -120,7 +120,7 @@ export class SlideshowModel {
     // Debug
     const fnName = `${this.clName}.getByLatest()`
 
-    console.log(`${fnName}: userProfileId: ${userProfileId}`)
+    // console.log(`${fnName}: userProfileId: ${userProfileId}`)
 
     // Query
     try {

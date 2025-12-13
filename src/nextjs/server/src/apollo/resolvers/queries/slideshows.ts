@@ -1,5 +1,4 @@
 import { prisma } from '@/db'
-import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { SlideshowsQueryService } from '@/services/slideshows/view/query-service'
 
 // Services
