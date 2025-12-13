@@ -6,8 +6,8 @@ import { ServerTestTypes } from '@/types/server-test-types'
 import { SlideModel } from '@/models/slideshows/slide-model'
 import { SlideTemplateModel } from '@/models/slideshows/slide-template-model'
 import { GenSlideTextLlmService } from './gen-text-llm-service'
-import { GetTechService } from '../tech/get-tech-service'
-import { YFinanceQueryService } from '../external-data/yfinance/query-service'
+import { GetTechService } from '../../tech/get-tech-service'
+import { YFinanceQueryService } from '../../external-data/yfinance/query-service'
 
 // Models
 const slideModel = new SlideModel()
