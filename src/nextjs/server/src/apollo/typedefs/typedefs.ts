@@ -183,6 +183,7 @@ export const typeDefs = `#graphql
 
   type Slide {
     id: String!
+    status: String!
     title: String!
     text: String
     audioPath: String

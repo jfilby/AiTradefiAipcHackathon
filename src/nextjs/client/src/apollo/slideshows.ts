@@ -19,6 +19,7 @@ export const getSlideshowQuery = gql`
         status
         slides {
           id
+          status
           title
           text
           audioPath
@@ -48,6 +49,7 @@ export const getSlideshowsQuery = gql`
         status
         slides {
           id
+          status
           title
           text
           audioPath
