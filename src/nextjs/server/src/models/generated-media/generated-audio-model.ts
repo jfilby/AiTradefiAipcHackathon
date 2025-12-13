@@ -9,11 +9,10 @@ export class GeneratedAudioModel {
   async create(
           prisma: PrismaClient,
           status: string,
-          voice: string,
-          quality: string,
-          uniqueHash: string,
+          elevenLabsVoiceId: string,
+          outputFormat: string,
           prompt: string,
-          path: string | null) {
+          relativePath: string) {
 
     // Debug
     const fnName = `${this.clName}.create()`
@@ -23,11 +22,10 @@ export class GeneratedAudioModel {
       return await prisma.generatedAudio.create({
         data: {
           status: status,
-          voice: voice,
-          quality: quality,
-          uniqueHash: uniqueHash,
+          elevenLabsVoiceId: elevenLabsVoiceId,
+          outputFormat: outputFormat,
           prompt: prompt,
-          path: path
+          relativePath: relativePath
         }
       })
     } catch(error) {
@@ -61,8 +59,8 @@ export class GeneratedAudioModel {
   async filter(
           prisma: PrismaClient,
           status: string | undefined = undefined,
-          voice: string | undefined = undefined,
-          quality: string | undefined = undefined) {
+          elevenLabsVoiceId: string | undefined = undefined,
+          outputFormat: string | undefined = undefined) {
 
     // Debug
     const fnName = `${this.clName}.filter()`
@@ -72,8 +70,8 @@ export class GeneratedAudioModel {
       return await prisma.generatedAudio.findMany({
         where: {
           status: status,
-          voice: voice,
-          quality: quality
+          elevenLabsVoiceId: elevenLabsVoiceId,
+          outputFormat: outputFormat
         }
       })
     } catch(error: any) {
@@ -111,14 +109,16 @@ export class GeneratedAudioModel {
 
   async getByUniqueKey(
           prisma: PrismaClient,
-          status: string,
-          voice: string,
-          quality: string,
-          uniqueHash: string,
-          prompt: string) {
+          relativePath: string) {
 
     // Debug
-    const fnName = `${this.clName}.getById()`
+    const fnName = `${this.clName}.getByUniqueKey()`
+
+    // Validate
+    if (relativePath === undefined) {
+      console.error(`${fnName}: id is null and relativePath is undefined`)
+      throw 'Prisma error'
+    }
 
     // Query
     var generatedAudio: any = null
@@ -126,11 +126,7 @@ export class GeneratedAudioModel {
     try {
       generatedAudio = await prisma.generatedAudio.findFirst({
         where: {
-          status: status,
-          voice: voice,
-          quality: quality,
-          uniqueHash: uniqueHash,
-          prompt: prompt
+          relativePath: relativePath
         }
       })
     } catch(error: any) {
@@ -148,11 +144,10 @@ export class GeneratedAudioModel {
           prisma: PrismaClient,
           id: string,
           status: string | undefined,
-          voice: string | undefined,
-          quality: string | undefined,
-          uniqueHash: string | undefined,
+          elevenLabsVoiceId: string | undefined,
+          outputFormat: string | undefined,
           prompt: string | undefined,
-          path: string | null | undefined) {
+          relativePath: string | undefined) {
 
     // Debug
     const fnName = `${this.clName}.update()`
@@ -162,11 +157,10 @@ export class GeneratedAudioModel {
       return await prisma.generatedAudio.update({
         data: {
           status: status,
-          voice: voice,
-          quality: quality,
-          uniqueHash: uniqueHash,
+          elevenLabsVoiceId: elevenLabsVoiceId,
+          outputFormat: outputFormat,
           prompt: prompt,
-          path: path
+          relativePath: relativePath
         },
         where: {
           id: id
@@ -182,11 +176,10 @@ export class GeneratedAudioModel {
           prisma: PrismaClient,
           id: string | undefined,
           status: string | undefined,
-          voice: string | undefined,
-          quality: string | undefined,
-          uniqueHash: string | undefined,
+          elevenLabsVoiceId: string | undefined,
+          outputFormat: string | undefined,
           prompt: string | undefined,
-          path: string | null | undefined) {
+          relativePath: string | undefined) {
 
     // Debug
     const fnName = `${this.clName}.upsert()`
@@ -195,20 +188,12 @@ export class GeneratedAudioModel {
 
     // If id isn't specified, but the unique keys are, try to get the record
     if (id == null &&
-        status != null &&
-        voice != null &&
-        quality != null &&
-        uniqueHash != null &&
-        prompt != null) {
+        relativePath != null) {
 
       const generatedAudio = await
               this.getByUniqueKey(
                 prisma,
-                status,
-                voice,
-                quality,
-                uniqueHash,
-                prompt)
+                relativePath)
 
       if (generatedAudio != null) {
         id = generatedAudio.id
@@ -224,18 +209,13 @@ export class GeneratedAudioModel {
         throw 'Prisma error'
       }
 
-      if (voice == null) {
-        console.error(`${fnName}: id is null and voice is null`)
+      if (elevenLabsVoiceId == null) {
+        console.error(`${fnName}: id is null and elevenLabsVoiceId is null`)
         throw 'Prisma error'
       }
 
-      if (quality == null) {
-        console.error(`${fnName}: id is null and quality is null`)
-        throw 'Prisma error'
-      }
-
-      if (uniqueHash == null) {
-        console.error(`${fnName}: id is null and uniqueHash is null`)
+      if (outputFormat == null) {
+        console.error(`${fnName}: id is null and outputFormat is null`)
         throw 'Prisma error'
       }
 
@@ -244,8 +224,8 @@ export class GeneratedAudioModel {
         throw 'Prisma error'
       }
 
-      if (path === undefined) {
-        console.error(`${fnName}: id is null and path is undefined`)
+      if (relativePath === undefined) {
+        console.error(`${fnName}: id is null and relativePath is undefined`)
         throw 'Prisma error'
       }
 
@@ -254,11 +234,10 @@ export class GeneratedAudioModel {
                this.create(
                  prisma,
                  status,
-                 voice,
-                 quality,
-                 uniqueHash,
+                 elevenLabsVoiceId,
+                 outputFormat,
                  prompt,
-                 path)
+                 relativePath)
     } else {
 
       // Update
@@ -267,11 +246,10 @@ export class GeneratedAudioModel {
                  prisma,
                  id,
                  status,
-                 voice,
-                 quality,
-                 uniqueHash,
+                 elevenLabsVoiceId,
+                 outputFormat,
                  prompt,
-                 path)
+                 relativePath)
     }
   }
 }

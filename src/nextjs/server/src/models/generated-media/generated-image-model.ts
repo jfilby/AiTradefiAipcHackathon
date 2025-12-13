@@ -10,9 +10,8 @@ export class GeneratedImageModel {
           prisma: PrismaClient,
           status: string,
           model: string,
-          uniqueHash: string,
           prompt: string,
-          path: string | null) {
+          relativePath: string) {
 
     // Debug
     const fnName = `${this.clName}.create()`
@@ -23,9 +22,8 @@ export class GeneratedImageModel {
         data: {
           status: status,
           model: model,
-          uniqueHash: uniqueHash,
           prompt: prompt,
-          path: path
+          relativePath: relativePath
         }
       })
     } catch(error) {
@@ -107,13 +105,16 @@ export class GeneratedImageModel {
 
   async getByUniqueKey(
           prisma: PrismaClient,
-          status: string,
-          model: string,
-          uniqueHash: string,
-          prompt: string) {
+          relativePath: string) {
 
     // Debug
-    const fnName = `${this.clName}.getById()`
+    const fnName = `${this.clName}.getByUniqueKey()`
+
+    // Validate
+    if (relativePath === undefined) {
+      console.error(`${fnName}: id is null and relativePath is undefined`)
+      throw 'Prisma error'
+    }
 
     // Query
     var generatedImage: any = null
@@ -121,10 +122,7 @@ export class GeneratedImageModel {
     try {
       generatedImage = await prisma.generatedImage.findFirst({
         where: {
-          status: status,
-          model: model,
-          uniqueHash: uniqueHash,
-          prompt: prompt
+          relativePath: relativePath
         }
       })
     } catch(error: any) {
@@ -143,9 +141,8 @@ export class GeneratedImageModel {
           id: string,
           status: string | undefined,
           model: string | undefined,
-          uniqueHash: string | undefined,
           prompt: string | undefined,
-          path: string | null | undefined) {
+          relativePath: string | undefined) {
 
     // Debug
     const fnName = `${this.clName}.update()`
@@ -156,9 +153,8 @@ export class GeneratedImageModel {
         data: {
           status: status,
           model: model,
-          uniqueHash: uniqueHash,
           prompt: prompt,
-          path: path
+          relativePath: relativePath
         },
         where: {
           id: id
@@ -175,9 +171,8 @@ export class GeneratedImageModel {
           id: string | undefined,
           status: string | undefined,
           model: string | undefined,
-          uniqueHash: string | undefined,
           prompt: string | undefined,
-          path: string | null | undefined) {
+          relativePath: string | undefined) {
 
     // Debug
     const fnName = `${this.clName}.upsert()`
@@ -186,18 +181,12 @@ export class GeneratedImageModel {
 
     // If id isn't specified, but the unique keys are, try to get the record
     if (id == null &&
-        status != null &&
-        model != null &&
-        uniqueHash != null &&
-        prompt != null) {
+        relativePath != null) {
 
       const generatedImage = await
               this.getByUniqueKey(
                 prisma,
-                status,
-                model,
-                uniqueHash,
-                prompt)
+                relativePath)
 
       if (generatedImage != null) {
         id = generatedImage.id
@@ -218,18 +207,13 @@ export class GeneratedImageModel {
         throw 'Prisma error'
       }
 
-      if (uniqueHash == null) {
-        console.error(`${fnName}: id is null and uniqueHash is null`)
-        throw 'Prisma error'
-      }
-
       if (prompt == null) {
         console.error(`${fnName}: id is null and prompt is null`)
         throw 'Prisma error'
       }
 
-      if (path === undefined) {
-        console.error(`${fnName}: id is null and path is undefined`)
+      if (relativePath === undefined) {
+        console.error(`${fnName}: id is null and relativePath is undefined`)
         throw 'Prisma error'
       }
 
@@ -239,9 +223,8 @@ export class GeneratedImageModel {
                  prisma,
                  status,
                  model,
-                 uniqueHash,
                  prompt,
-                 path)
+                 relativePath)
     } else {
 
       // Update
@@ -251,9 +234,8 @@ export class GeneratedImageModel {
                  id,
                  status,
                  model,
-                 uniqueHash,
                  prompt,
-                 path)
+                 relativePath)
     }
   }
 }

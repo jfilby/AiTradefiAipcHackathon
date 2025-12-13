@@ -471,18 +471,33 @@ model SlideTemplate {
 
 // Audio
 
+model ElevenLabsVoice {
+  id                           String               @id @default(cuid())
+  voiceId                      String               @map("voice_id") @unique
+  status                       String               @db.Char(1)
+  name                         String
+  category                     String
+  description                  String
+  previewUrl                   String               @map("preview_url")
+  highQualityBaseModelIds      Json                 @map("high_quality_base_model_ids") @db.JsonB
+
+  ofGeneratedAudios            GeneratedAudio[]
+
+  @@map("eleven_labs_voice")
+  @@schema("public")
+}
+
 model GeneratedAudio {
-  // uniqueHash: hash of voice + quality + prompt (very likely unique, but not
-  // set to a unique key just in case)
+  // uniqueHash: hash of elevenLabsVoiceId + outputFormat + prompt (very likely
+  // unique, butnot set to a unique key just in case)
   id                           String               @id @default(cuid())
   status                       String               @db.Char(1)
-  voice                        String
-  quality                      String
-  uniqueHash                   String               @map("unique_hash")
+  elevenLabsVoiceId            String               @map("elevenlabs_voice_id")
+  elevenLabsVoice              ElevenLabsVoice      @relation(fields: [elevenLabsVoiceId], references: [id])
+  outputFormat                 String               @map("output_format")
   prompt                       String
-  path                         String?
+  relativePath                 String               @map("relative_path") @unique
 
-  @@index([uniqueHash])
   @@map("generated_audio")
   @@schema("public")
 }
@@ -495,11 +510,9 @@ model GeneratedImage {
   id                           String               @id @default(cuid())
   status                       String               @db.Char(1)
   model                        String
-  uniqueHash                   String               @map("unique_hash")
   prompt                       String
-  path                         String?
+  relativePath                 String               @map("relative_path") @unique
 
-  @@index([uniqueHash])
   @@map("generated_image")
   @@schema("public")
 }

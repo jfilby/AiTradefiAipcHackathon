@@ -11,15 +11,21 @@ import { AnalysisModel } from '@/models/trade-analysis/analysis-model'
 import { GenerationsSettingsModel } from '@/models/trade-analysis/generations-settings-model'
 import { InstrumentModel } from '@/models/instruments/instrument-model'
 import { SlideshowModel } from '@/models/slideshows/slideshow-model'
+import { SlideModel } from '@/models/slideshows/slide-model'
+import { SlideTemplateModel } from '@/models/slideshows/slide-template-model'
 import { TradeAnalysesGroupModel } from '@/models/trade-analysis/trade-analyses-group-model'
 import { TradeAnalysisModel } from '@/models/trade-analysis/trade-analysis-model'
-import { SlideTemplateModel } from '@/models/slideshows/slide-template-model'
+import { GeneratedAudioModel } from '@/models/generated-media/generated-audio-model'
+import { GeneratedImageModel } from '@/models/generated-media/generated-image-model'
 
 // Models
 const analysisModel = new AnalysisModel()
+const generatedAudioModel = new GeneratedAudioModel()
+const generatedImageModel = new GeneratedImageModel()
 const generationsSettingsModel = new GenerationsSettingsModel()
 const instrumentModel = new InstrumentModel()
 const slideshowModel = new SlideshowModel()
+const slideModel = new SlideModel()
 const slideTemplateModel = new SlideTemplateModel()
 const tradeAnalysesGroupModel = new TradeAnalysesGroupModel()
 const tradeAnalysisModel = new TradeAnalysisModel()
@@ -33,6 +39,9 @@ export class TestDataSetupService {
   // Code
   async run(prisma: PrismaClient,
             adminUserProfileId: string) {
+
+    // Setup media
+    await this.setupMedia(prisma)
 
     // Setup the Analysis
     const analysis = await
@@ -63,6 +72,7 @@ export class TestDataSetupService {
     // Setup Slides
     await this.setupSlides(
             prisma,
+            analysis,
             slideshow)
   }
 
@@ -105,6 +115,11 @@ export class TestDataSetupService {
     return analysis
   }
 
+  async setupMedia(prisma: PrismaClient) {
+
+    ;
+  }
+
   async setupSlideshow(
           prisma: PrismaClient,
           adminUserProfileId: string,
@@ -124,9 +139,40 @@ export class TestDataSetupService {
 
   async setupSlides(
           prisma: PrismaClient,
+          analysis: Analysis,
           slideshow: Slideshow) {
 
+    // Get the SlideTemplates (in order)
+    const slideTemplates = await
+            slideTemplateModel.filter(
+              prisma,
+              analysis.id,
+              undefined,  // slideNo
+              undefined,  // type
+              true)       // sortBySlideNo
+
+    // Get the audioPath for slideNo 1
+    const generatedAudio = await
+            generatedAudioModel.getByRelativePath(
+              prisma,
+              `/audio/nvda-test/overview.mp3`)
+
+    // Get the imagePath for slideNo 1
     ;
+
+    // Create the intro slide
+    const introSlide = await
+            slideModel.upsert(
+              prisma,
+              undefined,  // id
+              slideshow.id,
+              slideTemplates[0].id,
+              slideTemplates[0].slideNo,
+              BaseDataTypes.activeStatus,
+              slideTemplates[0].title,
+              slideTemplates[0].textPrompt,
+              generatedAudio.id,
+              null)       // imagePath
   }
 
   async setupSlideTemplates(

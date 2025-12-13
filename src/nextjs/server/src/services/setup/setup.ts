@@ -1,3 +1,5 @@
+const fs = require('fs').promises
+const path = require('path')
 import { PrismaClient, UserProfile } from '@prisma/client'
 import { CustomError } from '@/serene-core-server/types/errors'
 import { ChatSettingsModel } from '@/serene-core-server/models/chat/chat-settings-model'
@@ -10,6 +12,7 @@ import { DocSourceModel } from '@/models/documents/doc-source-model'
 import { InstrumentModel } from '@/models/instruments/instrument-model'
 import { WindowTypeModel } from '@/models/instruments/window-type-model'
 import { AgentUserService } from '@/services/agents/agent-user-service'
+import { ElevenLabsService } from '../elevenlabs/service'
 import { GenerationsSettingsSetupService } from '../generations-settings/setup-service'
 import { SetupAnalysesTechService } from '../analysis/setup-tech-service'
 import { YFinanceUtilsService } from '../external-data/yfinance/utils-service'
@@ -24,6 +27,7 @@ const windowTypeModel = new WindowTypeModel()
 
 // Services
 const agentUserService = new AgentUserService()
+const elevenLabsService = new ElevenLabsService()
 const generationsSettingsSetupService = new GenerationsSettingsSetupService()
 const sereneAiSetup = new SereneAiSetup()
 const setupAnalysesTechService = new SetupAnalysesTechService()
@@ -108,11 +112,23 @@ export class SetupService {
     await generationsSettingsSetupService.setup(
             prisma,
             adminUserProfile.id)
+
+    // Setup ElevenLabs
+    await elevenLabsService.setup(prisma)
   }
 
   async setupBaseData(
           prisma: PrismaClient,
           adminUserProfile: UserProfile) {
+
+    // Create data paths
+    await fs.mkdir(
+            `${process.env.BASE_DATA_PATH}/audio/nvda-test`,
+            { recursive: true })
+
+    await fs.mkdir(
+            `${process.env.BASE_DATA_PATH}/images/nvda-test`,
+            { recursive: true })
 
     // Exchange upserts
     for (const exchangeName of ServerOnlyTypes.exchangeNames) {
