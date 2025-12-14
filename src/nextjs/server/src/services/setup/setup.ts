@@ -9,12 +9,11 @@ import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { ServerOnlyTypes } from '@/types/server-only-types'
 import { ExchangeModel } from '@/models/instruments/exchange-model'
 import { DocSourceModel } from '@/models/documents/doc-source-model'
-import { InstrumentModel } from '@/models/instruments/instrument-model'
-import { WindowTypeModel } from '@/models/instruments/window-type-model'
 import { AgentUserService } from '@/services/agents/agent-user-service'
-import { ElevenLabsService } from '../elevenlabs/service'
+import { ElevenLabsService } from '../generated-data/elevenlabs/service'
 import { GenerationsSettingsSetupService } from '../generations-settings/setup-service'
 import { SetupAnalysesTechService } from '../analysis/setup-tech-service'
+import { SetupPreGeneratedImagesService } from '../generated-data/images/setup-service'
 import { YFinanceUtilsService } from '../external-data/yfinance/utils-service'
 
 // Models
@@ -22,14 +21,13 @@ const agentUserModel = new AgentUserModel()
 const chatSettingsModel = new ChatSettingsModel()
 const exchangeModel = new ExchangeModel()
 const docSourceModel = new DocSourceModel()
-const instrumentModel = new InstrumentModel()
-const windowTypeModel = new WindowTypeModel()
 
 // Services
 const agentUserService = new AgentUserService()
 const elevenLabsService = new ElevenLabsService()
 const generationsSettingsSetupService = new GenerationsSettingsSetupService()
 const sereneAiSetup = new SereneAiSetup()
+const setupPreGeneratedImagesService = new SetupPreGeneratedImagesService()
 const setupAnalysesTechService = new SetupAnalysesTechService()
 const yFinanceUtilsService = new YFinanceUtilsService()
 
@@ -112,6 +110,9 @@ export class SetupService {
     await generationsSettingsSetupService.setup(
             prisma,
             adminUserProfile.id)
+
+    // Setup pre-generated image registration
+    await setupPreGeneratedImagesService.setup(prisma)
 
     // Setup ElevenLabs
     await elevenLabsService.setup(prisma)

@@ -165,7 +165,10 @@ export class AnalysisToSlidesTestDataService {
               `/audio/nvda-test/overview.mp3`)
 
     // Get the imagePath for slideNo 1
-    ;
+    const generatedImage = await
+            generatedImageModel.getByUniqueKey(
+              prisma,
+              `/images/nvda-test/nvda-invest-logo.png`)
 
     // Create the intro slide
     const introSlide = await
@@ -179,7 +182,7 @@ export class AnalysisToSlidesTestDataService {
               slideTemplates[0].title,
               slideTemplates[0].textPrompt,
               generatedAudio.id,
-              null)       // generatedImageId
+              generatedImage.id)
   }
 
   async setupSlideTemplates(
