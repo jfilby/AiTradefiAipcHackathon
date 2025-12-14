@@ -13,15 +13,17 @@ import { BaseDataTypes } from '@/shared/types/base-data-types'
 interface Props {
   userProfileId: string
   instanceId?: string
+  slideshow: any
   slide: any
-  slidesCount: number
+  setSlide: any
 }
 
 export default function ViewSlide({
                           userProfileId,
                           instanceId,
+                          slideshow,
                           slide,
-                          slidesCount
+                          setSlide
                         }: Props) {
 
   // Const
@@ -32,12 +34,11 @@ export default function ViewSlide({
     `${process.env.NEXT_PUBLIC_API_URL}/api/image/${slide.generatedImageId}/get`
 
   // Use a reduced text size if an image is present
-  const textVariant = slide.generatedImageId == null ? 'h3' : 'h6'
+  const textVariant = slide.generatedImageId == null ? 'h4' : 'h6'
 
   // State
   const [alertSeverity, setAlertSeverity] = useState<any>('')
   const [message, setMessage] = useState<string | undefined>(undefined)
-  const [thisSlide, setThisSlide] = useState<any>(slide)
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [undeleteDialogOpen, setUndeleteDialogOpen] = useState(false)
@@ -64,8 +65,8 @@ export default function ViewSlide({
 
     if (deleteAction === true) {
 
-      thisSlide.status = BaseDataTypes.deletePendingStatus
-      setThisSlide(thisSlide)
+      slide.status = BaseDataTypes.deletePendingStatus
+      setSlide(slide)
       setSaveAction(true)
       setDeleteAction(false)
     }
@@ -76,8 +77,8 @@ export default function ViewSlide({
 
     if (undeleteAction === true) {
 
-      thisSlide.status = BaseDataTypes.activeStatus
-      setThisSlide(thisSlide)
+      slide.status = BaseDataTypes.activeStatus
+      setSlide(slide)
       setSaveAction(true)
       setUndeleteAction(false)
     }
@@ -98,23 +99,23 @@ export default function ViewSlide({
         <></>
       }
 
-      {/* <p>thisSlide: {JSON.stringify(thisSlide)}</p> */}
+      {/* <p>slide: {JSON.stringify(slide)}</p> */}
 
       <div style={{ marginBottom: '2em' }}>
         <div style={{ marginBottom: '1em', width: '80%' }}>
 
-          {thisSlide.status === BaseDataTypes.activeStatus ?
+          {slide.status === BaseDataTypes.activeStatus ?
             <Typography
               style={{ marginBottom: '0.5em' }}
               variant='h2'>
-              <>{thisSlide.title}</>
+              <>{slide.title}</>
             </Typography>
           :
             <>
               <Typography
                 style={{ color: 'gray' }}
                 variant='h2'>
-                <>{thisSlide.title}</>
+                <>{slide.title}</>
               </Typography>
               <Typography
                 style={{ color: 'gray' }}
@@ -141,23 +142,12 @@ export default function ViewSlide({
         <Typography
           style={{ marginBottom: '1em' }}
           variant={textVariant}>
-          {thisSlide.text}
+          {slide.text}
         </Typography>
       </div>
 
-      <div style={{ width: '100%' }}>
-        <div style={{ display: 'inline-block', height: '2em', width: '80%' }}>
-
-          {slide.slideNo < slidesCount ?
-            <Button
-              onClick={(e) => {}}
-              variant='contained'>
-              Next
-            </Button>
-          :
-            <></>
-          }
-
+      <div style={{ borderTop: '2px solid #eee', paddingTop: '0.5em', width: '100%' }}>
+        <div style={{ display: 'inline-block', height: '2em', width: '50%' }}>
           {slide.generatedAudioId != null?
             <LabeledIconButton
               icon={ReplayIcon}
@@ -167,25 +157,48 @@ export default function ViewSlide({
           :
             <></>
           }
+
+          {slide.status === BaseDataTypes.activeStatus ?
+
+            <LabeledIconButton
+              icon={DeleteIcon}
+              label='Delete'
+              onClick={(e: any) => setDeleteDialogOpen(true)}
+              style={{ marginRight: '1em' }} />
+          :
+            <LabeledIconButton
+              icon={RestoreFromTrashIcon}
+              label='Undelete'
+              onClick={(e: any) => setUndeleteDialogOpen(true)}
+              style={{ marginRight: '1em' }} />
+          }
         </div>
 
-        <div style={{ display: 'inline-block', height: '2em', textAlign: 'right', width: '20%' }}>
-          <>
-            {thisSlide.status === BaseDataTypes.activeStatus ?
+        <div style={{ display: 'inline-block', height: '2em', textAlign: 'right', verticalAlign: 'top', width: '50%' }}>
 
-              <LabeledIconButton
-                icon={DeleteIcon}
-                label='Delete'
-                onClick={(e: any) => setDeleteDialogOpen(true)}
-                style={{ marginRight: '1em' }} />
-            :
-              <LabeledIconButton
-                icon={RestoreFromTrashIcon}
-                label='Undelete'
-                onClick={(e: any) => setUndeleteDialogOpen(true)}
-                style={{ marginRight: '1em' }} />
-            }
-          </>
+          {/* Note: slideNo starts from 1
+          <p>slide.slideNo: {slide.slideNo}</p> */}
+
+          {slide.slideNo > 1 ?
+            <Button
+              onClick={(e) => setSlide(slideshow.slides[slide.slideNo - 2])}
+              variant='outlined'>
+              Previous
+            </Button>
+          :
+            <></>
+          }
+
+          {slide.slideNo < slideshow.slides.length ?
+            <Button
+              onClick={(e) => setSlide(slideshow.slides[slide.slideNo])}
+              style={{ marginLeft: '0.5em' }}
+              variant='contained'>
+              Next
+            </Button>
+          :
+            <></>
+          }
         </div>
       </div>
 

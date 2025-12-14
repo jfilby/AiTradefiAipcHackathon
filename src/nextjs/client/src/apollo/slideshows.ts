@@ -22,6 +22,7 @@ export const getSlideshowQuery = gql`
           status
           title
           text
+          slideNo
           generatedAudioId
           generatedImageId
         }
@@ -52,6 +53,7 @@ export const getSlideshowsQuery = gql`
           status
           title
           text
+          slideNo
           generatedAudioId
           generatedImageId
         }

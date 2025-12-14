@@ -5,15 +5,17 @@ import { Button, Typography } from '@mui/material'
 interface Props {
   userProfileId: string
   instanceId?: string
+  slideshow: any
   slide: any
-  slidesCount: number
+  setSlide: any
 }
 
 export default function PlaySlide({
                           userProfileId,
                           instanceId,
+                          slideshow,
                           slide,
-                          slidesCount
+                          setSlide
                         }: Props) {
 
   // State
@@ -27,8 +29,9 @@ export default function PlaySlide({
         <ViewSlide
           userProfileId={userProfileId}
           instanceId={undefined}
+          slideshow={slideshow}
           slide={slide}
-          slidesCount={slidesCount} />
+          setSlide={setSlide} />
       :
         <div>
           <Typography

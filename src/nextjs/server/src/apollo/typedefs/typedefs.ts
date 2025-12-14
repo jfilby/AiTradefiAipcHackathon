@@ -186,6 +186,7 @@ export const typeDefs = `#graphql
     status: String!
     title: String!
     text: String
+    slideNo: Int!
     generatedAudioId: String
     generatedImageId: String
   }

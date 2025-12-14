@@ -1,12 +1,12 @@
 import { PrismaClient, UserProfile } from '@prisma/client'
 import { CustomError } from '@/serene-core-server/types/errors'
 import { ConsoleService } from '@/serene-core-server/services/console/service'
-import { AnalysisToSlidesTestDataService } from './test-data-setup-service'
+import { Slideshow1DataService } from './slideshows/slideshow-1-data-service'
 import { CreateTestAudioService } from './test-audio-service'
 import { CreateTestImageService } from './test-image-service'
 
 // Services
-const analysisToSlidesTestDataService = new AnalysisToSlidesTestDataService()
+const slideshow1DataService = new Slideshow1DataService()
 const consoleService = new ConsoleService()
 const createTestAudioService = new CreateTestAudioService()
 const createTestImageService = new CreateTestImageService()
@@ -52,7 +52,7 @@ export class TestsService {
       }
 
       case '4': {
-        return await analysisToSlidesTestDataService.run(
+        return await slideshow1DataService.run(
                        prisma,
                        adminUserProfile.id)
       }

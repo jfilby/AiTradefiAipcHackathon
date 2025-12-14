@@ -12,35 +12,31 @@ import { ExchangeModel } from '@/models/instruments/exchange-model'
 import { GenerationsSettingsModel } from '@/models/trade-analysis/generations-settings-model'
 import { InstrumentModel } from '@/models/instruments/instrument-model'
 import { SlideshowModel } from '@/models/slideshows/slideshow-model'
-import { SlideModel } from '@/models/slideshows/slide-model'
 import { SlideTemplateModel } from '@/models/slideshows/slide-template-model'
 import { TradeAnalysesGroupModel } from '@/models/trade-analysis/trade-analyses-group-model'
 import { TradeAnalysisModel } from '@/models/trade-analysis/trade-analysis-model'
-import { GeneratedAudioModel } from '@/models/generated-media/generated-audio-model'
-import { GeneratedImageModel } from '@/models/generated-media/generated-image-model'
-import { GetTechService } from '../tech/get-tech-service'
+import { GetTechService } from '../../tech/get-tech-service'
+import { Slideshow1SlidesService } from './slideshow-1-slides-service'
 
 // Models
 const analysisModel = new AnalysisModel()
 const exchangeModel = new ExchangeModel()
-const generatedAudioModel = new GeneratedAudioModel()
-const generatedImageModel = new GeneratedImageModel()
 const generationsSettingsModel = new GenerationsSettingsModel()
 const instrumentModel = new InstrumentModel()
 const slideshowModel = new SlideshowModel()
-const slideModel = new SlideModel()
 const slideTemplateModel = new SlideTemplateModel()
 const tradeAnalysesGroupModel = new TradeAnalysesGroupModel()
 const tradeAnalysisModel = new TradeAnalysisModel()
 
 // Services
 const getTechService = new GetTechService()
+const slideshow1SlidesService = new Slideshow1SlidesService()
 
 // Class
-export class AnalysisToSlidesTestDataService {
+export class Slideshow1DataService {
 
   // Consts
-  clName = 'AnalysisToSlidesTestDataService'
+  clName = 'Slideshow1DataService'
 
   // Use a fixed date to prevent creating duplicate TradeAnalysesGroups, which
   // would lead to duplicated slideshows
@@ -80,7 +76,7 @@ export class AnalysisToSlidesTestDataService {
             slideshow)
 
     // Setup Slides
-    await this.setupSlides(
+    await slideshow1SlidesService.setupSlides(
             prisma,
             analysis,
             slideshow)
@@ -148,47 +144,6 @@ export class AnalysisToSlidesTestDataService {
     return slideshow
   }
 
-  async setupSlides(
-          prisma: PrismaClient,
-          analysis: Analysis,
-          slideshow: Slideshow) {
-
-    // Get the SlideTemplates (in order)
-    const slideTemplates = await
-            slideTemplateModel.filter(
-              prisma,
-              analysis.id,
-              undefined,  // slideNo
-              undefined,  // type
-              true)       // sortBySlideNo
-
-    // Get the audioPath for slideNo 1
-    const generatedAudio = await
-            generatedAudioModel.getByUniqueKey(
-              prisma,
-              `/audio/nvda-test/overview.mp3`)
-
-    // Get the imagePath for slideNo 1
-    const generatedImage = await
-            generatedImageModel.getByUniqueKey(
-              prisma,
-              `/images/nvda-test/nvda-invest-logo.png`)
-
-    // Create the intro slide
-    const introSlide = await
-            slideModel.upsert(
-              prisma,
-              undefined,  // id
-              slideshow.id,
-              slideTemplates[0].id,
-              slideTemplates[0].slideNo,
-              BaseDataTypes.activeStatus,
-              slideTemplates[0].title,
-              slideTemplates[0].textPrompt,
-              generatedAudio.id,
-              generatedImage.id)
-  }
-
   async setupSlideTemplates(
           prisma: PrismaClient,
           analysis: Analysis,
@@ -203,7 +158,7 @@ export class AnalysisToSlidesTestDataService {
               1,          // slideNo
               SlideTypes.intro,
               `Invest in NVDA!`,
-              `An introduction to the potential investment in NVDA`,
+              `An introduction to potential investment in NVDA`,
               `Narrate the intro`,
               `An image of NVDA with dollar signs`)
 
