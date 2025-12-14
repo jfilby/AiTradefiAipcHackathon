@@ -65,7 +65,8 @@ export default function ViewSlideshowPage({
             <PlaySlide
               userProfileId={userProfile.id}
               instanceId={undefined}
-              slide={slide} />
+              slide={slide}
+              slidesCount={slideshow.slides.length} />
           :
             <></>
           }

@@ -6,12 +6,14 @@ interface Props {
   userProfileId: string
   instanceId?: string
   slide: any
+  slidesCount: number
 }
 
 export default function PlaySlide({
                           userProfileId,
                           instanceId,
-                          slide
+                          slide,
+                          slidesCount
                         }: Props) {
 
   // State
@@ -25,7 +27,8 @@ export default function PlaySlide({
         <ViewSlide
           userProfileId={userProfileId}
           instanceId={undefined}
-          slide={slide} />
+          slide={slide}
+          slidesCount={slidesCount} />
       :
         <div>
           <Typography

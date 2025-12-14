@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
 import ReplayIcon from '@mui/icons-material/Replay'
 import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash'
-import { Alert, Typography } from '@mui/material'
+import { Alert, Button, Typography } from '@mui/material'
 import { Image } from 'mui-image'
 import LabeledIconButton from '@/serene-core-client/components/buttons/labeled-icon-button'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
@@ -14,12 +14,14 @@ interface Props {
   userProfileId: string
   instanceId?: string
   slide: any
+  slidesCount: number
 }
 
 export default function ViewSlide({
                           userProfileId,
                           instanceId,
-                          slide
+                          slide,
+                          slidesCount
                         }: Props) {
 
   // Const
@@ -124,14 +126,6 @@ export default function ViewSlide({
         </div>
       </div>
 
-      <div style={{ textAlign: 'left' }}>
-        <Typography
-          style={{ marginBottom: '1em' }}
-          variant={textVariant}>
-          {thisSlide.text}
-        </Typography>
-      </div>
-
       {slide.generatedImageId != null ?
         <div style={{ marginBottom: '1em' }}>
           <Image
@@ -143,8 +137,27 @@ export default function ViewSlide({
         <></>
       }
 
+      <div style={{ textAlign: 'left' }}>
+        <Typography
+          style={{ marginBottom: '1em' }}
+          variant={textVariant}>
+          {thisSlide.text}
+        </Typography>
+      </div>
+
       <div style={{ width: '100%' }}>
         <div style={{ display: 'inline-block', height: '2em', width: '80%' }}>
+
+          {slide.slideNo < slidesCount ?
+            <Button
+              onClick={(e) => {}}
+              variant='contained'>
+              Next
+            </Button>
+          :
+            <></>
+          }
+
           {slide.generatedAudioId != null?
             <LabeledIconButton
               icon={ReplayIcon}
