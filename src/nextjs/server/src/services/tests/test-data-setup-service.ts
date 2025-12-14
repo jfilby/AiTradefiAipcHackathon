@@ -42,6 +42,10 @@ export class AnalysisToSlidesTestDataService {
   // Consts
   clName = 'AnalysisToSlidesTestDataService'
 
+  // Use a fixed date to prevent creating duplicate TradeAnalysesGroups, which
+  // would lead to duplicated slideshows
+  slideshowDate = new Date('2025-12-14')
+
   // Code
   async run(prisma: PrismaClient,
             adminUserProfileId: string) {
@@ -264,16 +268,13 @@ export class AnalysisToSlidesTestDataService {
     // Debug
     const fnName = `${this.clName}.setupTradeAnalysis()`
 
-    // Get current date
-    const today = new Date()
-
     // Upsert TradeAnalysesGroup
     const tradeAnalysesGroup = await
             tradeAnalysesGroupModel.upsert(
               prisma,
               undefined,  // id
               analysis.id,
-              today,
+              this.slideshowDate,
               ServerOnlyTypes.tradeAnalysisEngineVersion,
               BaseDataTypes.activeStatus,
               analysis.defaultMinScore,  // minScore
