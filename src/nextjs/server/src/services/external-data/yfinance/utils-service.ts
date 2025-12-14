@@ -1,7 +1,7 @@
 import { Exchange, Instrument } from '@prisma/client'
 import YahooFinance from 'yahoo-finance2'
 import { CustomError } from '@/serene-core-server/types/errors'
-import { YahooFinanceTypes } from './types'
+import { YahooFinanceTypes } from '../../../types/yfinance-types'
 
 // Services
 const yahooFinance = new YahooFinance()

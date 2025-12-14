@@ -8,7 +8,7 @@ import { YFinanceChartModel } from '@/models/yfinance-models/yfinance-chart-mode
 import { YFinanceFinModel } from '@/models/yfinance-models/yfinance-fin-model'
 import { YFinanceQuoteModel } from '@/models/yfinance-models/yfinance-quote-model'
 import { YFinanceUtilsService } from './utils-service'
-import { YFinanceFinTypes } from './types'
+import { YFinanceFinTypes } from '../../../types/yfinance-types'
 
 // Models
 const exchangeModel = new ExchangeModel()

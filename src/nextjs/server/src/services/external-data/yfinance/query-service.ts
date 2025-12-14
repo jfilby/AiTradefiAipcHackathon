@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { YFinanceInstrumentContext } from './types'
+import { YFinanceInstrumentContext } from '../../../types/yfinance-types'
 import { YFinanceFinModel } from '@/models/yfinance-models/yfinance-fin-model'
 import { YFinanceQuoteModel } from '@/models/yfinance-models/yfinance-quote-model'
 import { CustomError } from '@/serene-core-server/types/errors'
