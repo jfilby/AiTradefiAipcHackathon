@@ -3,6 +3,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import ReplayIcon from '@mui/icons-material/Replay'
 import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash'
 import { Alert, Typography } from '@mui/material'
+import { Image } from 'mui-image'
 import LabeledIconButton from '@/serene-core-client/components/buttons/labeled-icon-button'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 // import DeleteDialog from '../dialogs/delete-dialog'
@@ -25,6 +26,12 @@ export default function ViewSlide({
   const audioUrl =
     `${process.env.NEXT_PUBLIC_API_URL}/api/audio/${slide.generatedAudioId}/get`
 
+  const imageUrl =
+    `${process.env.NEXT_PUBLIC_API_URL}/api/image/${slide.generatedImageId}/get`
+
+  // Use a reduced text size if an image is present
+  const textVariant = slide.generatedImageId == null ? 'h3' : 'h6'
+
   // State
   const [alertSeverity, setAlertSeverity] = useState<any>('')
   const [message, setMessage] = useState<string | undefined>(undefined)
@@ -39,7 +46,7 @@ export default function ViewSlide({
   // Functions
   async function playAudio() {
 
-    console.log(`playing..`)
+    // console.log(`playing audio..`)
 
     const audio = new Audio(audioUrl)
     audio.play()
@@ -97,14 +104,14 @@ export default function ViewSlide({
           {thisSlide.status === BaseDataTypes.activeStatus ?
             <Typography
               style={{ marginBottom: '0.5em' }}
-              variant='h1'>
+              variant='h2'>
               <>{thisSlide.title}</>
             </Typography>
           :
             <>
               <Typography
                 style={{ color: 'gray' }}
-                variant='h1'>
+                variant='h2'>
                 <>{thisSlide.title}</>
               </Typography>
               <Typography
@@ -117,11 +124,24 @@ export default function ViewSlide({
         </div>
       </div>
 
-      <div style={{ /* border: '1px solid #eee', */ minHeight: '30em', textAlign: 'left' }}>
-        <Typography variant='h3'>
+      <div style={{ textAlign: 'left' }}>
+        <Typography
+          style={{ marginBottom: '1em' }}
+          variant={textVariant}>
           {thisSlide.text}
         </Typography>
       </div>
+
+      {slide.generatedImageId != null ?
+        <div style={{ marginBottom: '1em' }}>
+          <Image
+            src={imageUrl}
+            fit='scale-down'
+            height='35em' />
+        </div>
+      :
+        <></>
+      }
 
       <div style={{ width: '100%' }}>
         <div style={{ display: 'inline-block', height: '2em', width: '80%' }}>
