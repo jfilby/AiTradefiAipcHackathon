@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { ElevenLabsTypes } from '@/shared/types/elevenlabs_types'
+import { ElevenLabsTypes } from '@/shared/types/elevenlabs-types'
 import { ElevenLabsService } from '../generated-data/elevenlabs/service'
 
 // Services
