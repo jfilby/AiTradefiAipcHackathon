@@ -35,8 +35,8 @@ export class SlideshowsQueryService {
     // Debug
     const fnName = `${this.clName}.enrichSlideshow()`
 
-    console.log(`${fnName}: slideshow.tradeAnalysis.instrumentId: ` +
-                JSON.stringify(slideshow.tradeAnalysis.instrumentId))
+    // console.log(`${fnName}: slideshow.tradeAnalysis.instrumentId: ` +
+    //             JSON.stringify(slideshow.tradeAnalysis.instrumentId))
 
     // Get instrument with exchange
     const instrument = await
@@ -124,7 +124,7 @@ export class SlideshowsQueryService {
       }
 
       // Debug
-      console.log(`${fnName}: slide: ` + JSON.stringify(slide))
+      // console.log(`${fnName}: slide: ` + JSON.stringify(slide))
     }
   }
 
