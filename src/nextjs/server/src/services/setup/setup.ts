@@ -6,7 +6,7 @@ import { ChatSettingsModel } from '@/serene-core-server/models/chat/chat-setting
 import { AgentUserModel } from '@/serene-ai-server/models/agents/agent-user-model'
 import { SereneAiSetup } from '@/serene-ai-server/services/setup/setup-service'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
-import { ServerOnlyTypes } from '@/types/server-only-types'
+import { CurrencyCodes, ServerOnlyTypes } from '@/types/server-only-types'
 import { ExchangeModel } from '@/models/instruments/exchange-model'
 import { DocSourceModel } from '@/models/documents/doc-source-model'
 import { AgentUserService } from '@/services/agents/agent-user-service'
@@ -140,6 +140,7 @@ export class SetupService {
                 undefined,  // id
                 exchangeName,
                 'US',
+                CurrencyCodes.usd,
                 [BaseDataTypes.stocksType],
                 yFinanceUtilsService.getExhangeSuffix(exchangeName))
     }

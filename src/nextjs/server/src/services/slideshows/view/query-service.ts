@@ -1,17 +1,24 @@
 import { PrismaClient } from '@prisma/client'
+import { CustomError } from '@/serene-core-server/types/errors'
 import { SlideTypes } from '@/types/server-only-types'
 import { YFinanceFinTypes, yFinanceIntervals } from '@/types/yfinance-types'
+import { InstrumentModel } from '@/models/instruments/instrument-model'
 import { SlideshowModel } from '@/models/slideshows/slideshow-model'
 import { YFinanceChartModel } from '@/models/yfinance-models/yfinance-chart-model'
 import { YFinanceFinModel } from '@/models/yfinance-models/yfinance-fin-model'
+import { YFinanceQuoteModel } from '@/models/yfinance-models/yfinance-quote-model'
+import { CurrencyUtilsService } from '@/services/utils/currency-service'
 import { YFinanceToChartjsService } from '@/services/external-data/yfinance/to-chartjs-service'
 
 // Models
+const instrumentModel = new InstrumentModel()
 const slideshowModel = new SlideshowModel()
 const yFinanceFinModel = new YFinanceFinModel()
 const yFinanceChartModel = new YFinanceChartModel
+const yFinanceQuoteModel = new YFinanceQuoteModel()
 
 // Services
+const currencyUtilsService = new CurrencyUtilsService()
 const yFinanceToChartjsService = new YFinanceToChartjsService()
 
 // Class
@@ -30,6 +37,31 @@ export class SlideshowsQueryService {
 
     console.log(`${fnName}: slideshow.tradeAnalysis.instrumentId: ` +
                 JSON.stringify(slideshow.tradeAnalysis.instrumentId))
+
+    // Get instrument with exchange
+    const instrument = await
+            instrumentModel.getById(
+              prisma,
+              slideshow.tradeAnalysis.instrumentId,
+              true)  // includeExchange
+
+    const exchangeCurrencySymbol =
+            currencyUtilsService.getCurrencySymbol(instrument.exchange.currencyCode)
+
+    // Get financials currency from Y!Finance quote data
+    const yFinanceQuote = await
+            yFinanceQuoteModel.getByUniqueKey(
+              prisma,
+              slideshow.tradeAnalysis.instrumentId)
+
+    if (yFinanceQuote == null) {
+      throw new CustomError(
+        `${fnName}: yFinanceQuote == null for instrumentId: ` +
+        `${slideshow.tradeAnalysis.instrumentId}`)
+    }
+
+    const financialsCurrencySymbol =
+            currencyUtilsService.getCurrencySymbol(yFinanceQuote.data.currency)
 
     // Get Y!Finance data
     const yFinanceAnnualFinancials = await
@@ -65,21 +97,28 @@ export class SlideshowsQueryService {
 
         case SlideTypes.annualFinancials: {
           slide.annualFinancials =
-            yFinanceToChartjsService.fromAnnualFinancials(yFinanceAnnualFinancials)
+            yFinanceToChartjsService.fromAnnualFinancials(
+              yFinanceAnnualFinancials,
+              financialsCurrencySymbol)
 
           break
         }
 
         case SlideTypes.quarterlyFinancials: {
           slide.quarterlyFinancials =
-            yFinanceToChartjsService.fromQuarterlyFinancials(yFinanceQuarterlyFinancials)
+            yFinanceToChartjsService.fromQuarterlyFinancials(
+              yFinanceQuarterlyFinancials,
+              financialsCurrencySymbol)
 
           break
         }
 
         case SlideTypes.dailyChart: {
           slide.dailyChart =
-            yFinanceToChartjsService.fromDailyChart(yFinanceDailyChart)
+            yFinanceToChartjsService.fromDailyChart(
+              yFinanceDailyChart,
+              exchangeCurrencySymbol)
+
           break
         }
       }

@@ -63,6 +63,12 @@ export class ServerOnlyTypes {
   static defaultGenerationsSettingsName = 'Default'
 }
 
+export enum CurrencyCodes {
+  gbp = 'GBP',
+  usd = 'USD',
+  zar = 'ZAR'
+}
+
 export enum SlideTypes {
   annualFinancials = 'AFN',
   dailyChart = 'DCH',

@@ -10,6 +10,7 @@ export class ExchangeModel {
           prisma: PrismaClient,
           name: string,
           region: string,
+          currencyCode: string,
           instrumentTypes: string[],
           yahooFinanceSuffix: string | null) {
 
@@ -22,6 +23,7 @@ export class ExchangeModel {
         data: {
           name: name,
           region: region,
+          currencyCode: currencyCode,
           instrumentTypes: instrumentTypes,
           yahooFinanceSuffix: yahooFinanceSuffix
         }
@@ -171,6 +173,7 @@ export class ExchangeModel {
           id: string,
           name: string | undefined,
           region: string | undefined,
+          currencyCode: string | undefined,
           instrumentTypes: string[] | undefined,
           yahooFinanceSuffix: string | null | undefined) {
 
@@ -183,6 +186,7 @@ export class ExchangeModel {
         data: {
           name: name,
           region: region,
+          currencyCode: currencyCode,
           instrumentTypes: instrumentTypes,
           yahooFinanceSuffix: yahooFinanceSuffix
         },
@@ -200,6 +204,7 @@ export class ExchangeModel {
                id: string | undefined,
                name: string | undefined,
                region: string | undefined,
+               currencyCode: string | undefined,
                instrumentTypes: string[] | undefined,
                yahooFinanceSuffix: string | null | undefined) {
 
@@ -234,6 +239,11 @@ export class ExchangeModel {
         throw 'Prisma error'
       }
 
+      if (currencyCode == null) {
+        console.error(`${fnName}: id is null and currencyCode is null`)
+        throw 'Prisma error'
+      }
+
       if (instrumentTypes == null) {
         console.error(`${fnName}: id is null and instrumentTypes is null`)
         throw 'Prisma error'
@@ -250,6 +260,7 @@ export class ExchangeModel {
                  prisma,
                  name,
                  region,
+                 currencyCode,
                  instrumentTypes,
                  yahooFinanceSuffix)
     } else {
@@ -261,6 +272,7 @@ export class ExchangeModel {
                  id,
                  name,
                  region,
+                 currencyCode,
                  instrumentTypes,
                  yahooFinanceSuffix)
     }

@@ -55,6 +55,7 @@ model Exchange {
   id                           String               @id @default(cuid())
   name                         String               @unique
   region                       String
+  currencyCode                 String               @map("currency_code")
   instrumentTypes              String[]
   yahooFinanceSuffix           String?              @map("yahoo_finance_suffix")
 

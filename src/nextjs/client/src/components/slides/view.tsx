@@ -170,7 +170,9 @@ export default function ViewSlide({
                 y: {
                   ticks: {
                     callback: (value) =>
-                      formatAbbreviatedNumber(value, { currency: '$' })
+                      formatAbbreviatedNumber(
+                        value,
+                        { currency: annualFinancials.currencySymbol })
                   }
                 }
               }
@@ -193,7 +195,9 @@ export default function ViewSlide({
                 y: {
                   ticks: {
                     callback: (value) =>
-                      formatAbbreviatedNumber(value, { currency: '$' })
+                      formatAbbreviatedNumber(
+                        value,
+                        { currency: quarterlyFinancials.currencySymbol })
                   }
                 }
               }
@@ -216,7 +220,9 @@ export default function ViewSlide({
                 y: {
                   ticks: {
                     callback: (value) =>
-                      formatAbbreviatedNumber(value, { currency: '$' })
+                      formatAbbreviatedNumber(
+                        value,
+                        { currency: dailyChart.currencySymbol })
                   }
                 }
               }

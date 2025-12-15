@@ -10,7 +10,9 @@ export class YFinanceToChartjsService {
   clName = 'YFinanceToChartjsService'
 
   // Code
-  fromAnnualFinancials(finData: any) {
+  fromAnnualFinancials(
+    finData: any,
+    currencySymbol: string) {
 
     // Debug
     const fnName = `${this.clName}.fromAnnualFinancials()`
@@ -52,14 +54,17 @@ export class YFinanceToChartjsService {
             backgroundColor: '#16a34a33'
           }
         ]
-      }
+      },
+      currencySymbol: currencySymbol
     }
 
     // Return
     return JSON.stringify(chartjs)
   }
 
-  fromDailyChart(finData: any) {
+  fromDailyChart(
+    finData: any,
+    currencySymbol: string) {
 
     // Debug
     const fnName = `${this.clName}.fromDailyChart()`
@@ -93,14 +98,17 @@ export class YFinanceToChartjsService {
             backgroundColor: '#2563eb33'   // fill (optional)
           }
         ]
-      }
+      },
+      currencySymbol: currencySymbol
     }
 
     // Return
     return JSON.stringify(chartjs)
   }
 
-  fromQuarterlyFinancials(finData: any) {
+  fromQuarterlyFinancials(
+    finData: any,
+    currencySymbol: string) {
 
     // Debug
     const fnName = `${this.clName}.fromQuarterlyFinancials()`
@@ -142,7 +150,8 @@ export class YFinanceToChartjsService {
             backgroundColor: '#16a34a33'
           }
         ]
-      }
+      },
+      currencySymbol: currencySymbol
     }
 
     // Return
