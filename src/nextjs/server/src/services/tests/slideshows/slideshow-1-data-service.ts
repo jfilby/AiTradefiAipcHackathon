@@ -194,12 +194,25 @@ export class Slideshow1DataService {
               null)       // imagePath
 
     // Create a daily chart slide template
-    const dailyChartSlideTemplate = await
+    const quarterlyFinancialsSlideTemplate = await
             slideTemplateModel.upsert(
               prisma,
               undefined,  // id
               analysis.id,
               4,          // slideNo
+              SlideTypes.quarterlyFinancials,
+              `Quarterly financials`,
+              `The last few quarters`,
+              `Narrate a summary of the quarterly financials`,
+              null)       // imagePath
+
+    // Create a daily chart slide template
+    const dailyChartSlideTemplate = await
+            slideTemplateModel.upsert(
+              prisma,
+              undefined,  // id
+              analysis.id,
+              5,          // slideNo
               SlideTypes.dailyChart,
               `Daily chart`,
               `Stock performance (daily timeframe)`,
@@ -212,7 +225,7 @@ export class Slideshow1DataService {
               prisma,
               undefined,  // id
               analysis.id,
-              5,          // slideNo
+              6,          // slideNo
               SlideTypes.outro,
               `Summary`,
               `A solid investment decision`,
@@ -319,13 +332,12 @@ export class Slideshow1DataService {
 
     // Check if Y!Finance data already exists
     const yFinanceFin = await
-            yFinanceFinModel.getByUniqueKey(
+            yFinanceFinModel.getLatest(
               prisma,
               instrument.id,
-              YFinanceFinTypes.annual,
-              this.slideshowDate)
+              YFinanceFinTypes.annual)
 
-    if (yFinanceFin != null) {
+    if (yFinanceFin.length > 0) {
       console.log(`${fnName}: Y!Finance data already setup..`)
       return
     }

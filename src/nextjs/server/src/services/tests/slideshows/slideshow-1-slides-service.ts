@@ -47,6 +47,21 @@ export class Slideshow1SlidesService {
             prisma,
             slideshow,
             slideTemplates[2])
+
+    await this.setupSlide4(
+            prisma,
+            slideshow,
+            slideTemplates[3])
+
+    await this.setupSlide5(
+            prisma,
+            slideshow,
+            slideTemplates[4])
+
+    await this.setupSlide6(
+            prisma,
+            slideshow,
+            slideTemplates[5])
   }
 
   async setupSlide1(
@@ -108,6 +123,66 @@ export class Slideshow1SlidesService {
 
     // Create the annual financials slide
     const annualFinancialsSlide = await
+            slideModel.upsert(
+              prisma,
+              undefined,  // id
+              slideshow.id,
+              slideTemplate.id,
+              slideTemplate.slideNo,
+              BaseDataTypes.activeStatus,
+              slideTemplate.title,
+              slideTemplate.textPrompt,
+              null,  // generatedAudioId,
+              null)  // generatedImageId
+  }
+
+  async setupSlide4(
+          prisma: PrismaClient,
+          slideshow: Slideshow,
+          slideTemplate: SlideTemplate) {
+
+    // Create the quarterly financials slide
+    const quarterlyFinancialsSlide = await
+            slideModel.upsert(
+              prisma,
+              undefined,  // id
+              slideshow.id,
+              slideTemplate.id,
+              slideTemplate.slideNo,
+              BaseDataTypes.activeStatus,
+              slideTemplate.title,
+              slideTemplate.textPrompt,
+              null,  // generatedAudioId,
+              null)  // generatedImageId
+  }
+
+  async setupSlide5(
+          prisma: PrismaClient,
+          slideshow: Slideshow,
+          slideTemplate: SlideTemplate) {
+
+    // Create the daily chart slide
+    const dailyChartSlide = await
+            slideModel.upsert(
+              prisma,
+              undefined,  // id
+              slideshow.id,
+              slideTemplate.id,
+              slideTemplate.slideNo,
+              BaseDataTypes.activeStatus,
+              slideTemplate.title,
+              slideTemplate.textPrompt,
+              null,  // generatedAudioId,
+              null)  // generatedImageId
+  }
+
+  async setupSlide6(
+          prisma: PrismaClient,
+          slideshow: Slideshow,
+          slideTemplate: SlideTemplate) {
+
+    // Create the outro slide
+    const outroSlide = await
             slideModel.upsert(
               prisma,
               undefined,  // id

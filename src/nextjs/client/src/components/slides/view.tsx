@@ -42,6 +42,14 @@ export default function ViewSlide({
     JSON.parse(slide.annualFinancials) :
     undefined
 
+  const quarterlyFinancials = slide.quarterlyFinancials ?          
+    JSON.parse(slide.quarterlyFinancials) :
+    undefined
+
+  const dailyChart = slide.dailyChart ?          
+    JSON.parse(slide.dailyChart) :
+    undefined
+
   // Use a reduced text size if an image is present
   const textVariant = slide.generatedImageId == null ? 'h4' : 'h6'
 
@@ -156,6 +164,52 @@ export default function ViewSlide({
           <Line
             datasetIdKey='id'
             data={annualFinancials.data}
+            options={{
+              interaction: { mode: 'index', intersect: false },
+              scales: {
+                y: {
+                  ticks: {
+                    callback: (value) =>
+                      formatAbbreviatedNumber(value, { currency: '$' })
+                  }
+                }
+              }
+            }} />
+          </div>
+        :
+        <></>
+      }
+
+      {/* <p>quarterlyFinancials: {JSON.stringify(slide.quarterlyFinancials)}</p> */}
+
+      {quarterlyFinancials != null ?
+        <div style={{ marginBottom: '1em' }}>
+          <Line
+            datasetIdKey='id'
+            data={quarterlyFinancials.data}
+            options={{
+              interaction: { mode: 'index', intersect: false },
+              scales: {
+                y: {
+                  ticks: {
+                    callback: (value) =>
+                      formatAbbreviatedNumber(value, { currency: '$' })
+                  }
+                }
+              }
+            }} />
+          </div>
+        :
+        <></>
+      }
+
+      {/* <p>dailyChart: {JSON.stringify(slide.dailyChart)}</p> */}
+
+      {dailyChart != null ?
+        <div style={{ marginBottom: '1em' }}>
+          <Line
+            datasetIdKey='id'
+            data={dailyChart.data}
             options={{
               interaction: { mode: 'index', intersect: false },
               scales: {
