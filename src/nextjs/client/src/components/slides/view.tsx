@@ -104,7 +104,7 @@ export default function ViewSlide({
 
   // Render
   return (
-    <div style={{ marginBottom: '2em', minWidth: 275 }}>
+    <div style={{ height: '80vh', marginBottom: '2em', minWidth: 275 }}>
 
       {message != null ?
         <Alert
@@ -147,11 +147,11 @@ export default function ViewSlide({
 
       {/* Slide image */}
       {imageUrl != null ?
-        <div style={{ marginBottom: '1em' }}>
+        <div style={{ marginBottom: '1em', verticalAlign: 'top' }}>
           <Image
             src={imageUrl}
-            fit='scale-down'
-            height='35em' />
+            fit='cover'
+            height='50vh' />
         </div>
       :
         <></>
@@ -186,63 +186,6 @@ export default function ViewSlide({
           variant={textVariant}>
           {slide.text}
         </Typography>
-      </div>
-
-      {/* Slide controls */}
-      <div style={{ borderTop: '2px solid #eee', paddingTop: '0.5em', width: '100%' }}>
-        <div style={{ display: 'inline-block', height: '2em', width: '50%' }}>
-          {slide.generatedAudioId != null?
-            <LabeledIconButton
-              icon={ReplayIcon}
-              label='Replay audio'
-              onClick={(e: any) => playAudio()}
-              style={{ marginRight: '1em' }} />
-          :
-            <></>
-          }
-
-          {slide.status === BaseDataTypes.activeStatus ?
-
-            <LabeledIconButton
-              icon={DeleteIcon}
-              label='Delete'
-              onClick={(e: any) => setDeleteDialogOpen(true)}
-              style={{ marginRight: '1em' }} />
-          :
-            <LabeledIconButton
-              icon={RestoreFromTrashIcon}
-              label='Undelete'
-              onClick={(e: any) => setUndeleteDialogOpen(true)}
-              style={{ marginRight: '1em' }} />
-          }
-        </div>
-
-        <div style={{ display: 'inline-block', height: '2em', textAlign: 'right', verticalAlign: 'top', width: '50%' }}>
-
-          {/* Note: slideNo starts from 1
-          <p>slide.slideNo: {slide.slideNo}</p> */}
-
-          {slide.slideNo > 1 ?
-            <Button
-              onClick={(e) => setSlide(slideshow.slides[slide.slideNo - 2])}
-              variant='outlined'>
-              Previous
-            </Button>
-          :
-            <></>
-          }
-
-          {slide.slideNo < slideshow.slides.length ?
-            <Button
-              onClick={(e) => setSlide(slideshow.slides[slide.slideNo])}
-              style={{ marginLeft: '0.5em' }}
-              variant='contained'>
-              Next
-            </Button>
-          :
-            <></>
-          }
-        </div>
       </div>
 
       {/* <SaveSlide
