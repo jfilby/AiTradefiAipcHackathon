@@ -9,7 +9,7 @@ import { FeatureFlagModel } from '@/serene-core-server/models/feature-flags/feat
 import { BatchTypes } from '@/types/batch-types'
 import { ServerOnlyTypes } from '@/types/server-only-types'
 import { BatchJobModel } from '@/models/batch/batch-job-model'
-import { SlideshowMutateService } from '@/services/slideshows/mutate-service'
+import { SlideshowMutateService } from '@/services/slideshows/generate/mutate-service'
 import { SlideTemplatesMutateService } from '@/services/slide-templates/mutate-service'
 import { TradeAnalysisMutateService } from '@/services/trade-analysis/mutate-service'
 
