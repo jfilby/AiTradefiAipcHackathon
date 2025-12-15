@@ -6,6 +6,7 @@ import { Alert, Button, Typography } from '@mui/material'
 import { Image } from 'mui-image'
 import { Line } from 'react-chartjs-2'
 import '@/components/chartjs/chartjs'
+import { formatAbbreviatedNumber } from '../chartjs/format-numbers'
 import LabeledIconButton from '@/serene-core-client/components/buttons/labeled-icon-button'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 // import DeleteDialog from '../dialogs/delete-dialog'
@@ -137,7 +138,7 @@ export default function ViewSlide({
         </div>
       </div>
 
-      {slide.generatedImageId != null ?
+      {imageUrl != null ?
         <div style={{ marginBottom: '1em' }}>
           <Image
             src={imageUrl}
@@ -161,9 +162,7 @@ export default function ViewSlide({
                 y: {
                   ticks: {
                     callback: (value) =>
-                      typeof value === 'number'
-                        ? `$${(value / 1e9).toFixed(1)}B`
-                        : value,
+                      formatAbbreviatedNumber(value, { currency: '$' })
                   }
                 }
               }
