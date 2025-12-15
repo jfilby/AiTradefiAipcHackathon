@@ -172,6 +172,35 @@ export class YFinanceFinModel {
     return yFinanceFin
   }
 
+  async getLatest(
+          prisma: PrismaClient,
+          instrumentId: string,
+          type: string,
+          limitBy: number = 3) {
+
+    // Debug
+    const fnName = `${this.clName}.getLatest()`
+
+    // Query
+    try {
+      return await prisma.yFinanceFin.findMany({
+        take: limitBy,
+        where: {
+          instrumentId: instrumentId,
+          type: type
+        },
+        orderBy: [
+          {
+            period: 'desc'
+          }
+        ]
+      })
+    } catch(error: any) {
+      console.error(`${fnName}: error: ${error}`)
+      throw 'Prisma error'
+    }
+  }
+
   async update(
           prisma: PrismaClient,
           id: string,

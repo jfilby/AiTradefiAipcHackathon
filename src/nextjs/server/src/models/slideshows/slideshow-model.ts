@@ -84,7 +84,8 @@ export class SlideshowModel {
   async getById(
           prisma: PrismaClient,
           id: string,
-          includeSlides: boolean = false) {
+          includeSlides: boolean = false,
+          includeTradeAnalysis: boolean = false) {
 
     // Debug
     const fnName = `${this.clName}.getById()`
@@ -95,7 +96,12 @@ export class SlideshowModel {
     try {
       slideshow = await prisma.slideshow.findUnique({
         include: {
-          ofSlides: true
+          ofSlides: includeSlides ? {
+            include: {
+              slideTemplate: true
+            }
+          } : undefined,
+          tradeAnalysis: includeTradeAnalysis
         },
         where: {
           id: id

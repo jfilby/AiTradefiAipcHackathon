@@ -8,7 +8,7 @@ import { YFinanceChartModel } from '@/models/yfinance-models/yfinance-chart-mode
 import { YFinanceFinModel } from '@/models/yfinance-models/yfinance-fin-model'
 import { YFinanceQuoteModel } from '@/models/yfinance-models/yfinance-quote-model'
 import { YFinanceUtilsService } from './utils-service'
-import { YFinanceFinTypes } from '../../../types/yfinance-types'
+import { YFinanceFinTypes, yFinanceIntervals } from '../../../types/yfinance-types'
 
 // Models
 const exchangeModel = new ExchangeModel()
@@ -260,7 +260,7 @@ export class YFinanceMutateService {
 
     const period1 = oneYearAgo
     const period2 = today
-    const interval = '1d'
+    const interval = yFinanceIntervals.daily
 
     // Get last year of daily data
     const data = await yahooFinance.chart(

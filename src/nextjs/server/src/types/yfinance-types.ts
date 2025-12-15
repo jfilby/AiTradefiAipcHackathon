@@ -64,6 +64,10 @@ export enum YFinanceFinTypes {
   annual = 'Y'
 }
 
+export enum yFinanceIntervals {
+  daily = '1d'
+}
+
 export interface YFinanceInstrumentContext {
   yFinanceQuote: any
   yFinanceFinancials: any

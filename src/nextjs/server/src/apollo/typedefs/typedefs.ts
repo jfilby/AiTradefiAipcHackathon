@@ -189,6 +189,10 @@ export const typeDefs = `#graphql
     slideNo: Int!
     generatedAudioId: String
     generatedImageId: String
+
+    annualFinancials: String
+    quarterlyFinancials: String
+    dailyChart: String
   }
 
   type Slideshow {

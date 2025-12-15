@@ -4,6 +4,8 @@ import ReplayIcon from '@mui/icons-material/Replay'
 import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash'
 import { Alert, Button, Typography } from '@mui/material'
 import { Image } from 'mui-image'
+import { Line } from 'react-chartjs-2'
+import '@/components/chartjs/chartjs'
 import LabeledIconButton from '@/serene-core-client/components/buttons/labeled-icon-button'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 // import DeleteDialog from '../dialogs/delete-dialog'
@@ -32,6 +34,10 @@ export default function ViewSlide({
 
   const imageUrl =
     `${process.env.NEXT_PUBLIC_API_URL}/api/image/${slide.generatedImageId}/get`
+
+  const annualFinancials =
+          slide.annualFinancials ?
+          JSON.parse(slide.annualFinancials) : undefined
 
   // Use a reduced text size if an image is present
   const textVariant = slide.generatedImageId == null ? 'h4' : 'h6'
@@ -135,6 +141,31 @@ export default function ViewSlide({
             height='35em' />
         </div>
       :
+        <></>
+      }
+
+      {/* <p>annualFinancials: {JSON.stringify(slide.annualFinancials)}</p> */}
+
+      {annualFinancials != null ?
+        <div style={{ marginBottom: '1em' }}>
+          <Line
+            datasetIdKey='id'
+            data={annualFinancials.data}
+            options={{
+              interaction: { mode: 'index', intersect: false },
+              scales: {
+                y: {
+                  ticks: {
+                    callback: (value) =>
+                      typeof value === 'number'
+                        ? `$${(value / 1e9).toFixed(1)}B`
+                        : value,
+                  }
+                }
+              }
+            }} />
+          </div>
+        :
         <></>
       }
 

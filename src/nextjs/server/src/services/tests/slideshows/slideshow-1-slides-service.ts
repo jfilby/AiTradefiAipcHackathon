@@ -18,7 +18,6 @@ export class Slideshow1SlidesService {
   clName = 'Slideshow1SlidesService'
 
   // Code
-
   async setupSlides(
           prisma: PrismaClient,
           analysis: Analysis,
@@ -43,6 +42,11 @@ export class Slideshow1SlidesService {
             prisma,
             slideshow,
             slideTemplates[1])
+
+    await this.setupSlide3(
+            prisma,
+            slideshow,
+            slideTemplates[2])
   }
 
   async setupSlide1(
@@ -97,4 +101,23 @@ export class Slideshow1SlidesService {
               null)  // generatedImageId
   }
 
+  async setupSlide3(
+          prisma: PrismaClient,
+          slideshow: Slideshow,
+          slideTemplate: SlideTemplate) {
+
+    // Create the annual financials slide
+    const annualFinancialsSlide = await
+            slideModel.upsert(
+              prisma,
+              undefined,  // id
+              slideshow.id,
+              slideTemplate.id,
+              slideTemplate.slideNo,
+              BaseDataTypes.activeStatus,
+              slideTemplate.title,
+              slideTemplate.textPrompt,
+              null,  // generatedAudioId,
+              null)  // generatedImageId
+  }
 }

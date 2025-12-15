@@ -84,7 +84,8 @@ export class InstrumentModel {
 
   async getById(
           prisma: PrismaClient,
-          id: string) {
+          id: string,
+          includeExchange: boolean = false) {
 
     // Debug
     const fnName = `${this.clName}.getById()`
@@ -94,6 +95,9 @@ export class InstrumentModel {
 
     try {
       instrument = await prisma.instrument.findUnique({
+        include: {
+          exchange: includeExchange
+        },
         where: {
           id: id
         }

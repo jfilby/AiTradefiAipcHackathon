@@ -7,6 +7,7 @@ import { CustomError } from '@/serene-core-server/types/errors'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { ServerOnlyTypes, SlideTypes } from '@/types/server-only-types'
 import { ServerTestTypes } from '@/types/server-test-types'
+import { YFinanceFinTypes } from '@/types/yfinance-types'
 import { AnalysisModel } from '@/models/trade-analysis/analysis-model'
 import { ExchangeModel } from '@/models/instruments/exchange-model'
 import { GenerationsSettingsModel } from '@/models/trade-analysis/generations-settings-model'
@@ -15,8 +16,10 @@ import { SlideshowModel } from '@/models/slideshows/slideshow-model'
 import { SlideTemplateModel } from '@/models/slideshows/slide-template-model'
 import { TradeAnalysesGroupModel } from '@/models/trade-analysis/trade-analyses-group-model'
 import { TradeAnalysisModel } from '@/models/trade-analysis/trade-analysis-model'
+import { YFinanceFinModel } from '@/models/yfinance-models/yfinance-fin-model'
 import { GetTechService } from '../../tech/get-tech-service'
 import { Slideshow1SlidesService } from './slideshow-1-slides-service'
+import { YFinanceMutateService } from '@/services/external-data/yfinance/mutate-service'
 
 // Models
 const analysisModel = new AnalysisModel()
@@ -27,10 +30,12 @@ const slideshowModel = new SlideshowModel()
 const slideTemplateModel = new SlideTemplateModel()
 const tradeAnalysesGroupModel = new TradeAnalysesGroupModel()
 const tradeAnalysisModel = new TradeAnalysisModel()
+const yFinanceFinModel = new YFinanceFinModel()
 
 // Services
 const getTechService = new GetTechService()
 const slideshow1SlidesService = new Slideshow1SlidesService()
+const yFinanceMutateService = new YFinanceMutateService()
 
 // Class
 export class Slideshow1DataService {
@@ -47,7 +52,7 @@ export class Slideshow1DataService {
             adminUserProfileId: string) {
 
     // Setup media
-    await this.setupMedia(prisma)
+    // await this.setupMedia(prisma)
 
     // Setup the Analysis
     const analysis = await
@@ -74,6 +79,11 @@ export class Slideshow1DataService {
             prisma,
             analysis,
             slideshow)
+
+    // Setup Y!Finance data
+    await this.setupYFinanceData(
+            prisma,
+            tradeAnalysis)
 
     // Setup Slides
     await slideshow1SlidesService.setupSlides(
@@ -119,11 +129,6 @@ export class Slideshow1DataService {
 
     // Return
     return analysis
-  }
-
-  async setupMedia(prisma: PrismaClient) {
-
-    ;
   }
 
   async setupSlideshow(
@@ -292,5 +297,43 @@ export class Slideshow1DataService {
 
     // Return
     return instrument
+  }
+
+  async setupYFinanceData(
+          prisma: PrismaClient,
+          tradeAnalysis: TradeAnalysis) {
+
+    // Debug
+    const fnName = `${this.clName}.setupYFinanceData`
+
+    // Get Instrument
+    const instrument = await
+            instrumentModel.getById(
+              prisma,
+              tradeAnalysis.instrumentId,
+              true)  // includeExchange
+
+    if (instrument == null) {
+      throw new CustomError(`${fnName}: instrument == null`)
+    }
+
+    // Check if Y!Finance data already exists
+    const yFinanceFin = await
+            yFinanceFinModel.getByUniqueKey(
+              prisma,
+              instrument.id,
+              YFinanceFinTypes.annual,
+              this.slideshowDate)
+
+    if (yFinanceFin != null) {
+      console.log(`${fnName}: Y!Finance data already setup..`)
+      return
+    }
+
+    // Get/create
+    await yFinanceMutateService.run(
+            prisma,
+            instrument.exchange,
+            instrument)
   }
 }

@@ -25,6 +25,9 @@ export const getSlideshowQuery = gql`
           slideNo
           generatedAudioId
           generatedImageId
+          annualFinancials
+          quarterlyFinancials
+          dailyChart
         }
       }
     }
