@@ -29,15 +29,17 @@ export default function ViewSlide({
                         }: Props) {
 
   // Const
-  const audioUrl =
-    `${process.env.NEXT_PUBLIC_API_URL}/api/audio/${slide.generatedAudioId}/get`
+  const audioUrl = slide.generatedAudioId ?
+    `${process.env.NEXT_PUBLIC_API_URL}/api/audio/${slide.generatedAudioId}/get` :
+    undefined
 
-  const imageUrl =
-    `${process.env.NEXT_PUBLIC_API_URL}/api/image/${slide.generatedImageId}/get`
+  const imageUrl = slide.generatedImageId ?
+    `${process.env.NEXT_PUBLIC_API_URL}/api/image/${slide.generatedImageId}/get` :
+    undefined
 
-  const annualFinancials =
-          slide.annualFinancials ?
-          JSON.parse(slide.annualFinancials) : undefined
+  const annualFinancials = slide.annualFinancials ?          
+    JSON.parse(slide.annualFinancials) :
+    undefined
 
   // Use a reduced text size if an image is present
   const textVariant = slide.generatedImageId == null ? 'h4' : 'h6'
@@ -64,7 +66,9 @@ export default function ViewSlide({
   // Effects
   useEffect(() => {
 
-    playAudio()
+    if (audioUrl != null) {
+      playAudio()
+    }
   }, [])
 
   useEffect(() => {
