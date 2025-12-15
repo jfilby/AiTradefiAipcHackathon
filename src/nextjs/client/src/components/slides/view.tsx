@@ -4,11 +4,9 @@ import ReplayIcon from '@mui/icons-material/Replay'
 import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash'
 import { Alert, Button, Typography } from '@mui/material'
 import { Image } from 'mui-image'
-import { Line } from 'react-chartjs-2'
-import '@/components/chartjs/chartjs'
-import { formatAbbreviatedNumber } from '../chartjs/format-numbers'
 import LabeledIconButton from '@/serene-core-client/components/buttons/labeled-icon-button'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
+import FinancialChart from './financial-chart'
 // import DeleteDialog from '../dialogs/delete-dialog'
 // import UndeleteDialog from '../dialogs/undelete-dialog'
 // import SaveSlideshow from './save'
@@ -120,6 +118,7 @@ export default function ViewSlide({
 
       {/* <p>slide: {JSON.stringify(slide)}</p> */}
 
+      {/* Sldie title */}
       <div style={{ marginBottom: '2em' }}>
         <div style={{ marginBottom: '1em', width: '80%' }}>
 
@@ -146,6 +145,7 @@ export default function ViewSlide({
         </div>
       </div>
 
+      {/* Slide image */}
       {imageUrl != null ?
         <div style={{ marginBottom: '1em' }}>
           <Image
@@ -157,81 +157,29 @@ export default function ViewSlide({
         <></>
       }
 
-      {/* <p>annualFinancials: {JSON.stringify(slide.annualFinancials)}</p> */}
-
+      {/* Charts */}
       {annualFinancials != null ?
-        <div style={{ marginBottom: '1em' }}>
-          <Line
-            datasetIdKey='id'
-            data={annualFinancials.data}
-            options={{
-              interaction: { mode: 'index', intersect: false },
-              scales: {
-                y: {
-                  ticks: {
-                    callback: (value) =>
-                      formatAbbreviatedNumber(
-                        value,
-                        { currency: annualFinancials.currencySymbol })
-                  }
-                }
-              }
-            }} />
-          </div>
+        <FinancialChart
+          chartData={annualFinancials} />
         :
         <></>
       }
-
-      {/* <p>quarterlyFinancials: {JSON.stringify(slide.quarterlyFinancials)}</p> */}
 
       {quarterlyFinancials != null ?
-        <div style={{ marginBottom: '1em' }}>
-          <Line
-            datasetIdKey='id'
-            data={quarterlyFinancials.data}
-            options={{
-              interaction: { mode: 'index', intersect: false },
-              scales: {
-                y: {
-                  ticks: {
-                    callback: (value) =>
-                      formatAbbreviatedNumber(
-                        value,
-                        { currency: quarterlyFinancials.currencySymbol })
-                  }
-                }
-              }
-            }} />
-          </div>
+        <FinancialChart
+          chartData={quarterlyFinancials} />
         :
         <></>
       }
-
-      {/* <p>dailyChart: {JSON.stringify(slide.dailyChart)}</p> */}
 
       {dailyChart != null ?
-        <div style={{ marginBottom: '1em' }}>
-          <Line
-            datasetIdKey='id'
-            data={dailyChart.data}
-            options={{
-              interaction: { mode: 'index', intersect: false },
-              scales: {
-                y: {
-                  ticks: {
-                    callback: (value) =>
-                      formatAbbreviatedNumber(
-                        value,
-                        { currency: dailyChart.currencySymbol })
-                  }
-                }
-              }
-            }} />
-          </div>
+        <FinancialChart
+          chartData={dailyChart} />
         :
         <></>
       }
 
+      {/* Slide text */}
       <div style={{ textAlign: 'left' }}>
         <Typography
           style={{ marginBottom: '1em' }}
@@ -240,6 +188,7 @@ export default function ViewSlide({
         </Typography>
       </div>
 
+      {/* Slide controls */}
       <div style={{ borderTop: '2px solid #eee', paddingTop: '0.5em', width: '100%' }}>
         <div style={{ display: 'inline-block', height: '2em', width: '50%' }}>
           {slide.generatedAudioId != null?
