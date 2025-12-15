@@ -2,9 +2,11 @@ import { useState } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
 import ReplayIcon from '@mui/icons-material/Replay'
 import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash'
-import ViewSlide from './view'
-import { Button, Typography } from '@mui/material'
+import { Button } from '@mui/material'
 import LabeledIconButton from '@/serene-core-client/components/buttons/labeled-icon-button'
+// import DeleteDialog from '../dialogs/delete-dialog'
+// import UndeleteDialog from '../dialogs/undelete-dialog'
+// import SaveSlideshow from './save'
 
 interface Props {
   userProfileId: string
@@ -14,7 +16,7 @@ interface Props {
   setSlide: any
 }
 
-export default function PlaySlide({
+export default function SlideControls({
                           userProfileId,
                           instanceId,
                           slideshow,
@@ -31,38 +33,7 @@ export default function PlaySlide({
 
   // Render
   return (
-    <div style={{ marginBottom: '2em', minWidth: 275 }}>
-
-      {play === true ?
-        <ViewSlide
-          userProfileId={userProfileId}
-          instanceId={undefined}
-          slideshow={slideshow}
-          slide={slide}
-          setSlide={setSlide} />
-      :
-        <div>
-          <Typography
-            style={{ marginBottom: '2em' }}
-            variant='h1'>
-            {slide.title}
-          </Typography>
-
-          <center>
-            <Button
-              onClick={(e) => setPlay(true)}
-              sx={{
-                padding: '20px 40px',
-                fontSize: '1.2rem',
-              }}
-              variant='contained'>
-              Play
-            </Button>
-          </center>
-        </div>
-      }
-
-      {/* Slide controls */}
+    <>
       <div style={{ borderTop: '2px solid #eee', paddingTop: '0.5em', width: '100%' }}>
         <div style={{ display: 'inline-block', height: '2em', width: '50%' }}>
           {slide.generatedAudioId != null?
@@ -119,7 +90,30 @@ export default function PlaySlide({
         </div>
       </div>
 
-    </div>
+      {/* <SaveSlide
+        userProfileId={userProfileId}
+        slideshow={thisSlide}
+        isAdd={false}
+        setAlertSeverity={setAlertSeverity}
+        setMessage={setMessage}
+        saveAction={saveAction}
+        setSaveAction={setSaveAction}
+        setEditMode={undefined}
+        redirectToIndexOnSave={false} />
+
+      <DeleteDialog
+        open={deleteDialogOpen}
+        type='slide'
+        name={slide.name}
+        setOpen={setDeleteDialogOpen}
+        setDeleteConfirmed={setDeleteAction} />
+
+      <UndeleteDialog
+        open={undeleteDialogOpen}
+        name={slide.name}
+        setOpen={setUndeleteDialogOpen}
+        setUndeleteConfirmed={setUndeleteAction} /> */}
+    </>
   )
 }
 

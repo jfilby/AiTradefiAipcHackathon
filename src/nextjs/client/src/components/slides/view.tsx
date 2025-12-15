@@ -1,15 +1,8 @@
 import { useEffect, useState } from 'react'
-import DeleteIcon from '@mui/icons-material/Delete'
-import ReplayIcon from '@mui/icons-material/Replay'
-import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash'
-import { Alert, Button, Typography } from '@mui/material'
+import { Alert, Typography } from '@mui/material'
 import { Image } from 'mui-image'
-import LabeledIconButton from '@/serene-core-client/components/buttons/labeled-icon-button'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import FinancialChart from './financial-chart'
-// import DeleteDialog from '../dialogs/delete-dialog'
-// import UndeleteDialog from '../dialogs/undelete-dialog'
-// import SaveSlideshow from './save'
 
 interface Props {
   userProfileId: string
@@ -187,30 +180,6 @@ export default function ViewSlide({
           {slide.text}
         </Typography>
       </div>
-
-      {/* <SaveSlide
-        userProfileId={userProfileId}
-        slideshow={thisSlide}
-        isAdd={false}
-        setAlertSeverity={setAlertSeverity}
-        setMessage={setMessage}
-        saveAction={saveAction}
-        setSaveAction={setSaveAction}
-        setEditMode={undefined}
-        redirectToIndexOnSave={false} />
-
-      <DeleteDialog
-        open={deleteDialogOpen}
-        type='slide'
-        name={slide.name}
-        setOpen={setDeleteDialogOpen}
-        setDeleteConfirmed={setDeleteAction} />
-
-      <UndeleteDialog
-        open={undeleteDialogOpen}
-        name={slide.name}
-        setOpen={setUndeleteDialogOpen}
-        setUndeleteConfirmed={setUndeleteAction} /> */}
     </div>
   )
 }
