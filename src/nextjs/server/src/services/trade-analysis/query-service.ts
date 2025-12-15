@@ -24,7 +24,7 @@ export class TradeAnalysisQueryService {
 
     // Don't run another group until at least a week (after screener runs at max)
     const latestTradeAnalysesGroup = await
-            tradeAnalysesGroupModel.getLatest(
+            tradeAnalysesGroupModel.getLatestByAnalysisId(
               prisma,
               analysisId,
               1)  // limitBy

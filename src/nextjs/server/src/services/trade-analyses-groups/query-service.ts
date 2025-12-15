@@ -42,9 +42,9 @@ export class TradeAnalysesGroupQueryService {
     // Get latest (note: Prisma can't filter by the TradeAnalysesGroup's
     // minScore, so the inner query is separate).
     const tradeAnalysesGroups = await
-            tradeAnalysesGroupModel.getLatest(
+            tradeAnalysesGroupModel.getLatestByInstrumentType(
               prisma,
-              // instrumentType ?? undefined,
+              instrumentType ?? undefined,
               3)  // limitBy
 
     // Validate

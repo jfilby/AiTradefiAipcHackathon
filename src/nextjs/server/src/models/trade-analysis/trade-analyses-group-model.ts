@@ -149,13 +149,13 @@ export class TradeAnalysesGroupModel {
     return tradeAnalysesGroup
   }
 
-  async getLatest(
+  async getLatestByAnalysisId(
           prisma: PrismaClient,
           analysisId: string,
           limitBy: number = 100) {
 
     // Debug
-    const fnName = `${this.clName}.getLatest()`
+    const fnName = `${this.clName}.getLatestByAnalysisId()`
 
     // Query
     try {
@@ -166,6 +166,40 @@ export class TradeAnalysesGroupModel {
         },
         where: {
           analysisId: analysisId
+        },
+        orderBy: [
+          {
+            day: 'desc'
+          }
+        ]
+      })
+    } catch(error: any) {
+      if (!(error instanceof error.NotFound)) {
+        console.error(`${fnName}: error: ${error}`)
+        throw 'Prisma error'
+      }
+    }
+  }
+
+  async getLatestByInstrumentType(
+          prisma: PrismaClient,
+          instrumentType: string | undefined,
+          limitBy: number = 100) {
+
+    // Debug
+    const fnName = `${this.clName}.getLatestByInstrumentType()`
+
+    // Query
+    try {
+      return await prisma.tradeAnalysesGroup.findMany({
+        take: limitBy,
+        include: {
+          analysis: true,
+        },
+        where: {
+          analysis: instrumentType ? {
+            instrumentType: instrumentType
+          } : undefined
         },
         orderBy: [
           {
