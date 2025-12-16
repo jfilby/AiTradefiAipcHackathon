@@ -335,6 +335,7 @@ model TradeAnalysesGroup {
   minScore                     Float                @map("min_score")
   screenerRuns                 Int                  @map("screener_runs")
   created                      DateTime             @default(now())
+  updated                      DateTime             @updatedAt
 
   ofTradeAnalyses              TradeAnalysis[]
 
