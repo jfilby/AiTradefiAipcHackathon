@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Alert, Divider, Typography } from '@mui/material'
+import { Alert, Typography } from '@mui/material'
 import ListTradeAnalyses from '../trade-analyses/list'
 
 interface Props {
