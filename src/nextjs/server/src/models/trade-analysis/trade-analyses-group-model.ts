@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { BaseDataTypes } from '@/shared/types/base-data-types'
 
 export class TradeAnalysesGroupModel {
 
@@ -48,6 +49,36 @@ export class TradeAnalysesGroupModel {
       return await prisma.tradeAnalysesGroup.delete({
         where: {
           id: id
+        }
+      })
+    } catch(error: any) {
+      if (!(error instanceof error.NotFound)) {
+        console.error(`${fnName}: error: ${error}`)
+        throw 'Prisma error'
+      }
+    }
+  }
+
+  async deleteOldIncompleteRuns(prisma: PrismaClient) {
+
+    // Debug
+    const fnName = `${this.clName}.deleteOldIncompleteRuns()`
+
+    // Get start of today
+    const startOfTodayUtc = new Date()
+    startOfTodayUtc.setUTCHours(0, 0, 0, 0)
+
+    // Debug
+    // console.log(`${fnName}: startOfTodayUtc: ${startOfTodayUtc}`)
+
+    // Delete
+    try {
+      await prisma.tradeAnalysesGroup.deleteMany({
+        where: {
+          status: BaseDataTypes.newStatus,
+          day: {
+            lt: startOfTodayUtc
+          }
         }
       })
     } catch(error: any) {

@@ -9,6 +9,7 @@ import { FeatureFlagModel } from '@/serene-core-server/models/feature-flags/feat
 import { BatchTypes } from '@/types/batch-types'
 import { ServerOnlyTypes } from '@/types/server-only-types'
 import { BatchJobModel } from '@/models/batch/batch-job-model'
+import { HousekeepingService } from '@/services/batch/housekeeping/service'
 import { SlideshowMutateService } from '@/services/slideshows/generate/mutate-service'
 import { SlideTemplatesMutateService } from '@/services/slide-templates/mutate-service'
 import { TradeAnalysisMutateService } from '@/services/trade-analysis/mutate-service'
@@ -17,6 +18,7 @@ import { TradeAnalysisMutateService } from '@/services/trade-analysis/mutate-ser
 const featureFlagModel = new FeatureFlagModel()
 
 // Services
+const housekeepingService = new HousekeepingService()
 const slideshowMutateService = new SlideshowMutateService()
 const slideTemplatesMutateService = new SlideTemplatesMutateService()
 const tradeAnalysisMutateService = new TradeAnalysisMutateService()
@@ -83,7 +85,14 @@ async function interval20s(prisma: PrismaClient) {
 
   // console.log(`${fnName}: starting..`)
 
-  ;
+  // Create slide templates
+  await slideTemplatesMutateService.run(prisma)
+
+  // Create slideshows
+  await slideshowMutateService.run(prisma)
+
+  // Trade analysis
+  await tradeAnalysisMutateService.run(prisma)
 }
 
 async function interval5m(prisma: PrismaClient) {
@@ -103,14 +112,8 @@ async function interval15m(prisma: PrismaClient) {
 
   // console.log(`${fnName}: starting..`)
 
-  // Create slide templates
-  await slideTemplatesMutateService.run(prisma)
-
-  // Create slideshows
-  await slideshowMutateService.run(prisma)
-
-  // Trade analysis
-  await tradeAnalysisMutateService.run(prisma)
+  // Housekeeping
+  await housekeepingService.run(prisma)
 }
 
 function sleep(ms: number) {
