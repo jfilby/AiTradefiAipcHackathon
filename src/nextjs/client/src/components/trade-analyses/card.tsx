@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Alert, Divider, Typography } from '@mui/material'
+import { Alert, Typography } from '@mui/material'
 
 interface Props {
   instanceId?: string
@@ -64,10 +64,6 @@ export default function TradeAnalysisCard({
           </div>
         </div>
       </div>
-
-      <Divider
-        variant='fullWidth'
-        style={{ marginBottom: '1em' }} />
     </div>
   )
 }
