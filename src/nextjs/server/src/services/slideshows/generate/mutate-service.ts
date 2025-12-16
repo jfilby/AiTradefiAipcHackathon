@@ -80,11 +80,11 @@ export class SlideshowMutateService {
         continue
       }
 
-      // Create a new slide
+      // Update the new slide
       slide = await
-        this.upsertSlide(
+        this.updateSlide(
           prisma,
-          slideshow.id,
+          // slideshow.id,
           slide,
           slideTemplate)
     }
@@ -123,16 +123,16 @@ export class SlideshowMutateService {
     console.log(`${fnName}: completed`)
   }
 
-  async upsertSlide(
+  async updateSlide(
           prisma: PrismaClient,
-          slideshowId: string,
-          slide: Slide | undefined,
+          // slideshowId: string,
+          slide: Slide /* | undefined */,
           slideTemplate: SlideTemplate) {
 
     // Debug
-    const fnName = `${this.clName}.upsertSlide()`
+    const fnName = `${this.clName}.updateSlide()`
 
-    // Upsert Slide (with new status)
+    /* Upsert Slide (with new status)
     slide = await
       slideModel.upsert(
         prisma,
@@ -142,9 +142,9 @@ export class SlideshowMutateService {
         slideTemplate.slideNo,
         BaseDataTypes.newStatus,
         slideTemplate.title,
-        null,         // text
-        null,         // generatedAudioId
-        null)         // generatedImageId
+        undefined,         // text
+        undefined,         // generatedAudioId
+        undefined)         // generatedImageId */
 
     // Generate audio
     const generatedAudioId = await
@@ -163,11 +163,11 @@ export class SlideshowMutateService {
       slideModel.update(
         prisma,
         slide.id,
-        slideshowId,
-        slideTemplate.id,
-        slideTemplate.slideNo,
+        undefined,  // slideshowId
+        undefined,  // slideTemplateId
+        undefined,  // slideNo
         BaseDataTypes.activeStatus,
-        slideTemplate.title,
+        undefined,  // slideTemplate.title
         undefined,  // text
         generatedAudioId,
         generatedImageId)
