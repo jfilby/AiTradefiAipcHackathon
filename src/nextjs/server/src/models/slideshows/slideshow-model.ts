@@ -99,7 +99,12 @@ export class SlideshowModel {
           ofSlides: includeSlides ? {
             include: {
               slideTemplate: true
-            }
+            },
+            orderBy: [
+              {
+                slideNo: 'asc'
+              }
+            ]
           } : undefined,
           tradeAnalysis: includeTradeAnalysis
         },
@@ -134,7 +139,13 @@ export class SlideshowModel {
         // distinct: ['tradeAnalysisId'],
         include: {
           tradeAnalysis: true,
-          ofSlides: true,
+          ofSlides: {
+            orderBy: [
+              {
+                slideNo: 'asc'
+              }
+            ]
+          },
         },
         where: {
           userProfileId: userProfileId,
