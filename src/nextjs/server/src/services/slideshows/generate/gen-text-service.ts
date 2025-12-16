@@ -94,13 +94,24 @@ export class GenSlideTextService {
       `## General instructions\n` +
       `- Generate slide data based on the slide templates plus instrument ` +
       `  data.\n` +
+      `- Don't reference this system/agent ` +
+      `  (${BaseDataTypes.aiTradefiAgentName}) in your slides unless ` +
+      `  prompted to. Make it about the instrument that was analyzed.\n` +
+      `- The title of each slide should reflect the slide type.\n` +
+      `- The title of the first slide should reflect the name of the ` +
+      `  slideshow and focus on the instrument analyzed.\n` +
+      `- The slideNo of each slide template correlates it with each slide ` +
+      `  with the same slideNo.\n` +
+      `- Use the textPrompt of the slideTemplates to generate the text of ` +
+      `  each slide.\n` +
       `\n` +
       `## Example\n` +
       `[\n` +
       `  {\n` +
       `    "slideNo": 1,\n` +
-      `    "title": ".."\n` +
-      `    "text": ".."\n` +
+      `    "title": "NVDA as a long-term investment"\n` +
+      `    "text": "This slideshow explains why NVDA is a good long-term ` +
+      `    investment."\n` +
       `  }\n` +
       `]\n` +
       `\n` +
@@ -155,6 +166,9 @@ export class GenSlideTextService {
 
     // Debug
     const fnName = `${this.clName}.generate()`
+
+    console.log(`${fnName}: queryResults.json: ` +
+                JSON.stringify(queryResults.json))
 
     // Process entries
     for (const entry of queryResults.json) {
