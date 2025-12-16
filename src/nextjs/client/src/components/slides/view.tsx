@@ -42,7 +42,10 @@ export default function ViewSlide({
     undefined
 
   // Use a reduced text size if an image is present
-  const textVariant = slide.generatedImageId == null ? 'h4' : 'h6'
+  const textVariant =
+          (slide.annualFinancials ||
+           slide.quarterlyFinancials ||
+           slide.generatedImageId) == null ? 'h5' : 'h6'
 
   // State
   const [alertSeverity, setAlertSeverity] = useState<any>('')
@@ -176,6 +179,7 @@ export default function ViewSlide({
       <div style={{ textAlign: 'left' }}>
         <Typography
           style={{ marginBottom: '1em' }}
+          sx={{ whiteSpace: 'pre-wrap' }}
           variant={textVariant}>
           {slide.text}
         </Typography>

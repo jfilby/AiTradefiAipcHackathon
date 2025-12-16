@@ -149,6 +149,14 @@ export class SlideshowsQueryService {
             prisma,
             slideshow)
 
+    // Adjust new-lines (double single new-lines)
+    for (const slide of slideshow.slides) {
+
+      if (slide.text != null) {
+        slide.text = slide.text.replace(/(?<!\n)\n(?!\n)/g, '\n\n')
+      }
+    }
+
     // Return
     return {
       status: true,
