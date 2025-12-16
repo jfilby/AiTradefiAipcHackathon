@@ -27,7 +27,11 @@ export default function FinancialChart({
                     { currency: chartData.currencySymbol })
               }
             }
-          }
+          },
+          // Disable animations:
+          // - Better for financial charts where correctness is important
+          // - The Notes dialog reanimates some lines when opening/closing
+          animation: false
         }} />
     </div>
   )
