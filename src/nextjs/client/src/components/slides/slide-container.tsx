@@ -24,6 +24,7 @@ export default function SlideContainer({
   const isTextSlide =
           (slide.annualFinancials != null ||
            slide.quarterlyFinancials != null ||
+           slide.dailyChart != null ||
            slide.generatedImageId != null) ? false : true
 
   // State
