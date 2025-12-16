@@ -104,6 +104,9 @@ export class GenSlideTextService {
       `  with the same slideNo.\n` +
       `- Use the textPrompt of the slideTemplates to generate the text of ` +
       `  each slide.\n` +
+      `- The slide text should make use of bullet points if making more ` +
+      `  than one point. Use hyphens as bullet points, don't go more than ` +
+      `  one level deep.\n` +
       `\n` +
       `## Example\n` +
       `[\n` +
