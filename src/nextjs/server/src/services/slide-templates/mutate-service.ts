@@ -34,6 +34,10 @@ export class SlideTemplatesMutateService {
       `- The prompt fields, when run, will have access to the requirements ` +
       `  of the analysis, as well the all relevant financial and stock ` +
       `  info.\n` +
+      `- Don't reference this system/agent ` +
+      `  (${BaseDataTypes.aiTradefiAgentName}) in your slides unless ` +
+      `  prompted to. Make it about the instrument that was analyzed.\n` +
+      `\n` +
       `## Type of slides\n` +
       JSON.stringify(Object.entries(SlideTypes)) +
       `\n\n` +
