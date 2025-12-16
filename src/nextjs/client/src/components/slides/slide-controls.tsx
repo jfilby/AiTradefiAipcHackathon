@@ -2,6 +2,7 @@ import { useState } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
 import ReplayIcon from '@mui/icons-material/Replay'
 import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash'
+import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes'
 import { Button } from '@mui/material'
 import LabeledIconButton from '@/serene-core-client/components/buttons/labeled-icon-button'
 // import DeleteDialog from '../dialogs/delete-dialog'
@@ -14,6 +15,8 @@ interface Props {
   slideshow: any
   slide: any
   setSlide: any
+  isTextSlide: boolean
+  setShowNotes: any
 }
 
 export default function SlideControls({
@@ -21,7 +24,9 @@ export default function SlideControls({
                           instanceId,
                           slideshow,
                           slide,
-                          setSlide
+                          setSlide,
+                          isTextSlide,
+                          setShowNotes
                         }: Props) {
 
   // State
@@ -36,11 +41,25 @@ export default function SlideControls({
     <>
       <div style={{ borderTop: '2px solid #eee', paddingTop: '0.5em', width: '100%' }}>
         <div style={{ display: 'inline-block', height: '2em', width: '50%' }}>
+
+          {/* <p>isTextSlide: {JSON.stringify(isTextSlide)}</p> */}
+
           {slide.generatedAudioId != null?
             <LabeledIconButton
               icon={ReplayIcon}
               label='Replay audio'
               onClick={(e: any) => playAudio()}
+              style={{ marginRight: '1em' }} />
+          :
+            <></>
+          }
+
+          {isTextSlide === false &&
+           slide.text != null ?
+            <LabeledIconButton
+              icon={SpeakerNotesIcon}
+              label='Notes'
+              onClick={(e: any) => setShowNotes(true)}
               style={{ marginRight: '1em' }} />
           :
             <></>

@@ -10,6 +10,7 @@ interface Props {
   slideshow: any
   slide: any
   setSlide: any
+  isTextSlide: boolean
 }
 
 export default function ViewSlide({
@@ -17,7 +18,8 @@ export default function ViewSlide({
                           instanceId,
                           slideshow,
                           slide,
-                          setSlide
+                          setSlide,
+                          isTextSlide
                         }: Props) {
 
   // Const
@@ -42,10 +44,7 @@ export default function ViewSlide({
     undefined
 
   // Use a reduced text size if an image is present
-  const textVariant =
-          (slide.annualFinancials ||
-           slide.quarterlyFinancials ||
-           slide.generatedImageId) == null ? 'h5' : 'h6'
+  const textVariant = 'h5'
 
   // State
   const [alertSeverity, setAlertSeverity] = useState<any>('')
@@ -176,14 +175,18 @@ export default function ViewSlide({
       }
 
       {/* Slide text */}
-      <div style={{ textAlign: 'left' }}>
-        <Typography
-          style={{ marginBottom: '1em' }}
-          sx={{ whiteSpace: 'pre-wrap' }}
-          variant={textVariant}>
-          {slide.text}
-        </Typography>
-      </div>
+      {isTextSlide ?
+        <div style={{ textAlign: 'left' }}>
+          <Typography
+            style={{ marginBottom: '1em' }}
+            sx={{ whiteSpace: 'pre-wrap' }}
+            variant={textVariant}>
+            {slide.text}
+          </Typography>
+        </div>
+      :
+        <></>
+      }
     </div>
   )
 }
