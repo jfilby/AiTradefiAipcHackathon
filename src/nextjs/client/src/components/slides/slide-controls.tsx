@@ -15,7 +15,6 @@ interface Props {
   slideshow: any
   slide: any
   setSlide: any
-  isTextSlide: boolean
   setShowNotes: any
 }
 
@@ -25,7 +24,6 @@ export default function SlideControls({
                           slideshow,
                           slide,
                           setSlide,
-                          isTextSlide,
                           setShowNotes
                         }: Props) {
 
@@ -54,7 +52,7 @@ export default function SlideControls({
             <></>
           }
 
-          {isTextSlide === false &&
+          {slide.isTextSlide === false &&
            slide.text != null ?
             <LabeledIconButton
               icon={SpeakerNotesIcon}

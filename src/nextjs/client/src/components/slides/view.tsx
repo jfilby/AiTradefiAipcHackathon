@@ -10,7 +10,6 @@ interface Props {
   slideshow: any
   slide: any
   setSlide: any
-  isTextSlide: boolean
 }
 
 export default function ViewSlide({
@@ -18,8 +17,7 @@ export default function ViewSlide({
                           instanceId,
                           slideshow,
                           slide,
-                          setSlide,
-                          isTextSlide
+                          setSlide
                         }: Props) {
 
   // Const
@@ -175,7 +173,7 @@ export default function ViewSlide({
       }
 
       {/* Slide text */}
-      {isTextSlide ?
+      {slide.isTextSlide ?
         <div style={{ textAlign: 'left' }}>
           <Typography
             style={{ marginBottom: '1em' }}

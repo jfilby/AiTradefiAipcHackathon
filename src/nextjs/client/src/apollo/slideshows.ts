@@ -25,6 +25,8 @@ export const getSlideshowQuery = gql`
           slideNo
           generatedAudioId
           generatedImageId
+
+          isTextSlide
           annualFinancials
           quarterlyFinancials
           dailyChart

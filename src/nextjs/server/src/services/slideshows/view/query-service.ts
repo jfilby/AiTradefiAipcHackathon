@@ -149,12 +149,20 @@ export class SlideshowsQueryService {
             prisma,
             slideshow)
 
-    // Adjust new-lines (double single new-lines)
+    // Additional slide processing
     for (const slide of slideshow.slides) {
 
+      // Adjust new-lines (double single new-lines)
       if (slide.text != null) {
         slide.text = slide.text.replace(/(?<!\n)\n(?!\n)/g, '\n\n')
       }
+
+      // Determine isTextSlide
+      slide.isTextSlide =
+        (slide.annualFinancials != null ||
+         slide.quarterlyFinancials != null ||
+         slide.dailyChart != null ||
+         slide.generatedImageId != null) ? false : true
     }
 
     // Return

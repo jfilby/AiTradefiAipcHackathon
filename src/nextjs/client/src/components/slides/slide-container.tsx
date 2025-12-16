@@ -20,13 +20,6 @@ export default function SlideContainer({
                           setSlide
                         }: Props) {
 
-  // Consts
-  const isTextSlide =
-          (slide.annualFinancials != null ||
-           slide.quarterlyFinancials != null ||
-           slide.dailyChart != null ||
-           slide.generatedImageId != null) ? false : true
-
   // State
   const [play, setPlay] = useState<boolean>(false)
   const [showNotes, setShowNotes] = useState<boolean>(false)
@@ -43,8 +36,7 @@ export default function SlideContainer({
           instanceId={undefined}
           slideshow={slideshow}
           slide={slide}
-          setSlide={setSlide}
-          isTextSlide={isTextSlide} />
+          setSlide={setSlide} />
       :
         <div>
           <Typography
@@ -73,7 +65,6 @@ export default function SlideContainer({
           slideshow={slideshow}
           slide={slide}
           setSlide={setSlide}
-          isTextSlide={isTextSlide}
           setShowNotes={setShowNotes} />
       :
         <></>

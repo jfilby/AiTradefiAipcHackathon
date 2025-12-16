@@ -190,6 +190,7 @@ export const typeDefs = `#graphql
     generatedAudioId: String
     generatedImageId: String
 
+    isTextSlide: Boolean!
     annualFinancials: String
     quarterlyFinancials: String
     dailyChart: String
