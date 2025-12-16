@@ -145,12 +145,12 @@ export class YFinanceMutateService {
     console.log(`${fnName}: instrument: ` + JSON.stringify(instrument))
 
     // Save quote
-    const found = await
+    const status = await
               this.saveQuote(
               prisma,
               instrument)
 
-    if (found === false) {
+    if (status === false) {
 
       // Debug
       console.warn(`${fnName}: couldn't save quote for ${ticker}`)
@@ -392,8 +392,24 @@ export class YFinanceMutateService {
     const fnName = `${this.clName}.saveQuote()`
 
     // Get a quote for the Y! Finance symbol
-    const quote = await
-            yahooFinance.quote(instrument.yFinanceTicker!)
+    var quote: any = null
+
+    try {
+      quote = await
+        yahooFinance.quote(instrument.yFinanceTicker!)
+
+    } catch (e: any) {
+
+      // Log the error to the console
+      console.warn(`${fnName}: failed to run Y! Finance enrichment for ` +
+                   `instrument: ${instrument.id}`)
+
+      console.error(`${fnName}: error message:`, e?.message)
+      console.error(`${fnName}: error stack:`, e?.stack)
+
+      // Return
+      return false
+    }
 
     // Validate
     if (quote == null) {

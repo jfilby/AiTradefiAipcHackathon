@@ -297,16 +297,26 @@ export class Slideshow1DataService {
     // Get Instrument
     const symbol = ServerTestTypes.nvdaSymbol
 
-    const instrument = await
-            instrumentModel.upsert(
-              prisma,
-              undefined,  // id
-              exchange.id,
-              BaseDataTypes.activeStatus,
-              symbol,
-              BaseDataTypes.stocksType,
-              'Nvidia',
-              null)       // yahooFinanceTicker
+    var instrument = await
+          instrumentModel.getByUniqueKey(
+            prisma,
+            exchange.id,
+            symbol)
+
+    if (instrument == null) {
+
+      instrument = await
+        instrumentModel.upsert(
+          prisma,
+          undefined,  // id
+          exchange.id,
+          BaseDataTypes.activeStatus,
+          symbol,
+          BaseDataTypes.stocksType,
+          'Nvidia',
+          null,       // yahooFinanceTicker
+          null)       // lastYFinanceTry
+    }
 
     // Return
     return instrument

@@ -217,20 +217,23 @@ export class TradeAnalysisMutateService {
             entry.instrument,
             instrumentType,
             entry.instrument,
-            null)       // yahooFinanceTicker
+            null,       // yahooFinanceTicker
+            null)       // lastYFinanceTry
       }
 
       // Enrich with Y! Finance data
-      var found = false
+      var yFinanceStatus = false
 
       try {
-        found = await
+        yFinanceStatus = await
           yFinanceMutateService.run(
             prisma,
             exchange,
             instrument)
+
       } catch(e: any) {
-        console.warn(`${fnName}: failed to run Y! Finance enrichment..`)
+        // Unhandled Y!Finance exception
+        console.warn(`${fnName}: unhandled Y! Finance enrichment error`)
         console.error(`${fnName}: error message:`, e?.message)
         console.error(`${fnName}: error stack:`, e?.stack)
         console.error(`${fnName}: raw error:`, e)
@@ -239,19 +242,20 @@ export class TradeAnalysisMutateService {
       }
 
       // Not found?
-      if (found === false) {
+      if (yFinanceStatus === false) {
         
         // Set to inactive
         instrument = await
           instrumentModel.update(
             prisma,
             instrument.id,
-            undefined,  // exchangeId,
+            undefined,   // exchangeId,
             BaseDataTypes.inactiveStatus,
-            undefined,  // symbol
-            undefined,  // type
-            undefined,  // name
-            undefined)  // yahooFinanceTicker
+            undefined,   // symbol
+            undefined,   // type
+            undefined,   // name
+            undefined,   // yahooFinanceTicker
+            new Date())  // lastYFinanceTry
 
         // Skip to next instrument
         continue
@@ -270,7 +274,8 @@ export class TradeAnalysisMutateService {
             undefined,  // symbol
             undefined,  // type
             undefined,  // name
-            undefined)  // yahooFinanceTicker
+            undefined,  // yahooFinanceTicker
+            undefined)  // lastYFinanceTry
       }
 
       // Get context
@@ -308,16 +313,24 @@ export class TradeAnalysisMutateService {
                 entry.exchange)
 
       // Get Instrument
-      const instrument = await
-              instrumentModel.upsert(
-                prisma,
-                undefined,  // id
-                exchange.id,
-                BaseDataTypes.activeStatus,
-                entry.instrument,
-                instrumentType,
-                entry.instrument,
-                null)       // yahooFinanceTicker
+      var instrument = await
+            instrumentModel.getByUniqueKey(
+              prisma,
+              exchange.id,
+              entry.instrument)
+
+      /* Save Instrument details (already saved in phase 1)
+      instrument = await
+        instrumentModel.update(
+          prisma,
+          instrument.id,
+          exchange.id,
+          BaseDataTypes.activeStatus,
+          entry.instrument,
+          instrumentType,
+          entry.instrument,
+          null,       // yahooFinanceTicker
+          null)       // lastYFinanceTry */
 
       // Check if TradeAnalysis already exists
       const tradeAnalysis = await
@@ -420,6 +433,8 @@ export class TradeAnalysisMutateService {
               prisma,
               analysis.id)
 
+    console.log(`${fnName}: canRun: ${canRun}`)
+
     if (canRun === false) {
       return
     }
@@ -446,7 +461,6 @@ export class TradeAnalysisMutateService {
           BaseDataTypes.newStatus,
           analysis.defaultMinScore,
           0)          // screenerRuns
-
     }
 
     // Get tech
