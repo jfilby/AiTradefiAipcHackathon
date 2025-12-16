@@ -13,7 +13,8 @@ export class InstrumentModel {
           symbol: string,
           type: string,
           name: string,
-          yahooFinanceTicker: string | null) {
+          yFinanceTicker: string | null,
+          lastYFinanceTry: Date | null) {
 
     // Debug
     const fnName = `${this.clName}.create()`
@@ -27,7 +28,8 @@ export class InstrumentModel {
           symbol: symbol,
           type: type,
           name: name,
-          yahooFinanceTicker: yahooFinanceTicker
+          yFinanceTicker: yFinanceTicker,
+          lastYFinanceTry: lastYFinanceTry
         }
       })
     } catch(error) {
@@ -196,7 +198,8 @@ export class InstrumentModel {
           symbol: string | undefined,
           type: string | undefined,
           name: string | undefined,
-          yahooFinanceTicker: string | null | undefined) {
+          yFinanceTicker: string | null | undefined,
+          lastYFinanceTry: Date | null | undefined) {
 
     // Debug
     const fnName = `${this.clName}.update()`
@@ -210,7 +213,8 @@ export class InstrumentModel {
           symbol: symbol,
           type: type,
           name: name,
-          yahooFinanceTicker: yahooFinanceTicker
+          yFinanceTicker: yFinanceTicker,
+          lastYFinanceTry: lastYFinanceTry
         },
         where: {
           id: id
@@ -222,14 +226,16 @@ export class InstrumentModel {
     }
   }
 
-  async upsert(prisma: PrismaClient,
-               id: string | undefined,
-               exchangeId: string | undefined,
-               status: string | undefined,
-               symbol: string | undefined,
-               type: string | undefined,
-               name: string | undefined,
-               yahooFinanceTicker: string | null | undefined) {
+  async upsert(
+          prisma: PrismaClient,
+          id: string | undefined,
+          exchangeId: string | undefined,
+          status: string | undefined,
+          symbol: string | undefined,
+          type: string | undefined,
+          name: string | undefined,
+          yFinanceTicker: string | null | undefined,
+          lastYFinanceTry: Date | null | undefined) {
 
     // Debug
     const fnName = `${this.clName}.upsert()`
@@ -279,8 +285,13 @@ export class InstrumentModel {
         throw 'Prisma error'
       }
 
-      if (yahooFinanceTicker === undefined) {
-        console.error(`${fnName}: id is null and yahooFinanceTicker is undefined`)
+      if (yFinanceTicker === undefined) {
+        console.error(`${fnName}: id is null and yFinanceTicker is undefined`)
+        throw 'Prisma error'
+      }
+
+      if (lastYFinanceTry === undefined) {
+        console.error(`${fnName}: id is null and lastYFinanceTry is undefined`)
         throw 'Prisma error'
       }
 
@@ -293,7 +304,8 @@ export class InstrumentModel {
                  symbol,
                  type,
                  name,
-                 yahooFinanceTicker)
+                 yFinanceTicker,
+                 lastYFinanceTry)
     } else {
 
       // Update
@@ -306,7 +318,8 @@ export class InstrumentModel {
                  symbol,
                  type,
                  name,
-                 yahooFinanceTicker)
+                 yFinanceTicker,
+                 lastYFinanceTry)
     }
   }
 }

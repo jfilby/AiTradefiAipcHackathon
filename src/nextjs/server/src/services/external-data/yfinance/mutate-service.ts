@@ -83,9 +83,10 @@ export class YFinanceMutateService {
     console.log(`${fnName}: starting..`)
 
     // Get ticker?
+    const now = new Date()
     var ticker: string | undefined = undefined
 
-    if (instrument.yahooFinanceTicker == null) {
+    if (instrument.yFinanceTicker == null) {
 
       // Try to get the ticker
       ticker =
@@ -113,11 +114,12 @@ export class YFinanceMutateService {
             undefined,  // symbol
             undefined,  // type
             undefined,  // name
-            null)       // yahooFinanceTicker
+            null,       // yFinanceTicker
+            now)        // lastYFinanceTry
 
         return false
 
-      } else if (instrument.yahooFinanceTicker !== ticker) {
+      } else if (instrument.yFinanceTicker !== ticker) {
 
         // Set ticker
         instrument = await
@@ -129,7 +131,8 @@ export class YFinanceMutateService {
             undefined,  // symbol
             undefined,  // type
             undefined,  // name
-            ticker)
+            ticker,
+            now)        // lastYFinanceTry
       }
     }
 
@@ -162,7 +165,8 @@ export class YFinanceMutateService {
           undefined,  // symbol
           undefined,  // type
           undefined,  // name
-          ticker)
+          ticker,
+          now)        // lastYFinanceTry
 
       // Return not found
       return false
@@ -178,7 +182,8 @@ export class YFinanceMutateService {
         undefined,  // symbol
         undefined,  // type
         undefined,  // name
-        ticker)
+        ticker,
+        now)        // lastYFinanceTry
 
     // Save financials
     await this.saveFinancials(
@@ -237,7 +242,8 @@ export class YFinanceMutateService {
           instrumentName,
           instrumentType,
           instrumentName,
-          ticker)
+          ticker,
+          new Date())  // lastYFinanceTry
     }
 
     // Run
@@ -264,7 +270,7 @@ export class YFinanceMutateService {
 
     // Get last year of daily data
     const data = await yahooFinance.chart(
-      instrument.yahooFinanceTicker!,
+      instrument.yFinanceTicker!,
       {
         period1: period1,
         period2: period2,
@@ -312,7 +318,7 @@ export class YFinanceMutateService {
     // Get financials for the last 4 quarters
     const data = await
             yahooFinance.fundamentalsTimeSeries(
-              instrument.yahooFinanceTicker!,
+              instrument.yFinanceTicker!,
               {
                 period1: period1,
                 type: 'quarterly',
@@ -352,7 +358,7 @@ export class YFinanceMutateService {
     // Get financials for the last 3 years
     const data = await
             yahooFinance.fundamentalsTimeSeries(
-              instrument.yahooFinanceTicker!,
+              instrument.yFinanceTicker!,
               {
                 period1: period1,
                 type: 'annual',
@@ -387,13 +393,13 @@ export class YFinanceMutateService {
 
     // Get a quote for the Y! Finance symbol
     const quote = await
-            yahooFinance.quote(instrument.yahooFinanceTicker!)
+            yahooFinance.quote(instrument.yFinanceTicker!)
 
     // Validate
     if (quote == null) {
 
       console.log(`${fnName}: quote == null for ticker: ` +
-                  `${instrument.yahooFinanceTicker}`)
+                  `${instrument.yFinanceTicker}`)
 
       return false
     }

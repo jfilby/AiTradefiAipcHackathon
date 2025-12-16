@@ -73,7 +73,8 @@ model Instrument {
   symbol                       String
   type                         String               // E.g. stock
   name                         String
-  yahooFinanceTicker           String?              @map("yahoo_finance_ticker")
+  yFinanceTicker               String?              @map("yfinance_ticker")
+  lastYFinanceTry              DateTime?            @map("last_yfinance_try")
 
   ofInstrumentPrices           InstrumentPrice[]
   ofDocInsights                DocInsight[]
