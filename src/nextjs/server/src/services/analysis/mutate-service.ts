@@ -29,7 +29,6 @@ export class AnalysesMutateService {
           instrumentType: string,
           defaultMinScore: number,
           name: string,
-          version: string,
           description: string,
           prompt: string) {
 
@@ -59,7 +58,6 @@ export class AnalysesMutateService {
               instrumentType,
               defaultMinScore,
               name,
-              version,
               description,
               prompt)
 

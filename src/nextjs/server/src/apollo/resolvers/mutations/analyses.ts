@@ -26,7 +26,6 @@ export async function upsertAnalysis(
             args.instrumentType,
             args.defaultMinScore,
             args.name,
-            args.version,
             args.description,
             args.prompt)
 

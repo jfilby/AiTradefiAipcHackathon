@@ -122,7 +122,6 @@ export class Slideshow1DataService {
               BaseDataTypes.stocksType,
               0.75,       // defaultMinScore
               `Test screener`,
-              `1.0.0`,    // version
               `Large caps with upside`,  // description
               `Look for large cap stocks that could still have considerable ` +
               `upside`)   // prompt

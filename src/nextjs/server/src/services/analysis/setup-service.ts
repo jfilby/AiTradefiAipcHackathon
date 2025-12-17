@@ -89,7 +89,6 @@ export class SetupAnalysesService {
                 definition.instrumentType,
                 ServerOnlyTypes.defaultMinScore,
                 definition.name,
-                definition.version,
                 definition.description,
                 definition.prompt.join('\n'))
 

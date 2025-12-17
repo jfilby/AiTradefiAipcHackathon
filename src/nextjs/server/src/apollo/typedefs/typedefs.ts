@@ -118,7 +118,6 @@ export const typeDefs = `#graphql
     instrumentType: String!
     defaultMinScore: Float!
     name: String!
-    version: String!
     description: String
     prompt: String
     created: String!
@@ -399,7 +398,6 @@ export const typeDefs = `#graphql
       instrumentType: String!
       defaultMinScore: Float!,
       name: String!,
-      version: String!,
       description: String!,
       prompt: String!): StatusAndMessage!
 

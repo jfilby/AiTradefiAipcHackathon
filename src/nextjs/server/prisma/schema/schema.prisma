@@ -255,7 +255,6 @@ model Analysis {
   instrumentType               String                 @map("instrument_type")
   defaultMinScore              Float                  @map("default_min_score")
   name                         String
-  version                      String
   description                  String
   prompt                       String
   created                      DateTime               @default(now())
@@ -265,7 +264,7 @@ model Analysis {
   ofSlideTemplates             SlideTemplate[]
   ofTradeAnalysesGroups        TradeAnalysesGroup[]
 
-  @@unique([userProfileId, name, version])
+  @@unique([userProfileId, name])
   @@map("analysis")
   @@schema("public")
 }

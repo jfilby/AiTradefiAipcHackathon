@@ -38,7 +38,6 @@ export default function EditAnalysis({
 
   // State
   const [name, setName] = useState<string>(analysis.name)
-  const [version, setVersion] = useState<string>(analysis.version)
   const [type, setType] = useState<string>(BaseDataTypes.screenerType)
   const [status, setStatus] = useState<string>(analysis.status)
   const [instrumentType, setInstrumentType] = useState<string>(analysis.instrumentType)
@@ -54,14 +53,6 @@ export default function EditAnalysis({
 
       setAlertSeverity('error')
       setMessage('The name must be specified')
-      return false
-    }
-
-    if (version == null ||
-        version.trim() === '') {
-
-      setAlertSeverity('error')
-      setMessage('The version must be specified')
       return false
     }
 
@@ -125,21 +116,6 @@ export default function EditAnalysis({
             required
             style={{ marginBottom: '1em' }}
             value={name} />
-        </div>
-
-        <div style={{ marginBottom: '1em' }}>
-          <TextField
-            autoComplete='off'
-            label='Version'
-            onChange={(e) => {
-              setVersion(e.target.value)
-
-              analysis.version = e.target.value
-              setAnalysis(analysis)
-            }}
-            required
-            style={{ marginBottom: '1em' }}
-            value={version} />
         </div>
 
         <div style={{ marginBottom: '1em', width: '15em' }}>

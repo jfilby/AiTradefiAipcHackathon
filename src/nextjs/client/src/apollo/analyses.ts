@@ -19,7 +19,6 @@ export const getAnalysisQuery = gql`
         instrumentType
         defaultMinScore
         name
-        version
         description
         prompt
         created
@@ -48,7 +47,6 @@ export const getAnalysesQuery = gql`
         instrumentType
         defaultMinScore
         name
-        version
         description
         prompt
         created
@@ -67,7 +65,6 @@ export const upsertAnalysisMutation = gql`
              $instrumentType: String!
              $defaultMinScore: Float!,
              $name: String!,
-             $version: String!,
              $description: String!,
              $prompt: String!)
   {
@@ -79,7 +76,6 @@ export const upsertAnalysisMutation = gql`
       instrumentType: $instrumentType,
       defaultMinScore: $defaultMinScore,
       name: $name,
-      version: $version,
       description: $description,
       prompt: $prompt) {
 

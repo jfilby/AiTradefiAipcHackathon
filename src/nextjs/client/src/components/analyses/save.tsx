@@ -59,7 +59,6 @@ export default function SaveAnalysis({
           instrumentType: analysis.instrumentType,
           defaultMinScore: analysis.defaultMinScore,
           name: analysis.name,
-          version: analysis.version,
           description: analysis.description,
           prompt: analysis.prompt
         }

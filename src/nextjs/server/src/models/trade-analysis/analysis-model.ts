@@ -16,7 +16,6 @@ export class AnalysisModel {
           instrumentType: string,
           defaultMinScore: number,
           name: string,
-          version: string,
           description: string,
           prompt: string) {
 
@@ -34,7 +33,6 @@ export class AnalysisModel {
           instrumentType: instrumentType,
           defaultMinScore: defaultMinScore,
           name: name,
-          version: version,
           description: description,
           prompt: prompt
         }
@@ -74,8 +72,7 @@ export class AnalysisModel {
           type: string | undefined = undefined,
           status: string | undefined = undefined,
           instrumentType: string | undefined = undefined,
-          name: string | undefined = undefined,
-          version: string | undefined = undefined) {
+          name: string | undefined = undefined) {
 
     // Debug
     const fnName = `${this.clName}.filter()`
@@ -89,8 +86,7 @@ export class AnalysisModel {
           type: type,
           status: status,
           instrumentType: instrumentType,
-          name: name,
-          version: version
+          name: name
         }
       })
     } catch(error: any) {
@@ -158,8 +154,7 @@ export class AnalysisModel {
   async getByUniqueKey(
           prisma: PrismaClient,
           userProfileId: string,
-          name: string,
-          version: string) {
+          name: string) {
 
     // Debug
     const fnName = `${this.clName}.getByUniqueKey()`
@@ -175,11 +170,6 @@ export class AnalysisModel {
       throw 'Validation error'
     }
 
-    if (version == null) {
-      console.error(`${fnName}: version == null`)
-      throw 'Validation error'
-    }
-
     // Query
     var analysis: any = null
 
@@ -187,8 +177,7 @@ export class AnalysisModel {
       analysis = await prisma.analysis.findFirst({
         where: {
           userProfileId: userProfileId,
-          name: name,
-          version: version
+          name: name
         }
       })
     } catch(error: any) {
@@ -212,7 +201,6 @@ export class AnalysisModel {
           instrumentType: string | undefined,
           defaultMinScore: number | undefined,
           name: string | undefined,
-          version: string | undefined,
           description: string | undefined,
           prompt: string | undefined) {
 
@@ -230,7 +218,6 @@ export class AnalysisModel {
           instrumentType: instrumentType,
           defaultMinScore: defaultMinScore,
           name: name,
-          version: version,
           description: description,
           prompt: prompt
         },
@@ -254,7 +241,6 @@ export class AnalysisModel {
           instrumentType: string | undefined,
           defaultMinScore: number | undefined,
           name: string | undefined,
-          version: string | undefined,
           description: string | undefined,
           prompt: string | undefined) {
 
@@ -266,15 +252,13 @@ export class AnalysisModel {
     // If id isn't specified, but the unique keys are, try to get the record
     if (id == null &&
         userProfileId != null &&
-        name != null &&
-        version != null) {
+        name != null) {
 
       const analysis = await
               this.getByUniqueKey(
                 prisma,
                 userProfileId,
-                name,
-                version)
+                name)
 
       if (analysis != null) {
         id = analysis.id
@@ -320,11 +304,6 @@ export class AnalysisModel {
         throw 'Prisma error'
       }
 
-      if (version == null) {
-        console.error(`${fnName}: id is null and version is null`)
-        throw 'Prisma error'
-      }
-
       if (description == null) {
         console.error(`${fnName}: id is null and description is null`)
         throw 'Prisma error'
@@ -346,7 +325,6 @@ export class AnalysisModel {
                  instrumentType,
                  defaultMinScore,
                  name,
-                 version,
                  description,
                  prompt)
     } else {
@@ -363,7 +341,6 @@ export class AnalysisModel {
                  instrumentType,
                  defaultMinScore,
                  name,
-                 version,
                  description,
                  prompt)
     }
