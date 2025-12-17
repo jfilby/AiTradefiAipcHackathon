@@ -7,14 +7,14 @@ import DialogTitle from '@mui/material/DialogTitle'
 
 interface Props {
   open: boolean
-  text: string
   setOpen: any
+  text: string
 }
 
 export default function NotesDialog({
                           open,
-                          text,
-                          setOpen
+                          setOpen,
+                          text
                         }: Props) {
 
   // Functions

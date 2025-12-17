@@ -72,8 +72,8 @@ export default function SlideContainer({
 
       <NotesDialog
         open={showNotes}
-        text={slide.text}
-        setOpen={setShowNotes} />
+        setOpen={setShowNotes}
+        text={slide.text} />
     </div>
   )
 }
