@@ -55,7 +55,7 @@ export async function getLatestTradeAnalysesGroups(
   const fnName = `getLatestTradeAnalysesGroup()`
 
   // Debug
-  console.log(`${fnName}: starting..`)
+  // console.log(`${fnName}: starting..`)
 
   // Get instruments
   const results = await
@@ -64,7 +64,7 @@ export async function getLatestTradeAnalysesGroups(
             null)  // any instrumentType
 
   // Debug
-  console.log(`${fnName}: results: ` + JSON.stringify(results))
+  // console.log(`${fnName}: results: ` + JSON.stringify(results))
 
   // Return
   return results
