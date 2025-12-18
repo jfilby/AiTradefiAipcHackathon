@@ -1,5 +1,4 @@
-import { Analysis, PrismaClient, Tech } from '@prisma/client'
-import { AiTechDefs } from '@/serene-ai-server/types/tech-defs'
+import { Analysis, AnalysisTech, PrismaClient, Tech } from '@prisma/client'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { AnalysisModel } from '@/models/trade-analysis/analysis-model'
 import { AnalysisTechModel } from '@/models/trade-analysis/analysis-tech-model'
@@ -30,8 +29,7 @@ export class SetupAnalysesTechService {
 
   analysisModelSpecs: AnalysisModelSpec[] = [
     {
-      // variantName: AiTechDefs.googleGemini_V2pt5ProFree,
-      variantName: AiTechDefs.googleGemini_V2pt5FlashFree,
+      variantName: process.env.STANDARD_LLM_VARIANT_NAME!,
       leading: true
     }
   ]
@@ -106,7 +104,8 @@ export class SetupAnalysesTechService {
 
   async setupAnalysis(
           prisma: PrismaClient,
-          analysis: Analysis) {
+          analysis: Analysis,
+          returnLeadingOnly: boolean = false) {
 
     // Debug
     const fnName = `${this.clName}.setup()`
@@ -115,6 +114,8 @@ export class SetupAnalysesTechService {
     const analysisModelsInfo = await this.getAnalysisModelsInfo(prisma)
 
     // Get/create TechAnalysis records
+    var analysisTechs: AnalysisTech[] = []
+
     for (const analysisModelInfo of analysisModelsInfo) {
 
       // Upsert
@@ -126,6 +127,18 @@ export class SetupAnalysesTechService {
                 analysisModelInfo.tech.id,
                 BaseDataTypes.activeStatus,
                 analysisModelInfo.analysisModelSpec.leading)
+
+      // Add to analysisTechs
+      if (returnLeadingOnly === false) {
+        analysisTechs.push(analysisTech)
+
+      } else if (analysisTech.isLeaderTech === true) {
+
+        analysisTechs.push(analysisTech)
+      }
     }
+
+    // Return
+    return analysisTechs
   }
 }

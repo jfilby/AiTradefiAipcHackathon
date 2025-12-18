@@ -12,6 +12,7 @@ import { ExchangeModel } from '@/models/instruments/exchange-model'
 import { InstrumentModel } from '@/models/instruments/instrument-model'
 import { TradeAnalysesGroupModel } from '@/models/trade-analysis/trade-analyses-group-model'
 import { TradeAnalysisModel } from '@/models/trade-analysis/trade-analysis-model'
+import { SetupAnalysesTechService } from '../analysis/setup-tech-service'
 import { TradeAnalysisLlmService } from './llm-service'
 import { TradeAnalysisQueryService } from './query-service'
 import { YFinanceMutateService } from '../external-data/yfinance/mutate-service'
@@ -27,6 +28,7 @@ const tradeAnalysesGroupModel = new TradeAnalysesGroupModel()
 const tradeAnalysisModel = new TradeAnalysisModel()
 
 // Services
+const setupAnalysesTechService = new SetupAnalysesTechService()
 const tradeAnalysisLlmService = new TradeAnalysisLlmService()
 const tradeAnalysisQueryService = new TradeAnalysisQueryService()
 const usersService = new UsersService()
@@ -412,18 +414,22 @@ export class TradeAnalysisMutateService {
     const fnName = `${this.clName}.runAnalysis()`
 
     // Get leading analysis tech
-    const leadingAnalysisTechs = await
-            analysisTechModel.filter(
-              prisma,
-              analysis.id,
-              undefined,  // techId
-              BaseDataTypes.activeStatus,
-              true)       // isLeaderTech
+    var leadingAnalysisTechs = await
+          analysisTechModel.filter(
+            prisma,
+            analysis.id,
+            undefined,  // techId
+            BaseDataTypes.activeStatus,
+            true)       // isLeaderTech
 
+    // Create a leader tech AnalysisTech if non exists
     if (leadingAnalysisTechs.length === 0) {
-      throw new CustomError(
-        `${fnName}: leadingAnalysisTechs.length === 0 for analysisId: ` +
-        `${analysis.id}`)
+
+      leadingAnalysisTechs = await
+        setupAnalysesTechService.setupAnalysis(
+          prisma,
+          analysis,
+          true)  // returnLeadingOnly
     }
 
     // Don't rerun the current group after max screener runs.

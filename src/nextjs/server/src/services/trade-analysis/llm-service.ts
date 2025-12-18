@@ -4,8 +4,8 @@ import { LlmCacheService } from '@/serene-ai-server/services/cache/service'
 import { AgentLlmService } from '@/serene-ai-server/services/llm-apis/agent-llm-service'
 import { LlmUtilsService } from '@/serene-ai-server/services/llm-apis/utils-service'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
-import { ExchangeModel } from '@/models/instruments/exchange-model'
 import { ServerOnlyTypes } from '@/types/server-only-types'
+import { ExchangeModel } from '@/models/instruments/exchange-model'
 
 // Models
 const exchangeModel = new ExchangeModel()
@@ -79,7 +79,7 @@ export class TradeAnalysisLlmService {
           llmTech,
           userProfileId,
           null,       // instanceId,
-          ServerOnlyTypes.defaultChatSettingsName,
+          BaseDataTypes.defaultChatSettingsName,
           BaseDataTypes.aiTradefiAgentRefId,
           BaseDataTypes.aiTradefiAgentName,
           BaseDataTypes.aiTradefiAgentRole,
