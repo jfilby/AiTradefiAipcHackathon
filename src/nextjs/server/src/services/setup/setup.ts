@@ -53,7 +53,7 @@ export class SetupService {
     await agentUserService.setup(prisma)
 
     // Upsert ChatSetting records
-    for (const chatSetting of ServerOnlyTypes.chatSettings) {
+    for (const chatSetting of BaseDataTypes.chatSettings) {
 
       // Get the tech and agent for the chat settings
       const agentUser = await

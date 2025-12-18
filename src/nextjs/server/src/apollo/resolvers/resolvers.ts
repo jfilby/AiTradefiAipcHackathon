@@ -22,6 +22,7 @@ import { getLatestTradeAnalysesGroups, getTradeAnalysesGroupById, getTradeAnalys
 
 // Concept mutations imports
 import { upsertAnalysis } from './mutations/analyses'
+import { getOrCreateInstanceChatSession } from './mutations/instance-chats'
 import { loadServerStartData } from './mutations/server-data-start'
 import { signUpForWaitlist } from './mutations/sign-ups'
 // import { upsertInstance } from './mutations/instances'
@@ -118,6 +119,9 @@ const Mutation = {
 
   // Instances
   // upsertInstance,
+
+  // Instance chats
+  getOrCreateInstanceChatSession,
 
   // General
   loadServerStartData,

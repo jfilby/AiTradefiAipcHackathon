@@ -1,9 +1,12 @@
 import Head from 'next/head'
 import { useState } from 'react'
+import ChatIcon from '@mui/icons-material/Chat'
 import { loadServerPage } from '@/services/page/load-server-page'
 import Layout from '@/components/layouts/layout'
 import { Typography } from '@mui/material'
+import LabeledIconButton from '@/serene-core-client/components/buttons/labeled-icon-button'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
+import ChatDialog from '@/components/chats/chat-dialog'
 import EditAnalysis from '@/components/analyses/edit'
 import LoadAnalysisById from '@/components/analyses/load-by-id'
 import SaveAnalysis from '@/components/analyses/save'
@@ -33,6 +36,8 @@ export default function EditAnalysesPage({
 
   const [loaded, setLoaded] = useState<boolean>(false)
   const [saveAction, setSaveAction] = useState<boolean>(false)
+  const [showChat, setShowChat] = useState<boolean>(false)
+  const [chatSession, setChatSession] = useState<string | undefined>(undefined)
 
   // Render
   return (
@@ -48,12 +53,20 @@ export default function EditAnalysesPage({
           {/* <p>userProfileId: {userProfile.id}</p>
           <p>analysis: {JSON.stringify(analysis)}</p> */}
 
-          <div style={{ width: '80%' }}>
-            <Typography
-              style={{ marginBottom: '0.5em' }}
-              variant='h4'>
-              Edit Analysis
-            </Typography>
+          <div>
+            <div style={{ display: 'inline-block', width: '80%' }}>
+              <Typography
+                style={{ marginBottom: '0.5em' }}
+                variant='h4'>
+                Edit Analysis
+              </Typography>
+            </div>
+            <div style={{ display: 'inline-block', textAlign: 'right', width: '20%' }}>
+              <LabeledIconButton
+                icon={ChatIcon}
+                label='Chat'
+                onClick={() => setShowChat(true)} />
+            </div>
           </div>
 
           {analysis != null &&
@@ -94,6 +107,17 @@ export default function EditAnalysesPage({
           redirectToIndexOnSave={true} />
 
       </Layout>
+
+      <ChatDialog
+        userProfileId={userProfile.id}
+        setAlertSeverity={setAlertSeverity}
+        setMessage={setMessage}
+        open={showChat}
+        setOpen={setShowChat}
+        analysis={analysis}
+        setAnalysis={setAnalysis}
+        chatSession={chatSession}
+        setChatSession={setChatSession} />
     </>
   )
 }

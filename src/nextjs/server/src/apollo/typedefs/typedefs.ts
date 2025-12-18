@@ -432,6 +432,13 @@ export const typeDefs = `#graphql
     # AiTradefi
     # ---
 
+    # Instance chats
+    getOrCreateInstanceChatSession(
+      instanceId: String,
+      chatSessionId: String,
+      userProfileId: String!,
+      chatSettingsName: String): ChatSessionResults!
+
     # Start
     loadServerStartData(
       userProfileId: String!,

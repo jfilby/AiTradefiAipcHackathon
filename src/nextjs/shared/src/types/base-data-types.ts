@@ -45,6 +45,28 @@ export class BaseDataTypes {
     }
   ]
 
+  // Chat settings
+  static defaultChatSettingsName = 'default'
+  static aiTradefiChatSettingsName = 'aiTradefi'
+
+  static chatSettingsNames = [
+    this.defaultChatSettingsName,
+    this.aiTradefiChatSettingsName
+  ]
+
+  static chatSettings = [
+    {
+      name: this.defaultChatSettingsName,
+      agentUniqueRef: this.batchAgentRefId,
+      isJsonMode: true
+    },
+    {
+      name: this.aiTradefiChatSettingsName,
+      agentUniqueRef: this.aiTradefiAgentRefId,
+      isJsonMode: false
+    }
+  ]
+
   // Instrument types
   static stocksType = 'stocks'
   static cryptoType = 'crypto'
