@@ -332,7 +332,9 @@ export default function ViewInstanceChatSession({
           <div style={{ display: 'inline-block' }}>
             <StreamMicComponent
               token={elevenlabsToken}
+              text={myMessage}
               setText={setMyMessage}
+              myMessageInput={myMessageInput}
               setToken={setElevenlabsToken} />
           </div>
 
