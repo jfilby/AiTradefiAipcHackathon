@@ -146,8 +146,6 @@ export default function EditAnalysesPage({
         setMessage={setMessage}
         open={showChat}
         setOpen={setShowChat}
-        analysis={analysis}
-        setAnalysis={setAnalysis}
         chatSession={chatSession}
         setChatSession={setChatSession}
         setChatRawJson={setChatRawJson} />

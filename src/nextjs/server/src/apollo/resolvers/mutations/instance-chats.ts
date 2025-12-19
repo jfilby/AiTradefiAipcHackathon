@@ -3,6 +3,7 @@ import { ChatParticipantModel } from '@/serene-core-server/models/chat/chat-part
 import { UsersService } from '@/serene-core-server/services/users/service'
 import { CustomError } from '@/serene-core-server/types/errors'
 import { ChatPages, ChatSessionOptions } from '@/types/server-only-types'
+import { ElevenLabsService } from '@/services/elevenlabs/service'
 import { InstanceChatsService } from '@/services/instance-chats/common/service'
 
 
@@ -12,6 +13,7 @@ const chatParticipantModel = new ChatParticipantModel()
 
 // Services
 // const chatSessionTurnService = new ChatSessionTurnService()
+const elevenLabsService = new ElevenLabsService()
 const instanceChatsService = new InstanceChatsService()
 const usersService = new UsersService()
 
@@ -67,6 +69,16 @@ export async function getOrCreateInstanceChatSession(
       }
     }
   })
+
+  // Get chat speak preference
+  const chatSpeakPreference = await
+          elevenLabsService.getSpeakPreference(
+            prisma,
+            args.userProfileId)
+
+  if (chatSpeakPreference != null) {
+    results.chatSpeakPreference = chatSpeakPreference
+  }
 
   // Debug
   console.log(`${fnName}: results: ${JSON.stringify(results)}`)

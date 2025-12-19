@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useMutation } from '@apollo/client/react'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -15,8 +15,6 @@ interface Props {
   setMessage: any
   open: boolean
   setOpen: any
-  analysis: any
-  setAnalysis: any
   chatSession: string | undefined
   setChatSession: any
   setChatRawJson: any
@@ -28,12 +26,13 @@ export default function ChatDialog({
                           setMessage,
                           open,
                           setOpen,
-                          analysis,
-                          setAnalysis,
                           chatSession,
                           setChatSession,
                           setChatRawJson
                         }: Props) {
+
+  // State
+  const [chatSpeakPreference, setChatSpeakPreference] = useState(true)
 
   // GraphQL
   const [sendGetOrCreateInstanceChatSessionMutation] =
@@ -67,6 +66,7 @@ export default function ChatDialog({
     if (results.status === true) {
       setAlertSeverity('success')
       setChatSession(results.chatSession)
+      setChatSpeakPreference(results.chatSpeakPreference)
     } else {
       setAlertSeverity('error')
     }
@@ -122,8 +122,9 @@ export default function ChatDialog({
 
           {chatSession != null ?
             <ViewInstanceChatSession
-              chatSession={chatSession}
               userProfileId={userProfileId}
+              chatSession={chatSession}
+              chatSpeakPreference={chatSpeakPreference}
               showInputTip={undefined}
               setShowInputTip={undefined}
               showNextTip={undefined}

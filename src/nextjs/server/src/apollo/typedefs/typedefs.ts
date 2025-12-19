@@ -40,6 +40,8 @@ export const typeDefs = `#graphql
     status: Boolean!
     message: String
     chatSession: ChatSession
+
+    chatSpeakPreference: Boolean
   }
 
   type Comment {
@@ -441,6 +443,10 @@ export const typeDefs = `#graphql
     # ElevenLabs
     createElevenLabsToken(
       userProfileId: String!): TokenResults!
+
+    upsertSpeakPreference(
+      userProfileId: String!,
+      enabled: Boolean!): StatusAndMessage!
 
     # Instance chats
     getOrCreateInstanceChatSession(

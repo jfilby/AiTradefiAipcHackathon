@@ -45,6 +45,8 @@ export const getOrCreateInstanceChatSessionMutation = gql`
           userProfileId
         }
       }
+
+      chatSpeakPreference
     }
   }
 `

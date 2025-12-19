@@ -1,13 +1,14 @@
-const crypto = require('crypto')
 import { writeFileSync } from 'fs'
 import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js'
+import { TextToSpeechConvertRequestOutputFormat } from '@elevenlabs/elevenlabs-js/api'
 import { PrismaClient } from '@prisma/client'
 import { CustomError } from '@/serene-core-server/types/errors'
+import { UserPreferenceModel } from '@/serene-core-server/models/users/user-preference-model'
+import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { ElevenLabsTypes } from '@/shared/types/elevenlabs-types'
+import { UserPreferenceCategories, UserPreferenceKeys } from '@/types/server-only-types'
 import { ElevenLabsVoiceModel } from '@/models/generated-media/elevenlabs-voice-model'
 import { GeneratedAudioModel } from '@/models/generated-media/generated-audio-model'
-import { BaseDataTypes } from '@/shared/types/base-data-types'
-import { TextToSpeechConvertRequestOutputFormat } from '@elevenlabs/elevenlabs-js/api'
 
 // Clients
 const client = new ElevenLabsClient({
@@ -17,6 +18,7 @@ const client = new ElevenLabsClient({
 // Models
 const elevenLabsVoiceModel = new ElevenLabsVoiceModel()
 const generatedAudioModel = new GeneratedAudioModel()
+const userPreferenceModel = new UserPreferenceModel()
 
 // Class
 export class ElevenLabsService {
@@ -136,6 +138,32 @@ export class ElevenLabsService {
     console.log(`${fnName}: saved to: ${filename}`)
   }
 
+  async getSpeakPreference(
+          prisma: PrismaClient,
+          userProfileId: string) {
+
+    // Debug
+    const fnName = `${this.clName}.getSpeakPreference()`
+
+    // Get UserPreference
+    const userPreference = await
+            userPreferenceModel.getByUniqueKey(
+              prisma,
+              userProfileId,
+              UserPreferenceKeys.chatSpeakKey)
+
+    // Debug
+    console.log(`${fnName}: userPreference: ` + JSON.stringify(userPreference))
+
+    // Validate
+    if (userPreference == null) {
+      return null
+    }
+
+    // If found
+    return JSON.parse(userPreference.value)
+  }
+
   async getVoices() {
 
     // Debug
@@ -155,7 +183,7 @@ export class ElevenLabsService {
   async saveVoices(prisma: PrismaClient) {
 
     // Debug
-    const fnName = `${this.clName}.getVoices()`
+    const fnName = `${this.clName}.saveVoices()`
 
     // API call
     const voicesList = await client.voices.search({})
@@ -180,5 +208,38 @@ export class ElevenLabsService {
   async setup(prisma: PrismaClient) {
 
     await this.saveVoices(prisma)
+  }
+
+  async upsertSpeakPreference(
+          prisma: PrismaClient,
+          userProfileId: string,
+          enabled: boolean) {
+
+    // Debug
+    const fnName = `${this.clName}.upsertSpeakPreference()`
+
+    // Validate
+    if (userProfileId == null) {
+      throw new CustomError(`${fnName}: userProfileId == null`)
+    }
+
+    if (enabled == null) {
+      throw new CustomError(`${fnName}: enabled == null`)
+    }
+
+    // Upsert
+    await userPreferenceModel.upsert(
+            prisma,
+            undefined,  // id
+            userProfileId,
+            UserPreferenceCategories.audioCategory,
+            UserPreferenceKeys.chatSpeakKey,
+            JSON.stringify(enabled),
+            null)       // values
+
+    // Return
+    return {
+      status: true
+    }
   }
 }

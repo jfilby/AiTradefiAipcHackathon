@@ -23,3 +23,25 @@ export async function createElevenLabsToken(
   // Return
   return results
 }
+
+export async function upsertSpeakPreference(
+                        parent: any,
+                        args: any,
+                        context: any,
+                        info: any) {
+
+  // Debug
+  const fnName = `upsertSpeakPreference()`
+
+  // console.log(`${fnName}: args: ` + JSON.stringify(args))
+
+  // Get instruments
+  const results = await
+          elevenLabsService.upsertSpeakPreference(
+            prisma,
+            args.userProfileId,
+            args.enabled)
+
+  // Return
+  return results
+}

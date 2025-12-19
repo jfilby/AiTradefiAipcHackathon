@@ -1,26 +1,24 @@
 import { useEffect } from 'react'
 import { useMutation } from '@apollo/client/react'
-import { createElevenLabsTokenMutation } from '@/apollo/eleven-labs'
+import { upsertSpeakPreferenceMutation } from '@/apollo/eleven-labs'
 
 interface Props {
   userProfileId: string
   setAlertSeverity: any
   setMessage: any
-  token: string | undefined
-  setToken: any
+  speak: boolean
 }
 
-export default function CreateElevenLabsToken({
+export default function SaveSpeakPreference({
                           userProfileId,
                           setAlertSeverity,
                           setMessage,
-                          token,
-                          setToken
+                          speak
                         }: Props) {
 
   // GraphQL
-  const [sendCreateElevenLabsTokenMutation] =
-    useMutation<any>(createElevenLabsTokenMutation, {
+  const [sendUpsertSpeakPreferenceMutation] =
+    useMutation<any>(upsertSpeakPreferenceMutation, {
       fetchPolicy: 'no-cache'
       /* onCompleted: data => {
         console.log('elementName: ' + elementName)
@@ -32,19 +30,20 @@ export default function CreateElevenLabsToken({
     })
 
   // Functions
-  async function createToken() {
+  async function saveSpeakPreference() {
 
     // Query
-    var sendCreateElevenLabsTokenData: any = undefined
+    var sendUpsertSpeakPreferenceData: any = undefined
 
-      await sendCreateElevenLabsTokenMutation({
+      await sendUpsertSpeakPreferenceMutation({
         variables: {
-          userProfileId: userProfileId
+          userProfileId: userProfileId,
+          enabled: speak
         }
-      }).then(result => sendCreateElevenLabsTokenData = result)
+      }).then(result => sendUpsertSpeakPreferenceData = result)
 
     // Get results and set fields
-    const results = sendCreateElevenLabsTokenData.data.createElevenLabsToken
+    const results = sendUpsertSpeakPreferenceData.data.upsertSpeakPreference
 
     if (results.status === true) {
       setAlertSeverity('success')
@@ -52,28 +51,20 @@ export default function CreateElevenLabsToken({
       setAlertSeverity('error')
       setMessage(results.message)
     }
-
-    // Done
-    setToken(results.token)
   }
 
   // Effects
   useEffect(() => {
 
     const fetchData = async () => {
-      await createToken()
-    }
-
-    // Return early if the token is already defined
-    if (token != null) {
-      return
+      await saveSpeakPreference()
     }
 
     // Async call
     const result = fetchData()
       .catch(console.error)
 
-  }, [token])
+  }, [speak])
 
   // Render
   return (

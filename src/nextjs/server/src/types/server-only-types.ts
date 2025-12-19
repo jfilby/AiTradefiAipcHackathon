@@ -39,6 +39,14 @@ export class ServerOnlyTypes {
   static defaultGenerationsSettingsName = 'Default'
 }
 
+export enum UserPreferenceCategories {
+  audioCategory = 'audio'
+}
+
+export enum UserPreferenceKeys {
+  chatSpeakKey = 'chat speak'
+}
+
 export enum ChatPages {
   analysisPageChat = 'analysis page chat'
 }

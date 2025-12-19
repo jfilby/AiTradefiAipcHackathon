@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { useQuery } from '@apollo/client/react'
 import { io } from 'socket.io-client'
-import { Alert, Button, TextareaAutosize } from '@mui/material'
+import { Alert, Button, Checkbox, FormControlLabel, TextareaAutosize } from '@mui/material'
 import ChatSessionMessages from '../../../deployed/serene-ai-client/components/chat/view/messages'
 import { getChatMessagesQuery } from '@/apollo/instance-chats'
 import CreateElevenLabsToken from '../elevenlabs/create-token'
+import SaveSpeakPreference from '../elevenlabs/save-speak-user-preference'
 import StreamMicComponent from '../elevenlabs/stream-mic'
 
 // Get/create a Socket.io object. This needs to be done outside of the
@@ -15,8 +16,9 @@ const socket = io(`${process.env.NEXT_PUBLIC_SOCKET_IO_URL}`)
 
 // Page function interface
 interface Props {
-  chatSession: any
   userProfileId: string
+  chatSession: any
+  chatSpeakPreference: boolean | null
   showInputTip: boolean | undefined
   setShowInputTip: any
   showNextTip: boolean | undefined
@@ -25,8 +27,9 @@ interface Props {
 }
 
 export default function ViewInstanceChatSession({
-                          chatSession,
                           userProfileId,  // should be fromChatParticipantId (or both)
+                          chatSession,
+                          chatSpeakPreference,
                           showInputTip,
                           setShowInputTip,
                           showNextTip,
@@ -53,6 +56,7 @@ export default function ViewInstanceChatSession({
   const [chatHeight, setChatHeight] = useState(getChatBoxHeight())
 
   const [elevenlabsToken, setElevenlabsToken] = useState<string | undefined>(undefined)
+  const [speak, setSpeak] = useState<boolean>(chatSpeakPreference ? chatSpeakPreference : true)
 
   // GraphQL
   const { refetch: fetchChatMessages } =
@@ -338,6 +342,18 @@ export default function ViewInstanceChatSession({
               setToken={setElevenlabsToken} />
           </div>
 
+          <div style={{ display: 'inline-block', marginLeft: '1em' }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={speak}
+                  onChange={(e) => setSpeak(e.target.checked)}
+                  size='small' />
+              }
+              label='Speak'
+              sx={{ '& .MuiFormControlLabel-label': { fontSize: '0.9rem' } }} />
+          </div>
+
           <Button
             disabled={!myTurn}
             onClick={(e) => { handleSendMessage() }}
@@ -353,6 +369,12 @@ export default function ViewInstanceChatSession({
         setMessage={setMessage}
         token={elevenlabsToken}
         setToken={setElevenlabsToken} />
+
+      <SaveSpeakPreference
+        userProfileId={userProfileId}
+        setAlertSeverity={setAlertSeverity}
+        setMessage={setMessage}
+        speak={speak} />
     </div>
   )
 }
