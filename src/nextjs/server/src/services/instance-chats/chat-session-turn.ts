@@ -184,6 +184,24 @@ export class ChatSessionTurnService {
       }
     } else {
 
+      // Debug
+      console.log(`${fnName}: sessionTurnData: ` +
+                  JSON.stringify(sessionTurnData))
+
+      // Get the messages (contents) from the JSON
+      // Assume this format if JSON mode is true
+      if (sessionTurnData.chatSession.chatSettings.isJsonMode === false) {
+
+        // sessionTurnData.toContents = sessionTurnData.messages
+
+      } else {
+        sessionTurnData.toContents = sessionTurnData.toJson.messages
+
+        for (const message of sessionTurnData.toContents) {
+          message.type = ''
+        }
+      }
+
       // Prep messages for saving with JSON reply data to prevent referencing
       // old ids in future AI responses. Make a deep copy of sessionTurnData.
       var saveSessionTurnData = structuredClone(sessionTurnData)
@@ -198,6 +216,10 @@ export class ChatSessionTurnService {
           saveSessionTurnData.chatSession,
           saveSessionTurnData)
     }
+
+    // Debug
+    console.log(`${fnName}: sessionTurnData.toContents: ` +
+                JSON.stringify(sessionTurnData.toContents))
 
     // Formulate the replyData
     replyData = {

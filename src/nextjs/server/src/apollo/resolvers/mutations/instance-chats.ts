@@ -2,7 +2,7 @@ import { prisma } from '@/db'
 import { ChatParticipantModel } from '@/serene-core-server/models/chat/chat-participant-model'
 import { UsersService } from '@/serene-core-server/services/users/service'
 import { CustomError } from '@/serene-core-server/types/errors'
-import { ChatSessionOptions } from '@/types/server-only-types'
+import { ChatPages, ChatSessionOptions } from '@/types/server-only-types'
 import { InstanceChatsService } from '@/services/instance-chats/common/service'
 
 
@@ -35,7 +35,9 @@ export async function getOrCreateInstanceChatSession(
   }
 
   // Define ChatSessionsOptions
-  const chatSessionOptions: ChatSessionOptions = {}
+  const chatSessionOptions: ChatSessionOptions = {
+    page: ChatPages.analysisPageChat
+  }
 
   // Get/create transaction
   var results: any

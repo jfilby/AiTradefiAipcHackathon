@@ -39,7 +39,12 @@ export class ServerOnlyTypes {
   static defaultGenerationsSettingsName = 'Default'
 }
 
+export enum ChatPages {
+  analysisPageChat = 'analysis page chat'
+}
+
 export interface ChatSessionOptions {
+  page?: string
 }
 
 export enum CurrencyCodes {

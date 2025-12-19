@@ -1,14 +1,17 @@
-import { PrismaClient } from '@prisma/client'
+import { ChatSettings, PrismaClient } from '@prisma/client'
 import { CustomError } from '@/serene-core-server/types/errors'
 import { ChatSettingsModel } from '@/serene-core-server/models/chat/chat-settings-model'
 import { SereneAiServerOnlyTypes } from '@/serene-ai-server/types/server-only-types'
 import { ChatSessionService } from '@/serene-ai-server/services/chats/sessions/chat-session-service'
-import { ChatSessionOptions } from '@/types/server-only-types'
+import { ChatPages, ChatSessionOptions } from '@/types/server-only-types'
+import { ChatPromptsService } from '../chat-prompts-service'
+import { BaseDataTypes } from '@/shared/types/base-data-types'
 
 // Models
 const chatSettingsModel = new ChatSettingsModel()
 
 // Services
+const chatPromptsService = new ChatPromptsService()
 const chatSessionService = new ChatSessionService()
 
 // Class
@@ -119,7 +122,6 @@ export class InstanceChatsService {
     }
 
     // If an agent is specified then create a new ChatSettings record
-    var appCustom: any = null
     var chatSettings = baseChatSettings
 
     // Debug
@@ -127,6 +129,12 @@ export class InstanceChatsService {
                 JSON.stringify(baseChatSettings))
 
     console.log(`${fnName}: creating chatSession..`)
+
+    // Determine the prompt
+    const prompt =
+            this.getPrompt(
+              chatSettings,
+              options)
 
     // Determine the name of the chat session
     var name = ``
@@ -143,8 +151,8 @@ export class InstanceChatsService {
               instanceId,
               chatSettings.isEncryptedAtRest,
               chatSettings.isJsonMode,
-              null,  // prompt
-              appCustom,
+              prompt,
+              null,  // appCustom
               name)
 
     // Debug
@@ -159,5 +167,32 @@ export class InstanceChatsService {
       status: true,
       chatSession: chatSession
     }
+  }
+
+  getPrompt(
+    chatSettings: ChatSettings,
+    options: ChatSessionOptions) {
+
+    // Debug
+    const fnName = `${this.clName}.getPrompt()`
+
+    // Get the prompt by the options
+    if (options.page === ChatPages.analysisPageChat) {
+
+      // Validate
+      if (chatSettings.isJsonMode === false) {
+
+        const errorMessage =
+                `${fnName}: expected chatSettings.isJsonMode to be true`
+
+        console.error(errorMessage)
+        throw new CustomError(errorMessage)
+      }
+
+      // Get and return Analysis page prompt
+      return chatPromptsService.getAnalysisPageChatPrompt()
+    }
+
+    return null
   }
 }

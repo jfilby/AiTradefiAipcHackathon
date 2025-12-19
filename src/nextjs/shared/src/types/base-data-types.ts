@@ -63,7 +63,7 @@ export class BaseDataTypes {
     {
       name: this.aiTradefiChatSettingsName,
       agentUniqueRef: this.aiTradefiAgentRefId,
-      isJsonMode: false
+      isJsonMode: true
     }
   ]
 
