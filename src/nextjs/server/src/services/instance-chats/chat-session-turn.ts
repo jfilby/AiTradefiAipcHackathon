@@ -170,7 +170,6 @@ export class ChatSessionTurnService {
 
     // Reply data var
     var replyData: any = null
-    var toContents: any[] = []
     var saveMessageResults: any = null
 
     // Rate limited?
