@@ -42,8 +42,12 @@ export default function StreamMicComponent({
 
   // Functions
   function setWithScribedText(scribedText: string) {
+
     const el = myMessageInput.current
-    if (!el) return text.trimEnd() + (text ? ' ' : '') + scribedText
+
+    if (!el) {
+      return text.trimEnd() + (text ? ' ' : '') + scribedText
+    }
 
     const start = cursorStartRef.current
     const end = cursorEndRef.current
