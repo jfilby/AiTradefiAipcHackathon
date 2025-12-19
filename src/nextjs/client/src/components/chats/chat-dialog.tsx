@@ -50,6 +50,11 @@ export default function ChatDialog({
   // Functions
   async function getChatSession() {
 
+    // Debug
+    const fnName = `getChatSession()`
+
+    // console.log(`${fnName}: loading chat session..`)
+
     // Query
     var sendGetOrCreateInstanceChatSessionData: any = undefined
 
@@ -76,6 +81,7 @@ export default function ChatDialog({
 
   const handleClose = () => {
     setOpen(false)
+    setChatSession(undefined)
   }
 
   // Effects

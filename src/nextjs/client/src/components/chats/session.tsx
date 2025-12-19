@@ -56,7 +56,7 @@ export default function ViewInstanceChatSession({
   const [chatHeight, setChatHeight] = useState(getChatBoxHeight())
 
   const [elevenlabsToken, setElevenlabsToken] = useState<string | undefined>(undefined)
-  const [speak, setSpeak] = useState<boolean>(chatSpeakPreference ? chatSpeakPreference : true)
+  const [speak, setSpeak] = useState<boolean>(chatSpeakPreference != null ? chatSpeakPreference : true)
 
   // GraphQL
   const { refetch: fetchChatMessages } =
