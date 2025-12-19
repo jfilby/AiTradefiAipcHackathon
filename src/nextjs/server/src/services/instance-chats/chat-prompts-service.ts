@@ -22,19 +22,6 @@ export class ChatPromptsService {
             `  instruments (e.g. stocks). This is the field users most ` +
             `  likely want help with.\n` +
             `\n` +
-            `## Return fields\n` +
-            `\n` +
-            `- messages: the chat response goes here (markdown).\n` +
-            `- name: a new name for the Analysis.\n` +
-            `- description: a new description.\n` +
-            `- prompt: a new prompt to screen instruments with.\n` +
-            `\n` +
-            // `Only offer name and description fields if not yet set.\n` +
-            // `\n` +
-            `The name, description and prompt fields should only be ` +
-            `specified on confirmation by that they want these fields ` +
-            `updated.\n` +
-            `\n` +
             `## Example\n` +
             `\n` +
             `{\n` +
@@ -45,7 +32,22 @@ export class ChatPromptsService {
             `  ],\n` +
             `  "prompt": "Look for small cap stocks with significant ` +
             `    revenue gain over the last 4 quarters."` +
-            `}\n`
+            `}\n` +
+            `\n` +
+            `## Return fields\n` +
+            `\n` +
+            `The output includes these fields (see the example section for ` +
+            `the expected structure):\n` +
+            `- messages: the chat response goes here (markdown).\n` +
+            `- name: a new name for the Analysis.\n` +
+            `- description: a new description.\n` +
+            `- prompt: a new prompt to screen instruments with.\n` +
+            `\n` +
+            // `Only offer name and description fields if not yet set.\n` +
+            // `\n` +
+            `The name, description and prompt fields should only be ` +
+            `specified on confirmation by that they want these fields ` +
+            `updated.\n`
 
     return prompt
   }

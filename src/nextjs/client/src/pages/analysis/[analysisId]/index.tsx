@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ChatIcon from '@mui/icons-material/Chat'
 import { loadServerPage } from '@/services/page/load-server-page'
 import Layout from '@/components/layouts/layout'
@@ -38,6 +38,36 @@ export default function EditAnalysesPage({
   const [saveAction, setSaveAction] = useState<boolean>(false)
   const [showChat, setShowChat] = useState<boolean>(false)
   const [chatSession, setChatSession] = useState<string | undefined>(undefined)
+
+  const [chatRawJson, setChatRawJson] = useState<any>(undefined)
+  const [analysisRefreshed, setAnalysisRefreshed] = useState<boolean>(false)
+
+  // Effects
+  useEffect(() => {
+
+    // Skip if not set
+    if (chatRawJson == null) {
+      return
+    }
+
+    // Update the Analysis data
+    if (chatRawJson.name != null) {
+      analysis.name = chatRawJson.name
+    }
+
+    if (chatRawJson.description != null) {
+      analysis.description = chatRawJson.description
+    }
+
+    if (chatRawJson.prompt != null) {
+      analysis.prompt = chatRawJson.prompt
+    }
+
+    // Put new field values into effect
+    setAnalysis(analysis)
+    setAnalysisRefreshed(true)
+
+  }, [chatRawJson])
 
   // Render
   return (
@@ -81,7 +111,9 @@ export default function EditAnalysesPage({
               analysis={analysis}
               setAnalysis={setAnalysis}
               setLoadAction={undefined}
-              setSaveAction={setSaveAction} />
+              setSaveAction={setSaveAction}
+              analysisRefreshed={analysisRefreshed}
+              setAnalysisRefreshed={setAnalysisRefreshed} />
           :
             <></>
           }
@@ -117,7 +149,8 @@ export default function EditAnalysesPage({
         analysis={analysis}
         setAnalysis={setAnalysis}
         chatSession={chatSession}
-        setChatSession={setChatSession} />
+        setChatSession={setChatSession}
+        setChatRawJson={setChatRawJson} />
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import CancelIcon from '@mui/icons-material/Cancel'
 import SaveIcon from '@mui/icons-material/Save'
@@ -18,6 +18,8 @@ interface Props {
   setAnalysis: any
   setLoadAction: any
   setSaveAction: any
+  analysisRefreshed: boolean
+  setAnalysisRefreshed: any
 }
 
 export default function EditAnalysis({
@@ -30,7 +32,9 @@ export default function EditAnalysis({
                           analysis,
                           setAnalysis,
                           setLoadAction,
-                          setSaveAction
+                          setSaveAction,
+                          analysisRefreshed,
+                          setAnalysisRefreshed
                         }: Props) {
 
   // Consts
@@ -44,6 +48,24 @@ export default function EditAnalysis({
   const [description, setDescription] = useState<string>(analysis.description)
   const [prompt, setPrompt] = useState<string>(analysis.prompt)
   const [defaultMinScore, setDefaultMinScore] = useState<string>(analysis.defaultMinScore)
+
+  // Effects
+  useEffect(() => {
+
+    // Skip if not refreshed
+    if (analysisRefreshed === false) {
+      return
+    }
+
+    // Update fields
+    setName(analysis.name)
+    setDescription(analysis.description)
+    setPrompt(analysis.prompt)
+
+    // Set to not refreshed
+    setAnalysisRefreshed(false)
+
+  }, [analysisRefreshed])
 
   // Functions
   function verifyFields() {

@@ -19,6 +19,7 @@ interface Props {
   setShowInputTip: any
   showNextTip: boolean | undefined
   setShowNextTip: any
+  setChatRawJson: any
 }
 
 export default function ViewInstanceChatSession({
@@ -27,7 +28,8 @@ export default function ViewInstanceChatSession({
                           showInputTip,
                           setShowInputTip,
                           showNextTip,
-                          setShowNextTip
+                          setShowNextTip,
+                          setChatRawJson
                         }: Props) {
 
   // Consts
@@ -206,6 +208,11 @@ export default function ViewInstanceChatSession({
         if (newMessage.sentByAi === true) {
           setMyTurn(true)
         }
+      }
+
+      // Update caller's json
+      if (newMessage.rawJson != null) {
+        setChatRawJson(newMessage.rawJson)
       }
     }
   })

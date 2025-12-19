@@ -19,6 +19,7 @@ interface Props {
   setAnalysis: any
   chatSession: string | undefined
   setChatSession: any
+  setChatRawJson: any
 }
 
 export default function ChatDialog({
@@ -30,7 +31,8 @@ export default function ChatDialog({
                           analysis,
                           setAnalysis,
                           chatSession,
-                          setChatSession
+                          setChatSession,
+                          setChatRawJson
                         }: Props) {
 
   // GraphQL
@@ -125,7 +127,8 @@ export default function ChatDialog({
               showInputTip={undefined}
               setShowInputTip={undefined}
               showNextTip={undefined}
-              setShowNextTip={undefined} />
+              setShowNextTip={undefined}
+              setChatRawJson={setChatRawJson} />
           :
             <></>
           }
