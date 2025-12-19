@@ -230,7 +230,7 @@ export default function EditAnalysis({
           style={{ marginBottom: '2em' }}
           value={prompt} />
 
-        <div style={{ marginBottom: '1em' }}>
+        {/* <div style={{ marginBottom: '1em' }}>
           <TextField
             autoComplete='off'
             label='Default min score (0..1)'
@@ -248,7 +248,7 @@ export default function EditAnalysis({
             required
             style={{ marginBottom: '1em' }}
             value={defaultMinScore} />
-        </div>
+        </div> */}
 
         <div style={{ textAlign: 'right', width: '100%' }}>
 
