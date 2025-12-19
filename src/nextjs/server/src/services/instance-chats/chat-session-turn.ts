@@ -205,12 +205,12 @@ export class ChatSessionTurnService {
       sentByAi: true,
       chatSessionId: chatSessionId,
       chatParticipantId: sessionTurnData.toChatParticipantId,
-      userChatMessage: saveMessageResults.userChatMessage,
-      aiReplyChatMessage: saveMessageResults.aiReplyChatMessage,
+      // userChatMessage: saveMessageResults.userChatMessage,
+      // aiReplyChatMessage: saveMessageResults.aiReplyChatMessage,
       userProfileId: sessionTurnData.toUserProfileId,
       name: sessionTurnData.toName,
-      contents: toContents,            // Should be a JSON array
-      rawJson: sessionTurnData.toJson  // Raw JSON returned from the LLM
+      contents: sessionTurnData.toContents,  // Should be a JSON array
+      rawJson: sessionTurnData.toJson        // Raw JSON returned from the LLM
     }
 
     // Debug

@@ -177,7 +177,9 @@ export default function ViewInstanceChatSession({
   socket.on('message', (newMessage: any) => {
 
     // Debug
-    // console.log(`message: ${JSON.stringify(newMessage)}`)
+    const fnName = `socket.on()`
+
+    // console.log(`${fnName}: newMessage: ` + JSON.stringify(newMessage))
 
     // Validate
     if (newMessage != null) {
