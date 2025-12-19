@@ -22,6 +22,7 @@ import { getLatestTradeAnalysesGroups, getTradeAnalysesGroupById, getTradeAnalys
 
 // Concept mutations imports
 import { upsertAnalysis } from './mutations/analyses'
+import { createElevenLabsToken } from './mutations/eleven-labs'
 import { getOrCreateInstanceChatSession } from './mutations/instance-chats'
 import { loadServerStartData } from './mutations/server-data-start'
 import { signUpForWaitlist } from './mutations/sign-ups'
@@ -113,6 +114,9 @@ const Mutation = {
 
   // AiTradefi
   // ---
+
+  // ElevenLabs
+  createElevenLabsToken,
 
   // Analyses
   upsertAnalysis,

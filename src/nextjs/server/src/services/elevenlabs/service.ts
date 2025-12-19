@@ -25,6 +25,40 @@ export class ElevenLabsService {
   clName = 'ElevenLabsService'
 
   // Code
+  async generateToken(
+          userProfileId: string) {
+
+    // Debug
+    const fnName = `${this.clName}.generateToken()`
+
+    // Validate
+    if (process.env.ELEVENLABS_API_KEY == null) {
+      throw new CustomError(
+        `${fnName}: process.env.ELEVENLABS_API_KEY == null`)
+    }
+
+    // Request a token
+    const response = await fetch(
+      'https://api.elevenlabs.io/v1/single-use-token/realtime_scribe',
+      {
+        method: 'POST',
+        headers: {
+          'xi-api-key': process.env.ELEVENLABS_API_KEY,
+        },
+      })
+
+    const data = await response.json()
+
+    // Debug
+    console.log(`${fnName}: data: ` + JSON.stringify(data))
+
+    // Return
+    return {
+      status: true,
+      token: data.token
+    }
+  }
+
   async generateTTS(
           voiceName: string,
           text: string,

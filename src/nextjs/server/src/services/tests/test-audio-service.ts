@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { ElevenLabsTypes } from '@/shared/types/elevenlabs-types'
-import { ElevenLabsService } from '../generated-data/elevenlabs/service'
+import { ElevenLabsService } from '../elevenlabs/service'
 
 // Services
 const elevenLabsService = new ElevenLabsService()

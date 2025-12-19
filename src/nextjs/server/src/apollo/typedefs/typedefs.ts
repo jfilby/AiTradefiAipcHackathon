@@ -216,6 +216,12 @@ export const typeDefs = `#graphql
     slideshows: [Slideshow]
   }
 
+  type TokenResults {
+    status: Boolean!
+    message: String
+    token: String
+  }
+
   type TradeAnalysesGroup {
     id: String
     analysis: Analysis!
@@ -431,6 +437,10 @@ export const typeDefs = `#graphql
 
     # AiTradefi
     # ---
+
+    # ElevenLabs
+    createElevenLabsToken(
+      userProfileId: String!): TokenResults!
 
     # Instance chats
     getOrCreateInstanceChatSession(

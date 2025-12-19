@@ -4,6 +4,8 @@ import { io } from 'socket.io-client'
 import { Alert, Button, TextareaAutosize } from '@mui/material'
 import ChatSessionMessages from '../../../deployed/serene-ai-client/components/chat/view/messages'
 import { getChatMessagesQuery } from '@/apollo/instance-chats'
+import CreateElevenLabsToken from '../elevenlabs/create-token'
+import StreamMicComponent from '../elevenlabs/stream-mic'
 
 // Get/create a Socket.io object. This needs to be done outside of the
 // function, which would otherwise constantly retry the object creation,
@@ -49,6 +51,8 @@ export default function ViewInstanceChatSession({
   const [lastMyMessage, setLastMyMessage] = useState('')
   const [messages, setMessages] = useState<any[]>([])
   const [chatHeight, setChatHeight] = useState(getChatBoxHeight())
+
+  const [elevenlabsToken, setElevenlabsToken] = useState<string | undefined>(undefined)
 
   // GraphQL
   const { refetch: fetchChatMessages } =
@@ -324,13 +328,29 @@ export default function ViewInstanceChatSession({
           style={{ border: '1px solid #ccc', marginRight: '0.5em', verticalAlign: 'top', width: '80%' }}
           value={myMessage} />
 
-        <Button
-          disabled={!myTurn}
-          onClick={(e) => { handleSendMessage() }}
-          style={{ verticalAlign: 'top' }}>
-          Send
-        </Button>
+        <div>
+          <div style={{ display: 'inline-block' }}>
+            <StreamMicComponent
+              token={elevenlabsToken}
+              setText={setMyMessage}
+              setToken={setElevenlabsToken} />
+          </div>
+
+          <Button
+            disabled={!myTurn}
+            onClick={(e) => { handleSendMessage() }}
+            style={{ display: 'inline-block', verticalAlign: 'top' }}>
+            Send
+          </Button>
+        </div>
       </>
+
+      <CreateElevenLabsToken
+        userProfileId={userProfileId}
+        setAlertSeverity={setAlertSeverity}
+        setMessage={setMessage}
+        token={elevenlabsToken}
+        setToken={setElevenlabsToken} />
     </div>
   )
 }
