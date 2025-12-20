@@ -44,7 +44,7 @@ export class ChatSessionTurnService {
 
     // Try to getet the llmTechId if not set via the ChatSession/ChatSettings
     const tech = await
-            getTechService.getStandardLlmTech(
+            getTechService.getChatLlmTech(
               prisma,
               userProfileId)
 

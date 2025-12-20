@@ -12,6 +12,40 @@ export class GetTechService {
   clName = 'GetTechService'
 
   // Code
+  async getChatLlmTech(
+          prisma: PrismaClient,
+          userProfileId: string | undefined = undefined) {
+
+    // Debug
+    const fnName = `${this.clName}.getChatLlmTech()`
+
+    // Validate
+    if (process.env.CHAT_LLM_VARIANT_NAME == null ||
+        process.env.CHAT_LLM_VARIANT_NAME === '') {
+
+      throw new CustomError(`${fnName}: env var ` +
+                            `CHAT_LLM_VARIANT_NAME not specified`)
+    }
+
+    // Defined LLM variant name
+    const variantName = process.env.CHAT_LLM_VARIANT_NAME!
+
+    // Get the standard LLM to use
+    const tech = await
+            techModel.getByVariantName(
+              prisma,
+              variantName)
+
+    // Validate
+    if (tech == null) {
+      throw new CustomError(`${fnName}: tech == null for variantName: ` +
+                            `${variantName}`)
+    }
+
+    // Return
+    return tech
+  }
+
   async getEmbeddingsTech(prisma: PrismaClient) {
 
     // Debug
@@ -37,8 +71,7 @@ export class GetTechService {
     // Validate
     if (tech == null) {
       throw new CustomError(`${fnName}: tech == null for variantName: ` +
-                            `${variantName}`
-      )
+                            `${variantName}`)
     }
 
     // Return
@@ -70,8 +103,7 @@ export class GetTechService {
     // Validate
     if (tech == null) {
       throw new CustomError(`${fnName}: tech == null for variantName: ` +
-                            `${variantName}`
-      )
+                            `${variantName}`)
     }
 
     // Return
@@ -105,8 +137,7 @@ export class GetTechService {
     // Validate
     if (tech == null) {
       throw new CustomError(`${fnName}: tech == null for variantName: ` +
-                            `${variantName}`
-      )
+                            `${variantName}`)
     }
 
     // Return
