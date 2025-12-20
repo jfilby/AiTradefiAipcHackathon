@@ -227,7 +227,7 @@ export class ChatSessionTurnService {
       chatSessionId: chatSessionId,
       chatParticipantId: sessionTurnData.toChatParticipantId,
       // userChatMessage: saveMessageResults.userChatMessage,
-      // aiReplyChatMessage: saveMessageResults.aiReplyChatMessage,
+      aiReplyChatMessageId: saveMessageResults.aiReplyChatMessage.id,
       userProfileId: sessionTurnData.toUserProfileId,
       name: sessionTurnData.toName,
       contents: sessionTurnData.toContents,  // Should be a JSON array

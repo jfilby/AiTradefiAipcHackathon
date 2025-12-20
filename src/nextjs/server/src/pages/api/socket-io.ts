@@ -3,6 +3,7 @@ import express from 'express'
 import http from 'http'
 import { prisma } from '@/db'
 import { Server as SocketIoServer } from 'socket.io'
+import { ElevenLabsService } from '@/services/elevenlabs/service'
 import { ChatSessionTurnService } from '@/services/instance-chats/chat-session-turn'
 
 // const prisma = new PrismaClient()
@@ -18,6 +19,7 @@ const io = new SocketIoServer(
                  })
 
 // Services
+const elevenLabsService = new ElevenLabsService()
 const chatSessionTurnService = new ChatSessionTurnService()
 
 // On socket.io events
@@ -96,6 +98,18 @@ io.on('connection', (socket) => {
 
     // Return the reply
     io.to(chatSessionId).emit('message', replyData)
+
+    // TTS if enabled
+    const audioBuffer = await
+            elevenLabsService.generateTtsFromChatMessagesIfEnabled(
+              prisma,
+              userProfileId,
+              replyData)
+
+    // Send audio (mp3)
+    if (audioBuffer != null) {
+      io.to(chatSessionId).emit('audio (mp3)', audioBuffer)
+    }
   })
 
   // Handle disconnection

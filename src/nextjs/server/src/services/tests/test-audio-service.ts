@@ -28,7 +28,7 @@ export class CreateTestAudioService {
 
     // Generate text-to-speech and save it
     const response = await
-            elevenLabsService.generateTTS(
+            elevenLabsService.generateTtsAndSave(
               ElevenLabsTypes.defaultVoiceName,
               prompt,
               relativePath)

@@ -1,3 +1,5 @@
+import fs from 'fs'
+import path, { relative } from 'path'
 import { writeFileSync } from 'fs'
 import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js'
 import { TextToSpeechConvertRequestOutputFormat } from '@elevenlabs/elevenlabs-js/api'
@@ -6,7 +8,7 @@ import { CustomError } from '@/serene-core-server/types/errors'
 import { UserPreferenceModel } from '@/serene-core-server/models/users/user-preference-model'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { ElevenLabsTypes } from '@/shared/types/elevenlabs-types'
-import { UserPreferenceCategories, UserPreferenceKeys } from '@/types/server-only-types'
+import { ServerOnlyTypes, UserPreferenceCategories, UserPreferenceKeys } from '@/types/server-only-types'
 import { ElevenLabsVoiceModel } from '@/models/generated-media/elevenlabs-voice-model'
 import { GeneratedAudioModel } from '@/models/generated-media/generated-audio-model'
 
@@ -61,40 +63,17 @@ export class ElevenLabsService {
     }
   }
 
-  async generateTTS(
-          voiceName: string,
+  async generateTtsBuffer(
+          voiceId: string,
           text: string,
-          relativePath: string,
           outputFormat: string = ElevenLabsTypes.defaultOutputFormat) {
 
     // Debug
-    const fnName = `${this.clName}.generateTTS()`
-
-    // Get voice by name
-    const elevenLabsVoice = await
-            elevenLabsVoiceModel.getByName(
-              prisma,
-              voiceName)
-
-    if (elevenLabsVoice == null) {
-      throw new CustomError(`${fnName}: elevenLabsVoice == null`)
-    }
-
-    // Does a record already exist?
-    var generatedAudio = await
-          generatedAudioModel.getByUniqueKey(
-            prisma,
-            relativePath)
-
-    if (generatedAudio != null) {
-
-      console.log(`${fnName}: GeneratedAudio record already exists`)
-      return
-    }
+    const fnName = `${this.clName}.generateTtsBuffer()`
 
     // TTS API call
     const stream = await client.textToSpeech.convert(
-      elevenLabsVoice.voiceId,
+      voiceId,
       {
         text: text,
         modelId: 'eleven_turbo_v2',
@@ -104,8 +83,6 @@ export class ElevenLabsService {
           similarityBoost: 0.8,
         },
       })
-
-    // Debug
 
     // Convert ReadableStream to Buffer
     const reader = stream.getReader()
@@ -119,9 +96,80 @@ export class ElevenLabsService {
 
     const buffer = Buffer.concat(chunks.map(chunk => Buffer.from(chunk)))
 
-    // Save to file
+    // Return
+    return buffer
+  }
+
+  async generateTts(
+          voiceName: string,
+          text: string,
+          outputFormat: string = ElevenLabsTypes.defaultOutputFormat) {
+
+    // Debug
+    const fnName = `${this.clName}.generateTts()`
+
+    // Get voice by name
+    const elevenLabsVoice = await
+            elevenLabsVoiceModel.getByName(
+              prisma,
+              voiceName)
+
+    if (elevenLabsVoice == null) {
+      throw new CustomError(`${fnName}: elevenLabsVoice == null`)
+    }
+
+    // TTS
+    const buffer = await
+            this.generateTtsBuffer(
+              elevenLabsVoice.voiceId,
+              text,
+              outputFormat) 
+
+    // Return
+    return {
+      outputFormat: outputFormat,
+      elevenLabsVoiceId: elevenLabsVoice.id,
+      data: buffer
+    }
+  }
+
+  async generateTtsAndSave(
+          voiceName: string,
+          text: string,
+          relativePath: string) {
+
+    // Debug
+    const fnName = `${this.clName}.generateTtsAndSave()`
+
+    // Does a record already exist?
+    var generatedAudio = await
+          generatedAudioModel.getByUniqueKey(
+            prisma,
+            relativePath)
+
+    if (generatedAudio != null) {
+
+      console.log(`${fnName}: GeneratedAudio record already exists`)
+      return {
+        generatedAudioId: generatedAudio.id
+      }
+    }
+
+    // Generate TTS
+    const ttsResults = await
+            this.generateTts(
+              voiceName,
+              text)
+
+    // Determine filename
     const filename = `${process.env.BASE_DATA_PATH}${relativePath}`
-    writeFileSync(filename, buffer)
+
+    // Create required paths if needed
+    const dir = path.dirname(filename)
+    fs.mkdirSync(dir, { recursive: true })
+
+    // Save to file
+    writeFileSync(filename, ttsResults.data)
 
     // Upsert GeneratedAudio record
     generatedAudio = await
@@ -129,13 +177,83 @@ export class ElevenLabsService {
         prisma,
         undefined,  // id
         BaseDataTypes.activeStatus,
-        elevenLabsVoice.id,
-        outputFormat,
+        ttsResults.elevenLabsVoiceId,
+        ttsResults.outputFormat,
         text,
         relativePath)
 
     // Debug
     console.log(`${fnName}: saved to: ${filename}`)
+  }
+
+  async generateTtsBufferIfEnabled(
+          prisma: PrismaClient,
+          userProfileId: string,
+          voiceName: string,
+          text: string) {
+
+    // Debug
+    const fnName = `${this.clName}.generateTtsBufferIfEnabled()`
+
+    // Get speak preference
+    const speakPreference = await
+            this.getSpeakPreference(
+              prisma,
+              userProfileId)
+
+    if (speakPreference == null ||
+        speakPreference === false) {
+
+      return undefined
+    }
+
+    // Get voice by name
+    const elevenLabsVoice = await
+            elevenLabsVoiceModel.getByName(
+              prisma,
+              voiceName)
+
+    if (elevenLabsVoice == null) {
+      throw new CustomError(`${fnName}: elevenLabsVoice == null`)
+    }
+
+    // TTS
+    const buffer = await
+            this.generateTtsBuffer(
+              elevenLabsVoice.voiceId,
+              text)
+
+    // Return
+    return buffer
+  }
+
+  async generateTtsFromChatMessagesIfEnabled(
+          prisma: PrismaClient,
+          userProfileId: string,
+          textReplyData: any) {
+
+    // Messages to text
+    var text = ''
+
+    for (const message of textReplyData.contents) {
+
+      if (text.length > 0) {
+        text += '\n'
+      }
+
+      text += message.text
+    }
+
+    // Generate TTS if enabled
+    const buffer = await
+            this.generateTtsBufferIfEnabled(
+              prisma,
+              userProfileId,
+              ElevenLabsTypes.defaultVoiceName,
+              text)
+
+    // Return
+    return buffer
   }
 
   async getSpeakPreference(
