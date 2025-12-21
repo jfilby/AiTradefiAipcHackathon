@@ -19,8 +19,7 @@ export async function getSlideshowById(
           slideshowsQueryService.getById(
             prisma,
             args.userProfileId,
-            args.slideshowId,
-            true)  // includeSlides
+            args.slideshowId)
 
   // Return
   return results
