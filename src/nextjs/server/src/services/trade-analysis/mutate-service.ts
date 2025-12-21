@@ -407,7 +407,7 @@ export class TradeAnalysisMutateService {
 
   async runAnalysis(
           prisma: PrismaClient,
-          userProfileId: string,
+          adminUserProfileId: string,
           analysis: Analysis) {
 
     // Debug
@@ -461,7 +461,7 @@ export class TradeAnalysisMutateService {
       tradeAnalysesGroup = await
         tradeAnalysesGroupModel.create(
           prisma,
-          userProfileId,
+          analysis.userProfileId,
           analysis.id,
           day,
           ServerOnlyTypes.tradeAnalysisEngineVersion,
@@ -485,7 +485,7 @@ export class TradeAnalysisMutateService {
       instrumentContextMap = await
         this.runTradeAnalysesGroup(
           prisma,
-          userProfileId,
+          adminUserProfileId,
           analysis,
           tradeAnalysesGroup,
           tech,
@@ -517,7 +517,7 @@ export class TradeAnalysisMutateService {
 
       await this.runTradeAnalysesGroup(
               prisma,
-              userProfileId,
+              adminUserProfileId,
               analysis,
               tradeAnalysesGroup,
               tech,
@@ -528,7 +528,7 @@ export class TradeAnalysisMutateService {
 
   async runTradeAnalysesGroup(
           prisma: PrismaClient,
-          userProfileId: string,
+          adminUserProfileId: string,
           analysis: Analysis,
           tradeAnalysesGroup: TradeAnalysesGroup,
           tech: Tech,
@@ -608,7 +608,7 @@ export class TradeAnalysisMutateService {
     const { status, message, queryResults } = await
             tradeAnalysisLlmService.llmRequest(
               prisma,
-              userProfileId,
+              adminUserProfileId,
               tech,
               pass,
               prompt)
