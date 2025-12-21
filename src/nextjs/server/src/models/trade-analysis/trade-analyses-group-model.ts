@@ -13,7 +13,7 @@ export class TradeAnalysesGroupModel {
           status: string) {
 
     // Debug
-    const fnName = `${this.clName}.create()`
+    const fnName = `${this.clName}.countByStatus()`
 
     // Count records
     try {
