@@ -43,22 +43,26 @@ export default function SlideControls({
           {/* <p>isTextSlide: {JSON.stringify(isTextSlide)}</p> */}
 
           {slide.generatedAudioId != null?
-            <LabeledIconButton
-              icon={ReplayIcon}
-              label='Replay audio'
-              onClick={(e: any) => playAudio()}
-              style={{ marginRight: '1em' }} />
+            <div style={{ display: 'inline-block' }}>
+              <LabeledIconButton
+                icon={ReplayIcon}
+                label='Replay audio'
+                onClick={(e: any) => playAudio()}
+                style={{ marginRight: '1em' }} />
+            </div>
           :
             <></>
           }
 
           {slide.isTextSlide === false &&
            slide.text != null ?
-            <LabeledIconButton
-              icon={SpeakerNotesIcon}
-              label='Notes'
-              onClick={(e: any) => setShowNotes(true)}
-              style={{ marginRight: '1em' }} />
+            <div style={{ display: 'inline-block' }}>
+              <LabeledIconButton
+                icon={SpeakerNotesIcon}
+                label='Notes'
+                onClick={(e: any) => setShowNotes(true)}
+                style={{ marginRight: '1em' }} />
+            </div>
           :
             <></>
           }
