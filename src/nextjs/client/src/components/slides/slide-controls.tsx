@@ -16,6 +16,7 @@ interface Props {
   slide: any
   setSlide: any
   setShowNotes: any
+  setReplayAudio: any
 }
 
 export default function SlideControls({
@@ -24,15 +25,12 @@ export default function SlideControls({
                           slideshow,
                           slide,
                           setSlide,
-                          setShowNotes
+                          setShowNotes,
+                          setReplayAudio
                         }: Props) {
 
   // State
   const [play, setPlay] = useState<boolean>(false)
-
-  function playAudio() {
-    throw new Error('Function not implemented.')
-  }
 
   // Render
   return (
@@ -47,7 +45,7 @@ export default function SlideControls({
               <LabeledIconButton
                 icon={ReplayIcon}
                 label='Replay audio'
-                onClick={(e: any) => playAudio()}
+                onClick={(e: any) => setReplayAudio(true)}
                 style={{ marginRight: '1em' }} />
             </div>
           :

@@ -22,6 +22,7 @@ export default function SlideContainer({
 
   // State
   const [play, setPlay] = useState<boolean>(false)
+  const [replayAudio, setReplayAudio] = useState<boolean>(false)
   const [showNotes, setShowNotes] = useState<boolean>(false)
 
   // Render
@@ -36,7 +37,9 @@ export default function SlideContainer({
           instanceId={undefined}
           slideshow={slideshow}
           slide={slide}
-          setSlide={setSlide} />
+          setSlide={setSlide}
+          replayAudio={replayAudio}
+          setReplayAudio={setReplayAudio} />
       :
         <div>
           <Typography
@@ -65,7 +68,8 @@ export default function SlideContainer({
           slideshow={slideshow}
           slide={slide}
           setSlide={setSlide}
-          setShowNotes={setShowNotes} />
+          setShowNotes={setShowNotes}
+          setReplayAudio={setReplayAudio} />
       :
         <></>
       }
