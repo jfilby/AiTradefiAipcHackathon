@@ -27,15 +27,15 @@ interface Props {
 }
 
 export default function ViewInstanceChatSession({
-                          userProfileId,  // should be fromChatParticipantId (or both)
-                          chatSession,
-                          chatSpeakPreference,
-                          showInputTip,
-                          setShowInputTip,
-                          showNextTip,
-                          setShowNextTip,
-                          setChatRawJson
-                        }: Props) {
+  userProfileId,  // should be fromChatParticipantId (or both)
+  chatSession,
+  chatSpeakPreference,
+  showInputTip,
+  setShowInputTip,
+  showNextTip,
+  setShowNextTip,
+  setChatRawJson
+}: Props) {
 
   // Consts
   const chatSessionId = chatSession.id
@@ -74,10 +74,12 @@ export default function ViewInstanceChatSession({
   // Functions
   function getChatBoxHeight() {
 
-    var height = 56
+    var height = 58
 
     // Alert
-    if (alertSeverity != null) {
+    if (alertSeverity != null &&
+        message != null) {
+
       height -= 6
     }
 
@@ -93,10 +95,10 @@ export default function ViewInstanceChatSession({
 
     // Get project
     const { data } = await
-            fetchChatMessages({
-              chatSessionId: chatSession.id,
-              userProfileId: userProfileId
-              })
+      fetchChatMessages({
+        chatSessionId: chatSession.id,
+        userProfileId: userProfileId
+      })
 
     const results = data.getChatMessages
 
@@ -122,9 +124,9 @@ export default function ViewInstanceChatSession({
     // console.log(`Sending joinChatSession message..`)
 
     socket.emit('joinChatSession', {
-        chatSessionId,
-        chatSessionToken,
-        userProfileId
+      chatSessionId,
+      chatSessionToken,
+      userProfileId
     })
   }
 
@@ -144,15 +146,15 @@ export default function ViewInstanceChatSession({
 
     // Emit a 'message' event to the server
     socket.emit('message', {
-        sentByAi: false,
-        chatSessionId: chatSessionId,
-        chatParticipantId: chatParticipant.id,
-        userProfileId: userProfileId,
-        name: chatParticipant.name,
-        contents: [{
-          type: '',
-          text: prepMyMessage
-        }]
+      sentByAi: false,
+      chatSessionId: chatSessionId,
+      chatParticipantId: chatParticipant.id,
+      userProfileId: userProfileId,
+      name: chatParticipant.name,
+      contents: [{
+        type: '',
+        text: prepMyMessage
+      }]
     })
 
     setLastMyMessage(prepMyMessage)
@@ -171,7 +173,7 @@ export default function ViewInstanceChatSession({
       if (messages.length === 0) {
         setShowInputTip(true)
       } else if (showInputTip === true &&
-                 messages.length > 0) {
+        messages.length > 0) {
 
         setShowInputTip(false)
       }
@@ -321,79 +323,93 @@ export default function ViewInstanceChatSession({
 
   // Render
   return (
-    <div style={{ border: '1px solid #888', padding: '0.5em', height: chatHeight }}>
-      {/* <p>chatSession: {JSON.stringify(chatSession)}</p> */}
+    <>
+      <div style={{
+        border: '1px solid #888',
+        padding: '0.5em',
+        height: chatHeight,
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden'
+      }}>
 
-      <ChatSessionMessages
-        messages={messages}
-        myTurn={myTurn}
-        userProfileId={userProfileId} />
-      <>
-      {alertSeverity && message ?
-        <Alert
-          severity={alertSeverity}
-          style={{ marginBottom: '2em' }}>
-          {message}
-        </Alert>
-        :
-        <></>
-      }
-      </>
-      <>
-        <TextareaAutosize
-          autoComplete='off'
-          autoFocus
-          minRows={2}
-          onChange={(e) => setMyMessage(e.target.value)}
-          onKeyDown={e => {
-            if (e.key === 'Enter' && myTurn === false) {
-              e.preventDefault()
-            }
-          }}
-          onKeyUp={e => {
-            if (e.key === 'Enter' && myTurn === true) {
+        {/* <p>chatSession: {JSON.stringify(chatSession)}</p> */}
 
-              if (e.shiftKey || e.ctrlKey) {
-                setMyMessage(myMessage + '\n')
-              } else {
-                handleSendMessage()
-              }
-            }
-          }}
-          ref={myMessageInput}
-          style={{ border: '1px solid #ccc', marginRight: '0.5em', verticalAlign: 'top', width: '80%' }}
-          value={myMessage} />
-
-        <div>
-          <div style={{ display: 'inline-block' }}>
-            <StreamMicComponent
-              token={elevenlabsToken}
-              text={myMessage}
-              setText={setMyMessage}
-              myMessageInput={myMessageInput}
-              setToken={setElevenlabsToken} />
-          </div>
-
-          <div style={{ display: 'inline-block', marginLeft: '1em' }}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={speak}
-                  onChange={(e) => setSpeak(e.target.checked)}
-                  size='small' />
-              }
-              label='Speak'
-              sx={{ '& .MuiFormControlLabel-label': { fontSize: '0.9rem' } }} />
-          </div>
-
-          <Button
-            disabled={!myTurn}
-            onClick={(e) => { handleSendMessage() }}
-            style={{ display: 'inline-block', verticalAlign: 'top' }}>
-            Send
-          </Button>
+        <div style={{ flex: 1, minHeight: 0 }}>
+          <ChatSessionMessages
+            messages={messages}
+            myTurn={myTurn}
+            userProfileId={userProfileId} />
         </div>
-      </>
+
+        <>
+          {alertSeverity && message ?
+            <Alert
+              severity={alertSeverity}
+              style={{ marginBottom: '2em' }}>
+              {message}
+            </Alert>
+            :
+            <></>
+          }
+        </>
+
+        <div style={{ flexShrink: 0 }}>
+          <TextareaAutosize
+            autoComplete='off'
+            autoFocus
+            minRows={2}
+            onChange={(e) => setMyMessage(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === 'Enter' && myTurn === false) {
+                e.preventDefault()
+              }
+            }}
+            onKeyUp={e => {
+              if (e.key === 'Enter' && myTurn === true) {
+
+                if (e.shiftKey || e.ctrlKey) {
+                  setMyMessage(myMessage + '\n')
+                } else {
+                  handleSendMessage()
+                }
+              }
+            }}
+            ref={myMessageInput}
+            style={{ border: '1px solid #ccc', marginRight: '0.5em', verticalAlign: 'top', width: '80%' }}
+            value={myMessage} />
+
+          <div>
+            <div style={{ display: 'inline-block' }}>
+              <StreamMicComponent
+                token={elevenlabsToken}
+                text={myMessage}
+                setText={setMyMessage}
+                myMessageInput={myMessageInput}
+                setToken={setElevenlabsToken} />
+            </div>
+
+            <div style={{ display: 'inline-block', marginLeft: '1em' }}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={speak}
+                    onChange={(e) => setSpeak(e.target.checked)}
+                    size='small' />
+                }
+                label='Speak'
+                sx={{ '& .MuiFormControlLabel-label': { fontSize: '0.9rem' } }} />
+            </div>
+
+            <Button
+              disabled={!myTurn}
+              onClick={(e) => { handleSendMessage() }}
+              style={{ display: 'inline-block', verticalAlign: 'top' }}>
+              Send
+            </Button>
+          </div>
+        </div>
+      </div>
 
       <CreateElevenLabsToken
         userProfileId={userProfileId}
@@ -407,6 +423,6 @@ export default function ViewInstanceChatSession({
         setAlertSeverity={setAlertSeverity}
         setMessage={setMessage}
         speak={speak} />
-    </div>
+    </>
   )
 }

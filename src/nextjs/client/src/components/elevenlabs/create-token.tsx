@@ -47,7 +47,7 @@ export default function CreateElevenLabsToken({
     const results = sendCreateElevenLabsTokenData.data.createElevenLabsToken
 
     if (results.status === true) {
-      setAlertSeverity('success')
+      setAlertSeverity(undefined)
     } else {
       setAlertSeverity('error')
       setMessage(results.message)
