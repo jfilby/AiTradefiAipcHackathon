@@ -13,11 +13,13 @@ export class GenerationsSettingsSetupService {
   clName = 'GenerationsSettingsSetupService'
 
   defaultSlideShowSettings = {
-    requirementsSlide: true
+    requirementsSlide: true,
+    withAudioNarration: true,
   }
 
   defaultVideoSettings = {
-    requirementsIntro: true
+    requirementsIntro: true,
+    withAudioNarration: true,
   }
 
   // Code
@@ -25,26 +27,16 @@ export class GenerationsSettingsSetupService {
           prisma: PrismaClient,
           adminUserProfileId: string) {
 
-    // Try to get
-    var generationsSettings = await
-          generationsSettingsModel.getByUniqueKey(
-            prisma,
-            adminUserProfileId,
-            ServerOnlyTypes.defaultGenerationsSettingsName)
-
-    if (generationsSettings != null) {
-      return
-    }
-
     // Create
-    generationsSettings = await
-      generationsSettingsModel.create(
-        prisma,
-        adminUserProfileId,
-        BaseDataTypes.activeStatus,
-        true,  // sharedPublicly
-        ServerOnlyTypes.defaultGenerationsSettingsName,
-        this.defaultSlideShowSettings,
-        this.defaultVideoSettings)
+    const generationsSettings = await
+            generationsSettingsModel.upsert(
+              prisma,
+              undefined,  // id
+              adminUserProfileId,
+              BaseDataTypes.activeStatus,
+              true,       // sharedPublicly
+              ServerOnlyTypes.defaultGenerationsSettingsName,
+              this.defaultSlideShowSettings,
+              this.defaultVideoSettings)
   }
 }
