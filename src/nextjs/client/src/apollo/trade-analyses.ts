@@ -61,6 +61,7 @@ export const getLatestTradeAnalysesGroupsQuery = gql`
           thesis
         }
       }
+      inNewStatus
     }
   }
 `

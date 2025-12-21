@@ -18,6 +18,7 @@ export default function LatestResearchPage({
 
   // State
   const [tradeAnalysesGroups, setTradeAnalysesGroups] = useState<any[]>([])
+  const [inNewStatus, setInNewStatus] = useState<number | undefined>(undefined)
 
   // Render
   return (
@@ -38,6 +39,17 @@ export default function LatestResearchPage({
             Latest stock research
           </Typography>
 
+          {inNewStatus != null &&
+           inNewStatus > 0 ?
+            <Typography
+              style={{ marginBottom: '2em' }}
+              variant='body1'>
+              {inNewStatus} result groups being generated for you..
+            </Typography>
+          :
+            <></>
+          }
+
           <ListTradeAnalysesGroups
             instanceId={undefined}
             tradeAnalysesGroups={tradeAnalysesGroups} />
@@ -46,7 +58,8 @@ export default function LatestResearchPage({
         <LoadLatestTradeAnalyses
           userProfileId={userProfile.id}
           instanceId={undefined}
-          setTradeAnalysesGroups={setTradeAnalysesGroups} />
+          setTradeAnalysesGroups={setTradeAnalysesGroups}
+          setInNewStatus={setInNewStatus} />
 
       </Layout>
     </>

@@ -94,6 +94,7 @@ model UserProfile {
   ofAnalyses                    Analysis[]
   ofGenerationsSettings         GenerationsSettings[]
   ofSlideshows                  Slideshow[]
+  ofTradeAnalysesGroups         TradeAnalysesGroup[]
 
   @@map("user_profile")
   @@schema("public")

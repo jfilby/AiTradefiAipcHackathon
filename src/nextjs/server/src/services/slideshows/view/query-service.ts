@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { CustomError } from '@/serene-core-server/types/errors'
+import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { SlideTypes } from '@/types/server-only-types'
 import { YFinanceFinTypes, yFinanceIntervals } from '@/types/yfinance-types'
 import { InstrumentModel } from '@/models/instruments/instrument-model'
@@ -196,10 +197,23 @@ export class SlideshowsQueryService {
       (slideshow as any).slides = slideshow.ofSlides
     }
 
+    // Get count in New status
+    var inNewStatus: number | undefined = undefined
+
+    if (userProfileId != null) {
+
+      inNewStatus = await
+        slideshowModel.countByStatus(
+          prisma,
+          userProfileId,
+          BaseDataTypes.newStatus)
+    }
+
     // Return
     return {
       status: true,
-      slideshows: slideshows
+      slideshows: slideshows,
+      inNewStatus: inNewStatus
     }
   }
 }

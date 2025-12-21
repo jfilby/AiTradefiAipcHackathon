@@ -245,6 +245,7 @@ export class Slideshow1DataService {
             tradeAnalysesGroupModel.upsert(
               prisma,
               undefined,  // id
+              adminUserProfileId,
               analysis.id,
               this.slideshowDate,
               ServerOnlyTypes.tradeAnalysisEngineVersion,

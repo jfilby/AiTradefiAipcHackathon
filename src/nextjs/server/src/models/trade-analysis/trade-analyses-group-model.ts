@@ -7,8 +7,31 @@ export class TradeAnalysesGroupModel {
   clName = 'TradeAnalysesGroupModel'
 
   // Code
+  async countByStatus(
+          prisma: PrismaClient,
+          userProfileId: string,
+          status: string) {
+
+    // Debug
+    const fnName = `${this.clName}.create()`
+
+    // Count records
+    try {
+      return await prisma.tradeAnalysesGroup.count({
+        where: {
+          userProfileId: userProfileId,
+          status: status
+        }
+      })
+    } catch(error) {
+      console.error(`${fnName}: error: ${error}`)
+      throw 'Prisma error'
+    }
+  }
+
   async create(
           prisma: PrismaClient,
+          userProfileId: string,
           analysisId: string,
           day: Date,
           engineVersion: string,
@@ -23,6 +46,7 @@ export class TradeAnalysesGroupModel {
     try {
       return await prisma.tradeAnalysesGroup.create({
         data: {
+          userProfileId: userProfileId,
           analysisId: analysisId,
           day: day,
           engineVersion: engineVersion,
@@ -91,6 +115,7 @@ export class TradeAnalysesGroupModel {
 
   async filter(
           prisma: PrismaClient,
+          userProfileId: string | undefined = undefined,
           analysisId: string | undefined = undefined,
           day: Date | undefined = undefined,
           status: string | undefined = undefined) {
@@ -102,6 +127,7 @@ export class TradeAnalysesGroupModel {
     try {
       return await prisma.tradeAnalysesGroup.findMany({
         where: {
+          userProfileId: userProfileId,
           analysisId: analysisId,
           day: day,
           status: status
@@ -214,6 +240,7 @@ export class TradeAnalysesGroupModel {
 
   async getLatestByInstrumentType(
           prisma: PrismaClient,
+          userProfileId: string,
           instrumentType: string | undefined,
           limitBy: number = 100) {
 
@@ -228,6 +255,7 @@ export class TradeAnalysesGroupModel {
           analysis: true,
         },
         where: {
+          userProfileId: userProfileId,
           analysis: instrumentType ? {
             instrumentType: instrumentType
           } : undefined
@@ -249,6 +277,7 @@ export class TradeAnalysesGroupModel {
   async update(
           prisma: PrismaClient,
           id: string,
+          userProfileId: string | undefined,
           analysisId: string | undefined,
           day: Date | undefined,
           engineVersion: string | undefined,
@@ -263,6 +292,7 @@ export class TradeAnalysesGroupModel {
     try {
       return await prisma.tradeAnalysesGroup.update({
         data: {
+          userProfileId: userProfileId,
           analysisId: analysisId,
           day: day,
           engineVersion: engineVersion,
@@ -283,6 +313,7 @@ export class TradeAnalysesGroupModel {
   async upsert(
           prisma: PrismaClient,
           id: string | undefined,
+          userProfileId: string | undefined,
           analysisId: string | undefined,
           day: Date | undefined,
           engineVersion: string | undefined,
@@ -313,6 +344,11 @@ export class TradeAnalysesGroupModel {
     if (id == null) {
 
       // Validate for create (mainly for type validation of the create call)
+      if (userProfileId == null) {
+        console.error(`${fnName}: id is null and userProfileId is null`)
+        throw 'Prisma error'
+      }
+
       if (analysisId == null) {
         console.error(`${fnName}: id is null and analysisId is null`)
         throw 'Prisma error'
@@ -347,6 +383,7 @@ export class TradeAnalysesGroupModel {
       return await
                this.create(
                  prisma,
+                 userProfileId,
                  analysisId,
                  day,
                  engineVersion,
@@ -360,6 +397,7 @@ export class TradeAnalysesGroupModel {
                this.update(
                  prisma,
                  id,
+                 userProfileId,
                  analysisId,
                  day,
                  engineVersion,

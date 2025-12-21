@@ -61,6 +61,7 @@ export async function getLatestTradeAnalysesGroups(
   const results = await
           tradeAnalysesGroupQueryService.getLatest(
             prisma,
+            args.userProfileId,
             null)  // any instrumentType
 
   // Debug

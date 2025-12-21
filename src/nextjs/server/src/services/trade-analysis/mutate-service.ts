@@ -461,6 +461,7 @@ export class TradeAnalysisMutateService {
       tradeAnalysesGroup = await
         tradeAnalysesGroupModel.create(
           prisma,
+          userProfileId,
           analysis.id,
           day,
           ServerOnlyTypes.tradeAnalysisEngineVersion,
@@ -648,6 +649,7 @@ export class TradeAnalysisMutateService {
       tradeAnalysesGroupModel.update(
         prisma,
         tradeAnalysesGroup.id,
+        undefined,  // userProfileId
         undefined,  // analysisId
         undefined,  // day
         undefined,  // engineVersion

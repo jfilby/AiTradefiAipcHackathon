@@ -63,6 +63,7 @@ export const getSlideshowsQuery = gql`
           generatedImageId
         }
       }
+      inNewStatus
     }
   }
 `

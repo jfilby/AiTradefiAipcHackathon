@@ -7,6 +7,28 @@ export class SlideshowModel {
   clName = 'SlideshowModel'
 
   // Code
+  async countByStatus(
+          prisma: PrismaClient,
+          userProfileId: string,
+          status: string) {
+
+    // Debug
+    const fnName = `${this.clName}.countByStatus()`
+
+    // Count records
+    try {
+      return await prisma.slideshow.count({
+        where: {
+          userProfileId: userProfileId,
+          status: status
+        }
+      })
+    } catch(error) {
+      console.error(`${fnName}: error: ${error}`)
+      throw 'Prisma error'
+    }
+  }
+
   async create(
           prisma: PrismaClient,
           userProfileId: string,

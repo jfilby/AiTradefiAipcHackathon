@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client'
 import { CustomError } from '@/serene-core-server/types/errors'
+import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { TradeAnalysesGroupModel } from '@/models/trade-analysis/trade-analyses-group-model'
 import { TradeAnalysisModel } from '@/models/trade-analysis/trade-analysis-model'
-import { BaseDataTypes } from '@/shared/types/base-data-types'
 
 // Models
 const tradeAnalysesGroupModel = new TradeAnalysesGroupModel()
@@ -34,16 +34,23 @@ export class TradeAnalysesGroupQueryService {
 
   async getLatest(
           prisma: PrismaClient,
+          userProfileId: string,
           instrumentType: string | null) {
 
     // Debug
     const fnName = `${this.clName}.getLatest()`
+
+    // Validate
+    if (userProfileId == null) {
+      throw new CustomError(`${fnName}: userProfileId == null`)
+    }
 
     // Get latest (note: Prisma can't filter by the TradeAnalysesGroup's
     // minScore, so the inner query is separate).
     const tradeAnalysesGroups = await
             tradeAnalysesGroupModel.getLatestByInstrumentType(
               prisma,
+              userProfileId,
               instrumentType ?? undefined,
               3)  // limitBy
 
@@ -63,10 +70,18 @@ export class TradeAnalysesGroupQueryService {
           BaseDataTypes.activeStatus)
     }
 
+    // Get count in New status
+    const inNewStatus = await
+            tradeAnalysesGroupModel.countByStatus(
+              prisma,
+              userProfileId,
+              BaseDataTypes.newStatus)
+
     // Return
     return {
       status: true,
-      tradeAnalysesGroups: tradeAnalysesGroups
+      tradeAnalysesGroups: tradeAnalysesGroups,
+      inNewStatus: inNewStatus
     }
   }
 }

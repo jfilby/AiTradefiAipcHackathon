@@ -327,6 +327,8 @@ model TradeAnalysis {
 
 model TradeAnalysesGroup {
   id                           String               @id @default(cuid())
+  userProfileId                String               @map("user_profile_id")
+  userProfile                  UserProfile          @relation(fields: [userProfileId], references: [id])
   analysisId                   String               @map("analysis_id")
   analysis                     Analysis             @relation(fields: [analysisId], references: [id])
   day                          DateTime             @db.Date

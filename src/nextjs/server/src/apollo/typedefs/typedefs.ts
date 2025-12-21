@@ -216,6 +216,8 @@ export const typeDefs = `#graphql
     status: Boolean!
     message: String
     slideshows: [Slideshow]
+
+    inNewStatus: Int
   }
 
   type TokenResults {
@@ -257,6 +259,8 @@ export const typeDefs = `#graphql
     status: Boolean!
     message: String
     tradeAnalysesGroups: [TradeAnalysesGroup]
+
+    inNewStatus: Int
   }
 
   type UpsertInstanceResults {

@@ -6,12 +6,14 @@ interface Props {
   userProfileId: string
   instanceId?: string
   setSlideshows: any
+  setInNewStatus: any
 }
 
 export default function LoadSlideshowsByFilter({
                           userProfileId,
                           instanceId,
-                          setSlideshows
+                          setSlideshows,
+                          setInNewStatus
                         }: Props) {
 
   // GraphQL
@@ -46,6 +48,7 @@ export default function LoadSlideshowsByFilter({
     const results = data.getSlideshows
 
     setSlideshows(results.slideshows)
+    setInNewStatus(results.inNewStatus)
   }
 
   // Effects

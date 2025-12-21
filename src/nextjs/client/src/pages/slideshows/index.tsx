@@ -18,6 +18,7 @@ export default function SlideshowsPage({
 
   // State
   const [slideshows, setSlideshows] = useState<any>(undefined)
+  const [inNewStatus, setInNewStatus] = useState<number | undefined>(undefined)
 
   // Render
   return (
@@ -40,6 +41,17 @@ export default function SlideshowsPage({
             </Typography>
           </div>
 
+          {inNewStatus != null &&
+           inNewStatus > 0 ?
+            <Typography
+              style={{ marginBottom: '2em' }}
+              variant='body1'>
+              {inNewStatus} slideshows being generated for you..
+            </Typography>
+          :
+            <></>
+          }
+
           <ListSlideshows
             userProfileId={userProfile.id}
             instanceId={undefined}
@@ -48,7 +60,8 @@ export default function SlideshowsPage({
 
         <LoadSlideshowsByFilter
           userProfileId={userProfile.id}
-          setSlideshows={setSlideshows} />
+          setSlideshows={setSlideshows}
+          setInNewStatus={setInNewStatus} />
 
       </Layout>
     </>

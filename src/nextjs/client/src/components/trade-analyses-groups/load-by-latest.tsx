@@ -6,12 +6,14 @@ interface Props {
   userProfileId: string
   instanceId?: string
   setTradeAnalysesGroups: any
+  setInNewStatus: any
 }
 
 export default function LoadLatestTradeAnalysesGroups({
                           userProfileId,
                           instanceId,
-                          setTradeAnalysesGroups
+                          setTradeAnalysesGroups,
+                          setInNewStatus
                         }: Props) {
 
   // GraphQL
@@ -41,6 +43,7 @@ export default function LoadLatestTradeAnalysesGroups({
     const results = data.getLatestTradeAnalysesGroups
 
     setTradeAnalysesGroups(results.tradeAnalysesGroups)
+    setInNewStatus(results.inNewStatus)
   }
 
   // Effects
