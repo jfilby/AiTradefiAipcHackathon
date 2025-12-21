@@ -35,8 +35,8 @@ export default function SlideshowsPage({
 
           <div>
             <Typography
-              style={{ marginBottom: '0.5em' }}
-              variant='h4'>
+              style={{ marginBottom: '1em' }}
+              variant='h3'>
               Slideshows
             </Typography>
           </div>

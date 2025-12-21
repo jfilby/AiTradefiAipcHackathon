@@ -140,7 +140,7 @@ export default function EditAnalysis({
             value={name} />
         </div>
 
-        <div style={{ marginBottom: '1em', width: '15em' }}>
+        {/* <div style={{ marginBottom: '1em', width: '15em' }}>
           <FormControl fullWidth>
             <InputLabel
               htmlFor='select-status'
@@ -169,7 +169,7 @@ export default function EditAnalysis({
               ))}
             </Select>
           </FormControl>
-        </div>
+        </div> */}
 
         <div style={{ marginBottom: '1em', width: '15em' }}>
           <FormControl fullWidth>
@@ -264,8 +264,7 @@ export default function EditAnalysis({
                   setAnalysis(analysis)
                   setSaveAction(true)
                 }
-              }}
-              style={{ marginRight: '1em' }} />
+              }} />
           </div>
 
           <div style={{ display: 'inline-block' }}>
@@ -275,7 +274,7 @@ export default function EditAnalysis({
               onClick={(e: any) => {
                 window.location.href = indexPage
               }}
-              style={{ marginRight: '1em' }} />
+              style={{ marginLeft: '1em' }} />
           </div>
         </div>
 

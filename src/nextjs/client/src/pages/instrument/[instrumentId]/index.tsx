@@ -33,8 +33,8 @@ export default function InstrumentsPage({
         <div style={{ textAlign: 'left', marginBottom: '2em' }}>
 
           <Typography
-            style={{ marginBottom: '0.5em' }}
-            variant='h4'>
+            style={{ marginBottom: '1em' }}
+            variant='h3'>
             Stocks
           </Typography>
 

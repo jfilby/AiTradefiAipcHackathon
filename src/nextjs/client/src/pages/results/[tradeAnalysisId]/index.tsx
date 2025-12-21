@@ -33,7 +33,7 @@ export default function TradeAnalysisPage({
         <div style={{ textAlign: 'left', marginBottom: '2em' }}>
 
           <Typography
-            style={{ marginBottom: '0.5em' }}
+            style={{ marginBottom: '1em' }}
             variant='h4'>
             Stock research
           </Typography>

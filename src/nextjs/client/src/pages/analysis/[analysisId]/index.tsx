@@ -1,6 +1,9 @@
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import ChatIcon from '@mui/icons-material/Chat'
+import DeleteIcon from '@mui/icons-material/Delete'
+import PublishIcon from '@mui/icons-material/Publish'
+import UnpublishedIcon from '@mui/icons-material/Unpublished'
 import { loadServerPage } from '@/services/page/load-server-page'
 import Layout from '@/components/layouts/layout'
 import { Typography } from '@mui/material'
@@ -84,18 +87,30 @@ export default function EditAnalysesPage({
           <p>analysis: {JSON.stringify(analysis)}</p> */}
 
           <div>
-            <div style={{ display: 'inline-block', width: '80%' }}>
+            <div style={{ display: 'inline-block', width: '50%' }}>
               <Typography
-                style={{ marginBottom: '0.5em' }}
-                variant='h4'>
+                style={{ marginBottom: '1em' }}
+                variant='h3'>
                 Edit Analysis
               </Typography>
             </div>
-            <div style={{ display: 'inline-block', textAlign: 'right', width: '20%' }}>
-              <LabeledIconButton
-                icon={ChatIcon}
-                label='Chat'
-                onClick={() => setShowChat(true)} />
+
+            <div style={{ display: 'inline-block', textAlign: 'right', width: '50%' }}>
+
+              <div style={{ display: 'inline-block' }}>
+                <LabeledIconButton
+                  icon={PublishIcon}
+                  label='Publish'
+                  onClick={() => {}} />
+              </div>
+
+              <div style={{ display: 'inline-block' }}>
+                <LabeledIconButton
+                  icon={ChatIcon}
+                  label='Chat'
+                  onClick={() => setShowChat(true)}
+                  style={{ marginLeft: '1em' }} />
+              </div>
             </div>
           </div>
 

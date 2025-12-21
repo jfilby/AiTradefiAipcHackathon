@@ -34,7 +34,7 @@ export default function LatestResearchPage({
           {/* <p>tradeAnalyses: {JSON.stringify(tradeAnalyses)}</p> */}
 
           <Typography
-            style={{ marginBottom: '0.5em' }}
+            style={{ marginBottom: '1em' }}
             variant='h3'>
             Latest stock research
           </Typography>
