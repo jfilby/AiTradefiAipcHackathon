@@ -1,11 +1,10 @@
-import { ChatSettings, PrismaClient } from '@prisma/client'
+import { Analysis, ChatSettings, PrismaClient } from '@prisma/client'
 import { CustomError } from '@/serene-core-server/types/errors'
 import { ChatSettingsModel } from '@/serene-core-server/models/chat/chat-settings-model'
 import { SereneAiServerOnlyTypes } from '@/serene-ai-server/types/server-only-types'
 import { ChatSessionService } from '@/serene-ai-server/services/chats/sessions/chat-session-service'
 import { ChatPages, ChatSessionOptions } from '@/types/server-only-types'
 import { ChatPromptsService } from '../chat-prompts-service'
-import { BaseDataTypes } from '@/shared/types/base-data-types'
 
 // Models
 const chatSettingsModel = new ChatSettingsModel()
@@ -73,6 +72,7 @@ export class InstanceChatsService {
           userProfileId: string,
           chatSessionId: string | undefined,
           chatSettingsName: string | undefined,
+          appCustom: string | undefined,
           options: ChatSessionOptions) {
 
     // Debug
@@ -130,9 +130,17 @@ export class InstanceChatsService {
 
     console.log(`${fnName}: creating chatSession..`)
 
+    // Get the appCustom JSON
+    var appCustomJson: any = null
+
+    if (appCustom != null) {
+      appCustomJson = JSON.parse(appCustom as string)
+    }
+
     // Determine the prompt
     const prompt =
             this.getPrompt(
+              appCustomJson,
               chatSettings,
               options)
 
@@ -152,7 +160,7 @@ export class InstanceChatsService {
               chatSettings.isEncryptedAtRest,
               chatSettings.isJsonMode,
               prompt,
-              null,  // appCustom
+              appCustomJson,
               name)
 
     // Debug
@@ -170,6 +178,7 @@ export class InstanceChatsService {
   }
 
   getPrompt(
+    appCustomJson: any,
     chatSettings: ChatSettings,
     options: ChatSessionOptions) {
 
@@ -190,7 +199,7 @@ export class InstanceChatsService {
       }
 
       // Get and return Analysis page prompt
-      return chatPromptsService.getAnalysisPageChatPrompt()
+      return chatPromptsService.getAnalysisPageChatPrompt(appCustomJson)
     }
 
     return null

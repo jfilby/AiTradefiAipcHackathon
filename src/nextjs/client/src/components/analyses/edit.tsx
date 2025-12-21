@@ -128,6 +128,7 @@ export default function EditAnalysis({
         <div style={{ marginBottom: '1em' }}>
           <TextField
             autoComplete='off'
+            disabled={analysis.status !== BaseDataTypes.newStatus}
             label='Name'
             onChange={(e) => {
               setName(e.target.value)
@@ -180,6 +181,7 @@ export default function EditAnalysis({
               Instrument type
             </InputLabel>
             <Select
+              disabled={analysis.status !== BaseDataTypes.newStatus}
               inputProps={{
                 id: 'select-instrument-type',
               }}
@@ -203,6 +205,7 @@ export default function EditAnalysis({
         </div>
 
         <TextAreaField
+          disabled={analysis.status !== BaseDataTypes.newStatus}
           id='description'
           label='Description'
           minRows={5}
@@ -217,6 +220,7 @@ export default function EditAnalysis({
           value={description} />
 
         <TextAreaField
+          disabled={analysis.status !== BaseDataTypes.newStatus}
           id='prompt'
           label='Prompt'
           minRows={5}
@@ -252,20 +256,24 @@ export default function EditAnalysis({
 
         <div style={{ textAlign: 'right', width: '100%' }}>
 
-          <div style={{ display: 'inline-block' }}>
-            <LabeledIconButton
-              icon={SaveIcon}
-              label='Save'
-              onClick={(e: any) => {
-                analysis.status = status
+          {analysis.status === BaseDataTypes.newStatus ?
+            <div style={{ display: 'inline-block' }}>
+              <LabeledIconButton
+                icon={SaveIcon}
+                label='Save'
+                onClick={(e: any) => {
+                  analysis.status = status
 
-                if (verifyFields() === true) {
+                  if (verifyFields() === true) {
 
-                  setAnalysis(analysis)
-                  setSaveAction(true)
-                }
-              }} />
-          </div>
+                    setAnalysis(analysis)
+                    setSaveAction(true)
+                  }
+                }} />
+            </div>
+          :
+            <></>
+          }
 
           <div style={{ display: 'inline-block' }}>
             <LabeledIconButton

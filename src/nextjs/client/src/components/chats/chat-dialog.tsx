@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useMutation } from '@apollo/client/react'
-import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogTitle from '@mui/material/DialogTitle'
+import { Button, Dialog } from '@mui/material'
+import { DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { getOrCreateInstanceChatSessionMutation } from '@/apollo/instance-chats'
 import ViewInstanceChatSession from './session'
@@ -15,6 +12,7 @@ interface Props {
   setMessage: any
   open: boolean
   setOpen: any
+  analysis: any
   chatSession: string | undefined
   setChatSession: any
   setChatRawJson: any
@@ -26,6 +24,7 @@ export default function ChatDialog({
                           setMessage,
                           open,
                           setOpen,
+                          analysis,
                           chatSession,
                           setChatSession,
                           setChatRawJson
@@ -61,7 +60,8 @@ export default function ChatDialog({
       await sendGetOrCreateInstanceChatSessionMutation({
         variables: {
           userProfileId: userProfileId,
-          chatSettingsName: BaseDataTypes.aiTradefiChatSettingsName
+          chatSettingsName: BaseDataTypes.aiTradefiChatSettingsName,
+          appCustom: JSON.stringify(analysis)
         }
       }).then(result => sendGetOrCreateInstanceChatSessionData = result)
 

@@ -23,6 +23,13 @@ export class BaseDataTypes {
     }
   ]
 
+  // Analysis record statuses
+  static analysisStatusMap = {
+    [this.activeStatus]: 'Published',
+    [this.newStatus]: 'Draft',
+    [this.deletePendingStatus]: 'Delete pending'
+  }
+
   // Agents
   static batchAgentRefId = 'Batch'
   static batchAgentName = 'Batch'

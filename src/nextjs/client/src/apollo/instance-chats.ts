@@ -28,12 +28,14 @@ export const getOrCreateInstanceChatSessionMutation = gql`
              $instanceId: String,
              $chatSessionId: String,
              $userProfileId: String!,
-             $chatSettingsName: String) {
+             $chatSettingsName: String,
+             $appCustom: String) {
     getOrCreateInstanceChatSession(
       instanceId: $instanceId,
       chatSessionId: $chatSessionId,
       userProfileId: $userProfileId,
-      chatSettingsName: $chatSettingsName) {
+      chatSettingsName: $chatSettingsName,
+      appCustom: $appCustom) {
 
       status
       message

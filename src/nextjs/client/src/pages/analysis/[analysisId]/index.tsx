@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import ChatIcon from '@mui/icons-material/Chat'
-import DeleteIcon from '@mui/icons-material/Delete'
 import PublishIcon from '@mui/icons-material/Publish'
 import UnpublishedIcon from '@mui/icons-material/Unpublished'
 import { loadServerPage } from '@/services/page/load-server-page'
@@ -12,7 +11,9 @@ import { BaseDataTypes } from '@/shared/types/base-data-types'
 import ChatDialog from '@/components/chats/chat-dialog'
 import EditAnalysis from '@/components/analyses/edit'
 import LoadAnalysisById from '@/components/analyses/load-by-id'
+import PublishDialog from '@/components/analyses/publish-dialog'
 import SaveAnalysis from '@/components/analyses/save'
+import UnpublishDialog from '@/components/analyses/unpublish-dialog'
 
 interface Props {
   userProfile: any
@@ -44,6 +45,9 @@ export default function EditAnalysesPage({
 
   const [chatRawJson, setChatRawJson] = useState<any>(undefined)
   const [analysisRefreshed, setAnalysisRefreshed] = useState<boolean>(false)
+
+  const [publishOpen, setPublishOpen] = useState<boolean>(false)
+  const [unpublishOpen, setUnpublishOpen] = useState<boolean>(false)
 
   // Effects
   useEffect(() => {
@@ -97,12 +101,21 @@ export default function EditAnalysesPage({
 
             <div style={{ display: 'inline-block', textAlign: 'right', width: '50%' }}>
 
-              <div style={{ display: 'inline-block' }}>
-                <LabeledIconButton
-                  icon={PublishIcon}
-                  label='Publish'
-                  onClick={() => {}} />
-              </div>
+              {analysis.status === BaseDataTypes.activeStatus ?
+                <div style={{ display: 'inline-block' }}>
+                  <LabeledIconButton
+                    icon={UnpublishedIcon}
+                    label='Unpublish'
+                    onClick={() => setUnpublishOpen(true)} />
+                </div>
+              :
+                <div style={{ display: 'inline-block' }}>
+                  <LabeledIconButton
+                    icon={PublishIcon}
+                    label='Publish'
+                    onClick={() => setPublishOpen(true)} />
+                </div>
+              }
 
               <div style={{ display: 'inline-block' }}>
                 <LabeledIconButton
@@ -161,9 +174,24 @@ export default function EditAnalysesPage({
         setMessage={setMessage}
         open={showChat}
         setOpen={setShowChat}
+        analysis={analysis}
         chatSession={chatSession}
         setChatSession={setChatSession}
         setChatRawJson={setChatRawJson} />
+
+      <PublishDialog
+        open={publishOpen}
+        setOpen={setPublishOpen}
+        analysis={analysis}
+        setAnalysis={setAnalysis}
+        setSaveAction={setSaveAction} />
+
+      <UnpublishDialog
+        open={unpublishOpen}
+        setOpen={setUnpublishOpen}
+        analysis={analysis}
+        setAnalysis={setAnalysis}
+        setSaveAction={setSaveAction} />
     </>
   )
 }

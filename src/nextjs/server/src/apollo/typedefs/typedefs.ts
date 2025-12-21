@@ -457,7 +457,8 @@ export const typeDefs = `#graphql
       instanceId: String,
       chatSessionId: String,
       userProfileId: String!,
-      chatSettingsName: String): ChatSessionResults!
+      chatSettingsName: String,
+      appCustom: String): ChatSessionResults!
 
     # Start
     loadServerStartData(

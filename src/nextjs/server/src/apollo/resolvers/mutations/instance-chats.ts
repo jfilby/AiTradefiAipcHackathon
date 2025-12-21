@@ -54,6 +54,7 @@ export async function getOrCreateInstanceChatSession(
           args.userProfileId,
           args.chatSessionId,
           args.chatSettingsName,
+          args.appCustom,
           chatSessionOptions)
     } catch (error) {
       if (error instanceof CustomError) {
