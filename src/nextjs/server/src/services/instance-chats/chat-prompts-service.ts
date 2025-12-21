@@ -49,7 +49,8 @@ export class ChatPromptsService {
           `the expected structure):\n` +
           `- messages: the chat response goes here (markdown).\n`
 
-    if (analysis?.status === BaseDataTypes.activeStatus) {
+    // Don't specify Analysis-related fields to return if not in draft status
+    if (analysis?.status === BaseDataTypes.newStatus) {
 
       prompt +=
         `- name: a new name for the Analysis.\n` +
@@ -63,6 +64,7 @@ export class ChatPromptsService {
         `updated.\n`
     }
 
+    // If an Analysis record is available, add its details to the prompt
     if (analysis != null) {
 
       var status = '?'
