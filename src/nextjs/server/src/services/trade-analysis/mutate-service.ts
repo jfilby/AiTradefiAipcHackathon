@@ -333,7 +333,7 @@ export class TradeAnalysisMutateService {
         continue
       }
 
-      // Determine getByPassedMinScore
+      // Determine passedMinScore
       var passedMinScore = false
 
       if (entry.score >= analysis.defaultMinScore) {
