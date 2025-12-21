@@ -81,7 +81,7 @@ export default function AnalysisCard({
           onClick={(e) => window.location.href = viewUrl}
           style={{ display: 'inline-block', marginBottom: '1em', width: '80%' }}>
 
-          {thisAnalysis.status === BaseDataTypes.activeStatus ?
+          {thisAnalysis.status !== BaseDataTypes.deletePendingStatus ?
             <Link href={viewUrl}>
               <Typography
                 style={{ marginBottom: '0.5em' }}
@@ -93,7 +93,7 @@ export default function AnalysisCard({
             <>
               <Typography
                 style={{ color: 'gray' }}
-                variant='h6'>
+                variant='h5'>
                 {thisAnalysis.name}
               </Typography>
             </>

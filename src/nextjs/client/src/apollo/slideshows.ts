@@ -62,6 +62,15 @@ export const getSlideshowsQuery = gql`
           generatedAudioId
           generatedImageId
         }
+        tradeAnalysis {
+          instrument {
+            name
+            exchange {
+              name
+            }
+          }
+          score
+        }
       }
       inNewStatus
     }

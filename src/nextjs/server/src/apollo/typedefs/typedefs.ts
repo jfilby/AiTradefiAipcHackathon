@@ -204,6 +204,7 @@ export const typeDefs = `#graphql
     status: String!
 
     slides: [Slide]
+    tradeAnalysis: TradeAnalysis
   }
 
   type SlideshowResults {

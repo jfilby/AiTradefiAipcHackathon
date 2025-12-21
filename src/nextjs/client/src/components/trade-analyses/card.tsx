@@ -40,7 +40,7 @@ export default function TradeAnalysisCard({
           <div style={{ marginBottom: '0.5em' }}>
             <Typography
               style={{ display: 'inline-block' }}
-              variant='h6'>
+              variant='h5'>
               {tradeAnalysis.instrument.name}
             </Typography>
 
@@ -52,7 +52,7 @@ export default function TradeAnalysisCard({
                 {tradeAnalysis.instrument.exchange.name}
               </span>
               <span style={{ color: '#660', marginLeft: '1em' }}>
-                {tradeAnalysis.score * 100}%
+                {Math.floor(tradeAnalysis.score * 100)}%
               </span>
             </Typography>
           </div>

@@ -160,7 +160,15 @@ export class SlideshowModel {
       return await prisma.slideshow.findMany({
         // distinct: ['tradeAnalysisId'],
         include: {
-          tradeAnalysis: true,
+          tradeAnalysis: {
+            include: {
+              instrument: {
+                include: {
+                  exchange: true
+                }
+              }
+            }
+          },
           ofSlides: {
             orderBy: [
               {
