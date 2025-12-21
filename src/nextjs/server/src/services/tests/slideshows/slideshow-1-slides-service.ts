@@ -92,6 +92,7 @@ export class Slideshow1SlidesService {
               BaseDataTypes.activeStatus,
               slideTemplate.title,
               slideTemplate.textPrompt,
+              null,       // narratedText
               generatedAudio.id,
               generatedImage.id)
   }
@@ -112,8 +113,9 @@ export class Slideshow1SlidesService {
               BaseDataTypes.activeStatus,
               slideTemplate.title,
               slideTemplate.textPrompt,
-              null,  // generatedAudioId,
-              null)  // generatedImageId
+              null,       // narratedText
+              null,       // generatedAudioId
+              null)       // generatedImageId
   }
 
   async setupSlide3(
@@ -132,7 +134,8 @@ export class Slideshow1SlidesService {
               BaseDataTypes.activeStatus,
               slideTemplate.title,
               slideTemplate.textPrompt,
-              null,  // generatedAudioId,
+              null,       // narratedText
+              null,  // generatedAudioId
               null)  // generatedImageId
   }
 
@@ -152,8 +155,9 @@ export class Slideshow1SlidesService {
               BaseDataTypes.activeStatus,
               slideTemplate.title,
               slideTemplate.textPrompt,
-              null,  // generatedAudioId,
-              null)  // generatedImageId
+              null,       // narratedText
+              null,       // generatedAudioId
+              null)       // generatedImageId
   }
 
   async setupSlide5(
@@ -172,8 +176,9 @@ export class Slideshow1SlidesService {
               BaseDataTypes.activeStatus,
               slideTemplate.title,
               slideTemplate.textPrompt,
-              null,  // generatedAudioId,
-              null)  // generatedImageId
+              null,       // narratedText
+              null,       // generatedAudioId
+              null)       // generatedImageId
   }
 
   async setupSlide6(
@@ -192,7 +197,8 @@ export class Slideshow1SlidesService {
               BaseDataTypes.activeStatus,
               slideTemplate.title,
               slideTemplate.textPrompt,
-              null,  // generatedAudioId,
-              null)  // generatedImageId
+              null,       // narratedText
+              null,       // generatedAudioId,
+              null)       // generatedImageId
   }
 }

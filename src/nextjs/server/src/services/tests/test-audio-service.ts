@@ -27,7 +27,7 @@ export class CreateTestAudioService {
     const relativePath = `/audio/nvda-test/overview.mp3`
 
     // Generate text-to-speech and save it
-    const response = await
+    const generatedAudio = await
             elevenLabsService.generateTtsAndSave(
               ElevenLabsTypes.defaultVoiceName,
               prompt,

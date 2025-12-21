@@ -108,13 +108,22 @@ export class GenSlideTextService {
       `  than one point. Use hyphens as bullet points, don't go more than ` +
       `  one level deep.\n` +
       `\n` +
+      `## Narrated text\n` +
+      `\n` +
+      `- If a slideTemplate has an audioPrompt that use it to generate a ` +
+      `  narratedText field.\n` +
+      `- The narratedText should be 1-2 sentences:\n` +
+      `  Sentence 1: restates the core point in natural language\n` +
+      `  Sentence 2: adds insight or implication\n` +
+      `\n` +
       `## Example\n` +
       `[\n` +
       `  {\n` +
       `    "slideNo": 1,\n` +
-      `    "title": "NVDA as a long-term investment"\n` +
+      `    "title": "NVDA as a long-term investment",\n` +
       `    "text": "This slideshow explains why NVDA is a good long-term ` +
-      `    investment."\n` +
+      `    investment.",\n` +
+      `    "narratedText": "Why NVDA is a good long-term investment."\n` +
       `  }\n` +
       `]\n` +
       `\n` +
@@ -138,7 +147,14 @@ export class GenSlideTextService {
         `  {\n` +
         `    "slideNo": ${slideTemplate.slideNo},\n` +
         `    "title": "${slideTemplate.title}",\n` +
-        `    "textPrompt": "${slideTemplate.textPrompt}"\n` +
+        `    "textPrompt": "${slideTemplate.textPrompt}"\n`
+
+      if (slideTemplate.audioPrompt != null) {
+        prompt +=
+          `    "audiotPrompt": "${slideTemplate.audioPrompt}"\n`
+      }
+
+      prompt +=
         `  }`
     }
 
@@ -194,6 +210,7 @@ export class GenSlideTextService {
                 BaseDataTypes.newStatus,
                 entry.title,
                 entry.text,
+                entry.narratedText,
                 null,         // generatedAudioId
                 null)         // generatedImageId
     }

@@ -1,15 +1,18 @@
-import { PrismaClient, Slide, SlideTemplate, TradeAnalysis } from '@prisma/client'
+import { GenerationsSettings, PrismaClient, Slide, SlideTemplate, TradeAnalysis } from '@prisma/client'
 import { CustomError } from '@/serene-core-server/types/errors'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
+import { ServerOnlyTypes } from '@/types/server-only-types'
 import { SlideModel } from '@/models/slideshows/slide-model'
 import { SlideshowModel } from '@/models/slideshows/slideshow-model'
 import { SlideTemplateModel } from '@/models/slideshows/slide-template-model'
+import { GenerationsSettingsModel } from '@/models/trade-analysis/generations-settings-model'
 import { TradeAnalysisModel } from '@/models/trade-analysis/trade-analysis-model'
 import { GenSlideAudioService } from './gen-audio-service'
 import { GenSlideImageService } from './gen-image-service'
 import { GenSlideTextService } from './gen-text-service'
 
 // Models
+const generationsSettingsModel = new GenerationsSettingsModel()
 const slideModel = new SlideModel()
 const slideshowModel = new SlideshowModel()
 const slideTemplateModel = new SlideTemplateModel()
@@ -31,6 +34,16 @@ export class SlideshowMutateService {
           prisma: PrismaClient,
           tradeAnalysis: TradeAnalysis) {
 
+    // Get Analysis record
+    const analysis = (tradeAnalysis as any).tradeAnalysesGroup.analysis
+
+    // Get GenerationsSettings
+    const generationsSettings = await
+            generationsSettingsModel.getByUniqueKey(
+              prisma,
+              analysis.userProfileId,
+              ServerOnlyTypes.defaultGenerationsSettingsName)
+
     // Try to get an existing record
     var slideshow = await
           slideshowModel.getByUniqueKey(
@@ -45,7 +58,7 @@ export class SlideshowMutateService {
     slideshow = await
       slideshowModel.create(
         prisma,
-        (tradeAnalysis as any).tradeAnalysesGroup.analysis.userProfileId,
+        analysis.userProfileId,
         tradeAnalysis.id,
         BaseDataTypes.newStatus)
 
@@ -53,7 +66,7 @@ export class SlideshowMutateService {
     const slideTemplates = await
             slideTemplateModel.filter(
               prisma,
-              (tradeAnalysis as any).tradeAnalysesGroup.analysisId,
+              analysis.id,
               undefined,  // slideNo
               undefined,  // type
               true)       // sortBySlideNo
@@ -84,6 +97,7 @@ export class SlideshowMutateService {
       slide = await
         this.updateSlide(
           prisma,
+          generationsSettings,
           slide,
           slideTemplate)
     }
@@ -124,17 +138,32 @@ export class SlideshowMutateService {
 
   async updateSlide(
           prisma: PrismaClient,
+          generationsSettings: GenerationsSettings,
           slide: Slide,
           slideTemplate: SlideTemplate) {
 
     // Debug
     const fnName = `${this.clName}.updateSlide()`
 
+    // Narrate audio
+    var narrateAudio = false
+
+    if (generationsSettings?.slideshowSettings != null &&
+        (generationsSettings.slideshowSettings as any).withAudioNarration === true) {
+
+      narrateAudio = true
+    }
+
     // Generate audio
-    const generatedAudioId = await
-            genSlideAudioService.generate(
-              prisma,
-              slideTemplate)
+    var generatedAudioId: string | undefined = undefined
+
+    if (narrateAudio === true) {
+
+      generatedAudioId = await
+        genSlideAudioService.generate(
+          prisma,
+          slide)
+    }
 
     // Generate image
     const generatedImageId = await
@@ -153,6 +182,7 @@ export class SlideshowMutateService {
         BaseDataTypes.activeStatus,
         undefined,  // slideTemplate.title
         undefined,  // text
+        undefined,  // narratedText
         generatedAudioId,
         generatedImageId)
   }

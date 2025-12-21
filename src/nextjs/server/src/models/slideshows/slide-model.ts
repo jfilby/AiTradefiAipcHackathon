@@ -15,6 +15,7 @@ export class SlideModel {
           status: string,
           title: string,
           text: string | null,
+          narratedText: string | null,
           generatedAudioId: string | null,
           generatedImageId: string | null) {
 
@@ -31,6 +32,7 @@ export class SlideModel {
           status: status,
           title: title,
           text: text,
+          narratedText: narratedText,
           generatedAudioId: generatedAudioId,
           generatedImageId: generatedImageId
         }
@@ -239,6 +241,7 @@ export class SlideModel {
           status: string | undefined,
           title: string | undefined,
           text: string | null | undefined,
+          narratedText: string | null | undefined,
           generatedAudioId: string | null | undefined,
           generatedImageId: string | null | undefined) {
 
@@ -255,6 +258,7 @@ export class SlideModel {
           status: status,
           title: title,
           text: text,
+          narratedText: narratedText,
           generatedAudioId: generatedAudioId,
           generatedImageId: generatedImageId
         },
@@ -277,6 +281,7 @@ export class SlideModel {
           status: string | undefined,
           title: string | undefined,
           text: string | null | undefined,
+          narratedText: string | null | undefined,
           generatedAudioId: string | null | undefined,
           generatedImageId: string | null | undefined) {
 
@@ -348,6 +353,11 @@ export class SlideModel {
         throw 'Prisma error'
       }
 
+      if (narratedText === undefined) {
+        console.error(`${fnName}: id is null and narratedText is undefined`)
+        throw 'Prisma error'
+      }
+
       if (generatedAudioId === undefined) {
         console.error(`${fnName}: id is null and generatedAudioId is undefined`)
         throw 'Prisma error'
@@ -368,6 +378,7 @@ export class SlideModel {
                  status,
                  title,
                  text,
+                 narratedText,
                  generatedAudioId,
                  generatedImageId)
     } else {
@@ -383,6 +394,7 @@ export class SlideModel {
                  status,
                  title,
                  text,
+                 narratedText,
                  generatedAudioId,
                  generatedImageId)
     }

@@ -1,5 +1,5 @@
 import fs from 'fs'
-import path, { relative } from 'path'
+import path from 'path'
 import { writeFileSync } from 'fs'
 import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js'
 import { TextToSpeechConvertRequestOutputFormat } from '@elevenlabs/elevenlabs-js/api'
@@ -8,7 +8,7 @@ import { CustomError } from '@/serene-core-server/types/errors'
 import { UserPreferenceModel } from '@/serene-core-server/models/users/user-preference-model'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { ElevenLabsTypes } from '@/shared/types/elevenlabs-types'
-import { ServerOnlyTypes, UserPreferenceCategories, UserPreferenceKeys } from '@/types/server-only-types'
+import { UserPreferenceCategories, UserPreferenceKeys } from '@/types/server-only-types'
 import { ElevenLabsVoiceModel } from '@/models/generated-media/elevenlabs-voice-model'
 import { GeneratedAudioModel } from '@/models/generated-media/generated-audio-model'
 
@@ -151,7 +151,7 @@ export class ElevenLabsService {
 
       console.log(`${fnName}: GeneratedAudio record already exists`)
       return {
-        generatedAudioId: generatedAudio.id
+        generatedAudio
       }
     }
 
@@ -184,6 +184,9 @@ export class ElevenLabsService {
 
     // Debug
     console.log(`${fnName}: saved to: ${filename}`)
+
+    // Return
+    return generatedAudio
   }
 
   async generateTtsBufferIfEnabled(

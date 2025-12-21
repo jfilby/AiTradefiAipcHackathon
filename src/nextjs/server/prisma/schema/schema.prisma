@@ -430,6 +430,7 @@ model Slide {
   status                       String               @db.Char(1)
   title                        String
   text                         String?
+  narratedText                 String?              @map("narrated_text")
   generatedAudioId             String?              @map("generated_audio_id")
   generatedAudio               GeneratedAudio?      @relation(fields: [generatedAudioId], references: [id])
   generatedImageId             String?              @map("generated_image_id")
