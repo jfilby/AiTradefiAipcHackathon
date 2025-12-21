@@ -16,6 +16,11 @@ export class GenSlideAudioService {
           prisma: PrismaClient,
           slide: Slide) {
 
+    // Validate
+    if (slide.narratedText == null) {
+      return null
+    }
+
     // Define relativePath
     const relativePath =
             `/audio/slideshows/${slide.slideshowId}/slide_${slide.id}.mp3`
@@ -23,6 +28,7 @@ export class GenSlideAudioService {
     // Generate narration
     const generatedAudio = await
             elevenLabsService.generateTtsAndSave(
+              prisma,
               ElevenLabsTypes.defaultVoiceName,
               slide.narratedText,
               relativePath)

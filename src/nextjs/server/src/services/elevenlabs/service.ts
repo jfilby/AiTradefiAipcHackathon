@@ -134,6 +134,7 @@ export class ElevenLabsService {
   }
 
   async generateTtsAndSave(
+          prisma: PrismaClient,
           voiceName: string,
           text: string,
           relativePath: string) {
