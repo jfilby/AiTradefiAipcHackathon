@@ -13,11 +13,13 @@ export class GenerationsSettingsSetupService {
   clName = 'GenerationsSettingsSetupService'
 
   defaultSlideShowSettings = {
+    withIntroImage: false,
     requirementsSlide: true,
     withAudioNarration: true,
   }
 
   defaultVideoSettings = {
+    withIntroImage: false,
     requirementsIntro: true,
     withAudioNarration: true,
   }

@@ -1,7 +1,7 @@
 import { GenerationsSettings, PrismaClient, Slide, SlideTemplate, TradeAnalysis } from '@prisma/client'
 import { CustomError } from '@/serene-core-server/types/errors'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
-import { ServerOnlyTypes } from '@/types/server-only-types'
+import { ServerOnlyTypes, SlideTypes } from '@/types/server-only-types'
 import { SlideModel } from '@/models/slideshows/slide-model'
 import { SlideshowModel } from '@/models/slideshows/slideshow-model'
 import { SlideTemplateModel } from '@/models/slideshows/slide-template-model'
@@ -155,7 +155,7 @@ export class SlideshowMutateService {
     }
 
     // Generate audio
-    var generatedAudioId: string | undefined = undefined
+    var generatedAudioId: string | null = null
 
     if (narrateAudio === true) {
 
@@ -166,10 +166,23 @@ export class SlideshowMutateService {
     }
 
     // Generate image
-    const generatedImageId = await
-            genSlideImageService.generate(
-              prisma,
-              slideTemplate)
+    var generateImage = false
+    var generatedImageId: string | null = null
+
+    if (slideTemplate.type === SlideTypes.intro &&
+        generationsSettings?.slideshowSettings != null &&
+        (generationsSettings.slideshowSettings as any).withIntroImage === true) {
+
+      generateImage = true
+    }
+
+    if (generateImage === true) {
+
+      generatedImageId = await
+        genSlideImageService.generate(
+          prisma,
+          slideTemplate)
+    }
 
     // Update Slide to active
     slide = await
