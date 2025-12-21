@@ -29,6 +29,7 @@ export class CreateTestAudioService {
     // Generate text-to-speech and save it
     const generatedAudio = await
             elevenLabsService.generateTtsAndSave(
+              prisma,
               ElevenLabsTypes.defaultVoiceName,
               prompt,
               relativePath)
