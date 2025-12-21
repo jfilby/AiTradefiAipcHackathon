@@ -1,8 +1,4 @@
-import { useState } from 'react'
-import DeleteIcon from '@mui/icons-material/Delete'
-import ReplayIcon from '@mui/icons-material/Replay'
-import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash'
-import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes'
+import { Replay, SpeakerNotes, VolumeMute, VolumeUp } from '@mui/icons-material'
 import { Button } from '@mui/material'
 import LabeledIconButton from '@/serene-core-client/components/buttons/labeled-icon-button'
 // import DeleteDialog from '../dialogs/delete-dialog'
@@ -15,8 +11,10 @@ interface Props {
   slideshow: any
   slide: any
   setSlide: any
-  setShowNotes: any
   setReplayAudio: any
+  muteAudio: boolean
+  setMuteAudio: any
+  setShowNotes: any
 }
 
 export default function SlideControls({
@@ -25,12 +23,11 @@ export default function SlideControls({
                           slideshow,
                           slide,
                           setSlide,
-                          setShowNotes,
-                          setReplayAudio
+                          setReplayAudio,
+                          muteAudio,
+                          setMuteAudio,
+                          setShowNotes
                         }: Props) {
-
-  // State
-  const [play, setPlay] = useState<boolean>(false)
 
   // Render
   return (
@@ -41,13 +38,32 @@ export default function SlideControls({
           {/* <p>isTextSlide: {JSON.stringify(isTextSlide)}</p> */}
 
           {slide.generatedAudioId != null?
-            <div style={{ display: 'inline-block' }}>
-              <LabeledIconButton
-                icon={ReplayIcon}
-                label='Replay audio'
-                onClick={(e: any) => setReplayAudio(true)}
-                style={{ marginRight: '1em' }} />
-            </div>
+            <>
+              <div style={{ display: 'inline-block' }}>
+                <LabeledIconButton
+                  disabled={muteAudio}
+                  icon={Replay}
+                  label='Replay audio'
+                  onClick={(e: any) => setReplayAudio(true)}
+                  style={{ marginRight: '1em' }} />
+              </div>
+
+              <div style={{ display: 'inline-block' }}>
+                {muteAudio === false ?
+                  <LabeledIconButton
+                    icon={VolumeMute}
+                    label='Mute'
+                    onClick={(e: any) => setMuteAudio(true)}
+                    style={{ marginRight: '1em' }} />
+                :
+                  <LabeledIconButton
+                    icon={VolumeUp}
+                    label='Unmute'
+                    onClick={(e: any) => setMuteAudio(false)}
+                    style={{ marginRight: '1em' }} />
+              }
+              </div>
+            </>
           :
             <></>
           }
@@ -56,7 +72,7 @@ export default function SlideControls({
            slide.text != null ?
             <div style={{ display: 'inline-block' }}>
               <LabeledIconButton
-                icon={SpeakerNotesIcon}
+                icon={SpeakerNotes}
                 label='Notes'
                 onClick={(e: any) => setShowNotes(true)}
                 style={{ marginRight: '1em' }} />

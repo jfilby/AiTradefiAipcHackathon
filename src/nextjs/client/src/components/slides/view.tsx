@@ -12,6 +12,8 @@ interface Props {
   setSlide: any
   replayAudio: boolean
   setReplayAudio: any
+  muteAudio: boolean
+  setMuteAudio: any
 }
 
 export default function ViewSlide({
@@ -21,7 +23,9 @@ export default function ViewSlide({
                           slide,
                           setSlide,
                           replayAudio,
-                          setReplayAudio
+                          setReplayAudio,
+                          muteAudio,
+                          setMuteAudio
                         }: Props) {
 
   // Const
@@ -113,7 +117,9 @@ export default function ViewSlide({
   // Effects
   useEffect(() => {
 
-    if (audioUrl != null) {
+    if (audioUrl != null &&
+        muteAudio === false) {
+
       playAudio()
     }
 
@@ -121,15 +127,26 @@ export default function ViewSlide({
 
   useEffect(() => {
 
-    if (replayAudio === false) {
+    if (replayAudio === false ||
+        muteAudio === true) {
+
       return
     }
 
     playAudio()
-
     setReplayAudio(false)
 
   }, [slide, replayAudio])
+
+  useEffect(() => {
+
+    if (muteAudio === false) {
+      return
+    }
+
+    fadeOutAndStop()
+
+  }, [slide, muteAudio])
 
   useEffect(() => {
 
