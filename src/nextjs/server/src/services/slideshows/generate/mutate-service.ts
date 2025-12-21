@@ -84,7 +84,6 @@ export class SlideshowMutateService {
       slide = await
         this.updateSlide(
           prisma,
-          // slideshow.id,
           slide,
           slideTemplate)
     }
@@ -125,26 +124,11 @@ export class SlideshowMutateService {
 
   async updateSlide(
           prisma: PrismaClient,
-          // slideshowId: string,
-          slide: Slide /* | undefined */,
+          slide: Slide,
           slideTemplate: SlideTemplate) {
 
     // Debug
     const fnName = `${this.clName}.updateSlide()`
-
-    /* Upsert Slide (with new status)
-    slide = await
-      slideModel.upsert(
-        prisma,
-        slide?.id,
-        slideshowId,
-        slideTemplate.id,
-        slideTemplate.slideNo,
-        BaseDataTypes.newStatus,
-        slideTemplate.title,
-        undefined,         // text
-        undefined,         // generatedAudioId
-        undefined)         // generatedImageId */
 
     // Generate audio
     const generatedAudioId = await
