@@ -12,18 +12,6 @@ export class GenerationsSettingsSetupService {
   // Consts
   clName = 'GenerationsSettingsSetupService'
 
-  defaultSlideShowSettings = {
-    withIntroImage: false,
-    requirementsSlide: true,
-    withAudioNarration: true,
-  }
-
-  defaultVideoSettings = {
-    withIntroImage: false,
-    requirementsIntro: true,
-    withAudioNarration: true,
-  }
-
   // Code
   async setup(
           prisma: PrismaClient,
@@ -38,7 +26,7 @@ export class GenerationsSettingsSetupService {
               BaseDataTypes.activeStatus,
               true,       // sharedPublicly
               ServerOnlyTypes.defaultGenerationsSettingsName,
-              this.defaultSlideShowSettings,
-              this.defaultVideoSettings)
+              ServerOnlyTypes.defaultSlideShowSettings,
+              ServerOnlyTypes.defaultVideoSettings)
   }
 }

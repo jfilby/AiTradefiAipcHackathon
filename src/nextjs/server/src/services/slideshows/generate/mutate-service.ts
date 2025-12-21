@@ -44,6 +44,16 @@ export class SlideshowMutateService {
               analysis.userProfileId,
               ServerOnlyTypes.defaultGenerationsSettingsName)
 
+    // Get slideshowSettings
+    var slideshowSettings: any = undefined
+
+    if (generationsSettings?.slideshowSettings != null) {
+      slideshowSettings = generationsSettings.slideshowSettings
+
+    } else {
+      slideshowSettings = ServerOnlyTypes.defaultSlideShowSettings
+    }
+
     // Try to get an existing record
     var slideshow = await
           slideshowModel.getByUniqueKey(
@@ -97,7 +107,7 @@ export class SlideshowMutateService {
       slide = await
         this.updateSlide(
           prisma,
-          generationsSettings,
+          slideshowSettings,
           slide,
           slideTemplate)
     }
@@ -138,7 +148,7 @@ export class SlideshowMutateService {
 
   async updateSlide(
           prisma: PrismaClient,
-          generationsSettings: GenerationsSettings,
+          slideshowSettings: any,
           slide: Slide,
           slideTemplate: SlideTemplate) {
 
@@ -148,11 +158,13 @@ export class SlideshowMutateService {
     // Narrate audio
     var narrateAudio = false
 
-    if (generationsSettings?.slideshowSettings != null &&
-        (generationsSettings.slideshowSettings as any).withAudioNarration === true) {
-
+    if (slideshowSettings.withAudioNarration === true) {
       narrateAudio = true
     }
+
+    // Debug
+    console.log(`${fnName}: slideId: ${slide.id} ` +
+                `narrateAudio: ${narrateAudio}`)
 
     // Generate audio
     var generatedAudioId: string | null = null
@@ -170,8 +182,7 @@ export class SlideshowMutateService {
     var generatedImageId: string | null = null
 
     if (slideTemplate.type === SlideTypes.intro &&
-        generationsSettings?.slideshowSettings != null &&
-        (generationsSettings.slideshowSettings as any).withIntroImage === true) {
+        slideshowSettings.withIntroImage === true) {
 
       generateImage = true
     }

@@ -16,6 +16,9 @@ export class GenSlideAudioService {
           prisma: PrismaClient,
           slide: Slide) {
 
+    // Debug
+    const fnName = `${this.clName}.generate()`
+
     // Validate
     if (slide.narratedText == null) {
       return null

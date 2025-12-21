@@ -37,6 +37,18 @@ export class ServerOnlyTypes {
 
   // Generations settings
   static defaultGenerationsSettingsName = 'Default'
+
+  static defaultSlideShowSettings = {
+    withIntroImage: false,
+    requirementsSlide: true,
+    withAudioNarration: true,
+  }
+  
+  static defaultVideoSettings = {
+    withIntroImage: false,
+    requirementsIntro: true,
+    withAudioNarration: true,
+  }
 }
 
 export enum UserPreferenceCategories {
