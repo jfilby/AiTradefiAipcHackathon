@@ -15,6 +15,7 @@ export class TradeAnalysisModel {
           status: string,
           tradeType: string,
           score: number,
+          passedMinScore: boolean,
           thesis: string) {
 
     // Debug
@@ -30,6 +31,7 @@ export class TradeAnalysisModel {
           status: status,
           tradeType: tradeType,
           score: score,
+          passedMinScore: passedMinScore,
           thesis: thesis
         }
       })
@@ -68,6 +70,7 @@ export class TradeAnalysisModel {
           techId: string | undefined = undefined,
           status: string | undefined = undefined,
           tradeType: string | undefined = undefined,
+          passedMinScore: boolean | undefined = undefined,
           includeInstrument: boolean = false,
           sortByScore: boolean = false) {
 
@@ -89,7 +92,8 @@ export class TradeAnalysisModel {
           instrumentId: instrumentId,
           techId: techId,
           status: status,
-          tradeType: tradeType
+          tradeType: tradeType,
+          passedMinScore: passedMinScore
         },
         orderBy: [
           {
@@ -119,6 +123,7 @@ export class TradeAnalysisModel {
           }
         },
         where: {
+          passedMinScore: true,
           OR: [
             {
               ofSlideshows: {
@@ -176,43 +181,13 @@ export class TradeAnalysisModel {
     return tradeAnalysis
   }
 
-  /* async getByLatest(
-          prisma: PrismaClient,
-          analysisId: string) {
-
-    // Debug
-    const fnName = `${this.clName}.getByLatest()`
-
-    // Query
-    try {
-      return await prisma.tradeAnalysis.findMany({
-        include: {
-          tradeAnalysesGroup: {
-            include: {
-              analysis: true
-            }
-          }
-        },
-        where: {
-          tradeAnalysesGroup: {
-            analysisId: analysisId
-          }
-        }
-      })
-    } catch(error: any) {
-      console.error(`${fnName}: error: ${error}`)
-      throw 'Prisma error'
-    }
-  } */
-
-  async getByMinScore(
+  async getByPassedMinScore(
           prisma: PrismaClient,
           tradeAnalysesGroupId: string,
-          minScore: number,
           status: string) {
 
     // Debug
-    const fnName = `${this.clName}.filter()`
+    const fnName = `${this.clName}.getByPassedMinScore()`
 
     // Query
     try {
@@ -227,9 +202,7 @@ export class TradeAnalysisModel {
         where: {
           tradeAnalysesGroupId: tradeAnalysesGroupId,
           status: status,
-          score: {
-            gte: minScore
-          }
+          passedMinScore: true
         },
         orderBy: [
           {
@@ -299,6 +272,7 @@ export class TradeAnalysisModel {
           status: string | undefined,
           tradeType: string | undefined,
           score: number | undefined,
+          passedMinScore: boolean | undefined,
           thesis: string | undefined) {
 
     // Debug
@@ -314,6 +288,7 @@ export class TradeAnalysisModel {
           status: status,
           tradeType: tradeType,
           score: score,
+          passedMinScore: passedMinScore,
           thesis: thesis
         },
         where: {
@@ -335,6 +310,7 @@ export class TradeAnalysisModel {
           status: string | undefined,
           tradeType: string | undefined,
           score: number | undefined,
+          passedMinScore: boolean | undefined,
           thesis: string | undefined) {
 
     // Debug
@@ -392,6 +368,11 @@ export class TradeAnalysisModel {
         throw 'Prisma error'
       }
 
+      if (passedMinScore == null) {
+        console.error(`${fnName}: id is null and passedMinScore is null`)
+        throw 'Prisma error'
+      }
+
       if (thesis == null) {
         console.error(`${fnName}: id is null and thesis is null`)
         throw 'Prisma error'
@@ -407,6 +388,7 @@ export class TradeAnalysisModel {
                  status,
                  tradeType,
                  score,
+                 passedMinScore,
                  thesis)
     } else {
 
@@ -421,6 +403,7 @@ export class TradeAnalysisModel {
                  status,
                  tradeType,
                  score,
+                 passedMinScore,
                  thesis)
     }
   }

@@ -297,7 +297,7 @@ export class TradeAnalysisMutateService {
 
   async processQueryResultsPass2(
           prisma: PrismaClient,
-          analysisId: string,
+          analysis: Analysis,
           tradeAnalysesGroup: TradeAnalysesGroup,
           techId: string,
           instrumentType: string,
@@ -321,19 +321,6 @@ export class TradeAnalysisMutateService {
               exchange.id,
               entry.instrument)
 
-      /* Save Instrument details (already saved in phase 1)
-      instrument = await
-        instrumentModel.update(
-          prisma,
-          instrument.id,
-          exchange.id,
-          BaseDataTypes.activeStatus,
-          entry.instrument,
-          instrumentType,
-          entry.instrument,
-          null,       // yahooFinanceTicker
-          null)       // lastYFinanceTry */
-
       // Check if TradeAnalysis already exists
       const tradeAnalysis = await
               tradeAnalysisModel.getByUniqueKey(
@@ -346,6 +333,13 @@ export class TradeAnalysisMutateService {
         continue
       }
 
+      // Determine getByPassedMinScore
+      var passedMinScore = false
+
+      if (entry.score >= analysis.defaultMinScore) {
+        passedMinScore = true
+      }
+
       // Create TradeAnalysis
       await tradeAnalysisModel.create(
               prisma,
@@ -355,6 +349,7 @@ export class TradeAnalysisMutateService {
               BaseDataTypes.activeStatus,
               entry.tradeType,
               entry.score,
+              passedMinScore,
               entry.thesis)
 
       // Save instrument name
@@ -582,7 +577,8 @@ export class TradeAnalysisMutateService {
               undefined,
               undefined,
               undefined,
-              true)  // includeInstrument
+              undefined,  // passedMinScore
+              true)       // includeInstrument
 
     const instrumentNamesAlreadyKnown =
             instrumentsAlreadyKnown.map(
@@ -637,7 +633,7 @@ export class TradeAnalysisMutateService {
       newInstrumentContextMap = await
         this.processQueryResultsPass2(
           prisma,
-          analysis.id,
+          analysis,
           tradeAnalysesGroup,
           tech.id,
           instrumentType,

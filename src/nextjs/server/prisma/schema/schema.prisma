@@ -313,6 +313,7 @@ model TradeAnalysis {
   status                       String               @db.Char(1)
   tradeType                    String               @map("trade_type") @db.Char(1)  // buy (B), sell (S)
   score                        Float                // 0..1
+  passedMinScore               Boolean              @map("passed_min_score")
   thesis                       String
   created                      DateTime             @default(now())
   updated                      DateTime             @updatedAt

@@ -272,6 +272,7 @@ export class Slideshow1DataService {
               BaseDataTypes.activeStatus,
               ServerOnlyTypes.buyTradeType,
               0.85,       // score,
+              true,       // passedMinScore
               `NVDA is a large cap that could still continue upward`)
                 // thesis
 

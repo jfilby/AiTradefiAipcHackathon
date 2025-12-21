@@ -63,10 +63,9 @@ export class TradeAnalysesGroupQueryService {
     for (const tradeAnalysesGroup of tradeAnalysesGroups) {
 
       (tradeAnalysesGroup as any).ofTradeAnalyses = await
-        tradeAnalysisModel.getByMinScore(
+        tradeAnalysisModel.getByPassedMinScore(
           prisma,
           tradeAnalysesGroup.id,
-          tradeAnalysesGroup.minScore,
           BaseDataTypes.activeStatus)
     }
 
