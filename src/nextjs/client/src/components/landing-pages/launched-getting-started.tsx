@@ -73,8 +73,6 @@ export default function GettingStartedDetails({
       :
         <></>
       }
-
-      <div style={{ marginBottom: '5em' }} />
     </>
   )
 }

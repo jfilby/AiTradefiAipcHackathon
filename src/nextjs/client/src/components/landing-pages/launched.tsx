@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import { Link, Typography } from '@mui/material'
+import { Button, Link, Typography } from '@mui/material'
 import { loadServerPage } from '@/services/page/load-server-page'
 import { pageBodyWidth } from '@/components/layouts/full-height-layout'
 import MoreInformation from '@/components/layouts/more-information'
@@ -73,15 +73,22 @@ export default function LaunchedLandingPage({
               authSession={authSession} />
             :
             <div style={{ marginBottom: '2em' }}>
-              <h1>Get started</h1>
-    
               <Typography
-                style={{ color: '#ddd', marginBottom: '2em' }}
-                variant='body1'>
-                  ___
+                style={{ marginBottom: '0.5em' }}
+                variant='h3'>
+                Get started
               </Typography>
+    
+              <Button
+                style={{ marginLeft: '1em' }}
+                onClick={(e: any) => window.location.href = `/analyses`}
+                variant='contained'>
+                Analyses
+              </Button>
             </div>
           }
+
+          <div style={{ marginBottom: '5em' }} />
 
           <LaunchedDetails />
         </div>
