@@ -1,3 +1,4 @@
+import { prisma } from '@/db'
 import { ElevenLabsService } from '@/services/elevenlabs/service'
 
 // Services

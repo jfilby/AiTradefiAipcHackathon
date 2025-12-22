@@ -1,5 +1,4 @@
 import { prisma } from '@/db'
-import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { AnalysesQueryService } from '@/services/analysis/query-service'
 
 // Services

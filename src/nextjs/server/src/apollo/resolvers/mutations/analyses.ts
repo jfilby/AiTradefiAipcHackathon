@@ -1,3 +1,4 @@
+import { prisma } from '@/db'
 import { AnalysesMutateService } from '@/services/analysis/mutate-service'
 
 // Services
