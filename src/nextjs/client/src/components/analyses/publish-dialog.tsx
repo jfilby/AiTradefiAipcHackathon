@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Button, Dialog, Typography } from '@mui/material'
 import { DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
@@ -17,6 +18,48 @@ export default function PublishDialog({
                           setAnalysis,
                           setSaveAction
                         }: Props) {
+
+  // State
+  const [validated, setValidated] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
+
+  // Effects
+  useEffect(() => {
+
+    // Return if not opening the dialog
+    if (open === false) {
+      return
+    }
+
+    // Validate the fields
+    if (analysis.name == null ||
+        analysis.name.length === 0) {
+
+      setErrorMessage(`Specify the name`)
+      setValidated(false)
+      return
+    }
+
+    if (analysis.description == null ||
+        analysis.description.length === 0) {
+
+      setErrorMessage(`Specify the description`)
+      setValidated(false)
+      return
+    }
+
+    if (analysis.prompt == null ||
+        analysis.prompt.length === 0) {
+
+      setErrorMessage(`Specify the prompt`)
+      setValidated(false)
+      return
+    }
+
+    // Validated OK
+    setValidated(true)
+
+  }, [open])
 
   // Functions
   const handleClose = () => {
@@ -51,17 +94,33 @@ export default function PublishDialog({
         <div style={{ marginBottom: '1em', textAlign: 'left' }}>
 
           <Typography variant='body1'>
-            Are you sure you're ready to publish this analysis?
-            <br/><br/>
-            This will generate results and slideshows based on this analysis.
-            The generation process takes a few minutes, first for the results
-            and then for the slideshows.
+
+            {validated === true ?
+              <>
+                Are you sure you're ready to publish this analysis?
+                <br/><br/>
+                This will generate results and slideshows based on this analysis.
+                The generation process takes a few minutes, first for the results
+                and then for the slideshows.
+              </>
+            :
+              <>
+                Please specify all fields first and try again.
+                <br/><br/>
+                {errorMessage}
+              </>
+            }
+
           </Typography>
         </div>
 
       </DialogContent>
       <DialogActions>
-        <Button variant='outlined' onClick={handlePublish} autoFocus>Publish</Button>
+        {validated === true ?
+          <Button variant='outlined' onClick={handlePublish} autoFocus>Publish</Button>
+        :
+          <></>
+        }
         <Button variant='outlined' onClick={handleClose} autoFocus>Close</Button>
       </DialogActions>
     </Dialog>

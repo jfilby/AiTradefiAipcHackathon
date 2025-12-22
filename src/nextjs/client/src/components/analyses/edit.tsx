@@ -137,6 +137,11 @@ export default function EditAnalysis({
               setAnalysis(analysis)
             }}
             required
+            slotProps={{
+              inputLabel: {
+                shrink: Boolean(name),
+              }
+            }}
             style={{ marginBottom: '1em' }}
             value={name} />
         </div>

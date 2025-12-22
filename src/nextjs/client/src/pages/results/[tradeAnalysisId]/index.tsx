@@ -34,7 +34,7 @@ export default function TradeAnalysisPage({
 
           <Typography
             style={{ marginBottom: '1em' }}
-            variant='h4'>
+            variant='h3'>
             Stock research
           </Typography>
 

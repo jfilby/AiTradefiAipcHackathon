@@ -1,11 +1,16 @@
 import Head from 'next/head'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Chat, Publish, Unpublished } from '@mui/icons-material'
+import LabeledIconButton from '@/serene-core-client/components/buttons/labeled-icon-button'
 import { loadServerPage } from '@/services/page/load-server-page'
 import Layout from '@/components/layouts/layout'
 import { Typography } from '@mui/material'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import EditAnalysis from '@/components/analyses/edit'
 import SaveAnalysis from '@/components/analyses/save'
+import ChatDialog from '@/components/chats/chat-dialog'
+import PublishDialog from '@/components/analyses/publish-dialog'
+import UnpublishDialog from '@/components/analyses/unpublish-dialog'
 
 interface Props {
   userProfile: any
@@ -23,12 +28,47 @@ export default function CreateAnalysesPage({
 
   const [analysis, setAnalysis] = useState<any>({
     type: BaseDataTypes.screenerType,
-    status: BaseDataTypes.activeStatus,
+    status: BaseDataTypes.newStatus,
     instrumentType: BaseDataTypes.stocksType,
     defaultMinScore: 0.75
   })
 
   const [saveAction, setSaveAction] = useState<boolean>(false)
+
+  const [showChat, setShowChat] = useState<boolean>(false)
+  const [chatSession, setChatSession] = useState<string | undefined>(undefined)
+  const [chatRawJson, setChatRawJson] = useState<any>(undefined)
+  const [analysisRefreshed, setAnalysisRefreshed] = useState<boolean>(false)
+
+  const [publishOpen, setPublishOpen] = useState<boolean>(false)
+  const [unpublishOpen, setUnpublishOpen] = useState<boolean>(false)
+
+  // Effects
+  useEffect(() => {
+
+    // Skip if not set
+    if (chatRawJson == null) {
+      return
+    }
+
+    // Update the Analysis data from chat JSON
+    if (chatRawJson.name != null) {
+      analysis.name = chatRawJson.name
+    }
+
+    if (chatRawJson.description != null) {
+      analysis.description = chatRawJson.description
+    }
+
+    if (chatRawJson.prompt != null) {
+      analysis.prompt = chatRawJson.prompt
+    }
+
+    // Put new field values into effect
+    setAnalysis(analysis)
+    setAnalysisRefreshed(true)
+
+  }, [chatRawJson])
 
   // Render
   return (
@@ -43,12 +83,41 @@ export default function CreateAnalysesPage({
 
           {/* <p>userProfileId: {userProfile.id}</p> */}
 
-          <div style={{ width: '80%' }}>
-            <Typography
-              style={{ marginBottom: '0.5em' }}
-              variant='h4'>
-              Create Analysis
-            </Typography>
+          <div style={{ width: '100%' }}>
+            <div style={{ display: 'inline-block', width: '50%' }}>
+              <Typography
+                style={{ marginBottom: '0.5em' }}
+                variant='h3'>
+                Create Analysis
+              </Typography>
+            </div>
+
+            <div style={{ display: 'inline-block', width: '50%', textAlign: 'right' }}>
+
+              {analysis.status === BaseDataTypes.activeStatus ?
+                <div style={{ display: 'inline-block' }}>
+                  <LabeledIconButton
+                    icon={Unpublished}
+                    label='Unpublish'
+                    onClick={() => setUnpublishOpen(true)} />
+                </div>
+              :
+                <div style={{ display: 'inline-block' }}>
+                  <LabeledIconButton
+                    icon={Publish}
+                    label='Publish'
+                    onClick={() => setPublishOpen(true)} />
+                </div>
+              }
+
+              <div style={{ display: 'inline-block' }}>
+                <LabeledIconButton
+                  icon={Chat}
+                  label='Chat'
+                  onClick={() => setShowChat(true)}
+                  style={{ marginLeft: '1em' }} />
+              </div>
+            </div>
           </div>
 
           <EditAnalysis
@@ -62,23 +131,48 @@ export default function CreateAnalysesPage({
             setAnalysis={setAnalysis}
             setLoadAction={undefined}
             setSaveAction={setSaveAction}
-            analysisRefreshed={false}
-            setAnalysisRefreshed={undefined} />
+            analysisRefreshed={analysisRefreshed}
+            setAnalysisRefreshed={setAnalysisRefreshed} />
         </div>
-
-        <SaveAnalysis
-          userProfileId={userProfile.id}
-          instanceId={undefined}
-          analysis={analysis}
-          isAdd={true}
-          setAlertSeverity={setAlertSeverity}
-          setMessage={setMessage}
-          saveAction={saveAction}
-          setSaveAction={setSaveAction}
-          setEditMode={undefined}
-          redirectToIndexOnSave={true} />
-
       </Layout>
+
+      <ChatDialog
+        userProfileId={userProfile.id}
+        setAlertSeverity={setAlertSeverity}
+        setMessage={setMessage}
+        open={showChat}
+        setOpen={setShowChat}
+        analysis={analysis}
+        chatSession={chatSession}
+        setChatSession={setChatSession}
+        setChatRawJson={setChatRawJson} />
+
+      <SaveAnalysis
+        userProfileId={userProfile.id}
+        instanceId={undefined}
+        analysis={analysis}
+        isAdd={true}
+        setAlertSeverity={setAlertSeverity}
+        setMessage={setMessage}
+        saveAction={saveAction}
+        setSaveAction={setSaveAction}
+        setEditMode={undefined}
+        redirectToIndexOnSave={true} />
+
+      <PublishDialog
+        open={publishOpen}
+        setOpen={setPublishOpen}
+        analysis={analysis}
+        setAnalysis={setAnalysis}
+        setSaveAction={setSaveAction} />
+
+      <UnpublishDialog
+        open={unpublishOpen}
+        setOpen={setUnpublishOpen}
+        analysis={analysis}
+        setAnalysis={setAnalysis}
+        setSaveAction={setSaveAction} />
+
     </>
   )
 }

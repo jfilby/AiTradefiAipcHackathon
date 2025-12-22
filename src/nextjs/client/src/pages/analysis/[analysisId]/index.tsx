@@ -1,8 +1,6 @@
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
-import ChatIcon from '@mui/icons-material/Chat'
-import PublishIcon from '@mui/icons-material/Publish'
-import UnpublishedIcon from '@mui/icons-material/Unpublished'
+import { Chat, Publish, Unpublished } from '@mui/icons-material'
 import { loadServerPage } from '@/services/page/load-server-page'
 import Layout from '@/components/layouts/layout'
 import { Typography } from '@mui/material'
@@ -40,9 +38,9 @@ export default function EditAnalysesPage({
 
   const [loaded, setLoaded] = useState<boolean>(false)
   const [saveAction, setSaveAction] = useState<boolean>(false)
+
   const [showChat, setShowChat] = useState<boolean>(false)
   const [chatSession, setChatSession] = useState<string | undefined>(undefined)
-
   const [chatRawJson, setChatRawJson] = useState<any>(undefined)
   const [analysisRefreshed, setAnalysisRefreshed] = useState<boolean>(false)
 
@@ -57,7 +55,7 @@ export default function EditAnalysesPage({
       return
     }
 
-    // Update the Analysis data
+    // Update the Analysis data from chat JSON
     if (chatRawJson.name != null) {
       analysis.name = chatRawJson.name
     }
@@ -104,14 +102,14 @@ export default function EditAnalysesPage({
               {analysis.status === BaseDataTypes.activeStatus ?
                 <div style={{ display: 'inline-block' }}>
                   <LabeledIconButton
-                    icon={UnpublishedIcon}
+                    icon={Unpublished}
                     label='Unpublish'
                     onClick={() => setUnpublishOpen(true)} />
                 </div>
               :
                 <div style={{ display: 'inline-block' }}>
                   <LabeledIconButton
-                    icon={PublishIcon}
+                    icon={Publish}
                     label='Publish'
                     onClick={() => setPublishOpen(true)} />
                 </div>
@@ -119,7 +117,7 @@ export default function EditAnalysesPage({
 
               <div style={{ display: 'inline-block' }}>
                 <LabeledIconButton
-                  icon={ChatIcon}
+                  icon={Chat}
                   label='Chat'
                   onClick={() => setShowChat(true)}
                   style={{ marginLeft: '1em' }} />

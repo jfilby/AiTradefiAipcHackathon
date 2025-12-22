@@ -38,8 +38,8 @@ export default function AnalysesPage({
           <div style={{ display: 'inline-block', width: '80%' }}>
             <Typography
               style={{ marginBottom: '0.5em' }}
-              variant='h4'>
-              Stock research
+              variant='h3'>
+              Analyses
             </Typography>
           </div>
           <div style={{ display: 'inline-block', textAlign: 'right', width: '20%' }}>
