@@ -17,12 +17,10 @@
   background: rgba(0, 0, 0, 0.7); /* dark overlay */
 }
 
-.hero h1, .hero p {
+.hero h1, .hero h2, .hero h3, .hero h4, .hero h5, .hero h6, .hero p {
   position: relative;
   z-index: 2;
-  /* color: #1a1a1a; /* dark text instead of white */
   color: #fff;
-  /* text-align: center; */
 }
 
 .hero button {

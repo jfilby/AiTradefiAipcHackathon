@@ -17,9 +17,17 @@ export default function GettingStartedDetails({
       <div style={{ marginBottom: '2em' }}/>
 
       {authSession == null ?
-        <h1>Try it out</h1>
+        <Typography
+          style={{ marginBottom: '0.5em' }}
+          variant='h3'>
+          Try it out
+        </Typography>
       :
-        <h1>Welcome back</h1>
+        <Typography
+          style={{ marginBottom: '0.5em' }}
+          variant='h3'>
+          Welcome back
+        </Typography>
       }
 
       <div style={{ marginBottom: '2em' }}>
@@ -59,12 +67,14 @@ export default function GettingStartedDetails({
       {authSession == null ?
         <Typography
           style={{ marginBottom: '1em' }}
-          variant='body1'>
+          variant='h6'>
           Sign-up to save your work.
         </Typography>
       :
         <></>
       }
+
+      <div style={{ marginBottom: '5em' }} />
     </>
   )
 }

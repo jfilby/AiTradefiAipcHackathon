@@ -132,12 +132,16 @@ export default function LaunchedDetails({}: Props) {
 
       <div style={{ marginBottom: '5em' }} /> */}
 
-      <h1>Powered by Google and ElevenLabs</h1>
+      <Typography
+        style={{ marginBottom: '0.5em' }}
+        variant='h3'>
+        Powered by
+      </Typography>
 
       <Link href='https://elevenlabs.io/'>
         <Typography
           style={{ marginBottom: '1em' }}
-          variant='body1'>
+          variant='h6'>
           AI audio by ElevenLabs.
         </Typography>
       </Link>
@@ -145,7 +149,7 @@ export default function LaunchedDetails({}: Props) {
       <Link href='https://ai.google.dev/gemini-api/docs'>
         <Typography
           style={{ marginBottom: '1em' }}
-          variant='body1'>
+          variant='h6'>
           AI chat &amp; reasoning by Google Gemini.
         </Typography>
       </Link>
@@ -153,14 +157,18 @@ export default function LaunchedDetails({}: Props) {
       <Link href='https://cloud.google.com/'>
         <Typography
           style={{ marginBottom: '1em' }}
-          variant='body1'>
+          variant='h6'>
           Hosted on Google Cloud.
         </Typography>
       </Link>
 
       <div style={{ marginBottom: '5em' }} />
 
-      <h1>Get updates</h1>
+      <Typography
+        style={{ marginBottom: '0.5em' }}
+        variant='h3'>
+        Get updates
+      </Typography>
 
       <div style={{ marginBottom: 'em' }}>
         <form onSubmit={waitlistSignup}>
