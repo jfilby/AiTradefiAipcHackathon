@@ -68,27 +68,8 @@ export default function LaunchedLandingPage({
             <></>
           }
 
-          {authSession !== undefined ?
-            <GettingStartedDetails
-              authSession={authSession} />
-            :
-            <div style={{ marginBottom: '2em' }}>
-              <Typography
-                style={{ marginBottom: '0.5em' }}
-                variant='h3'>
-                Get started
-              </Typography>
-    
-              <Button
-                style={{ marginLeft: '1em' }}
-                onClick={(e: any) => window.location.href = `/analyses`}
-                variant='contained'>
-                Analyses
-              </Button>
-            </div>
-          }
-
-          <div style={{ marginBottom: '5em' }} />
+          <GettingStartedDetails
+            authSession={authSession} />
 
           <LaunchedDetails />
         </div>
