@@ -1,5 +1,11 @@
 # Data setup
 
+## Login as admin user
+
+Login using your preferred method before running setup. This is because the
+first login method is difficult to change.
+
+
 ## Load the analyses
 
 Load the analyses into the Analysis records.
