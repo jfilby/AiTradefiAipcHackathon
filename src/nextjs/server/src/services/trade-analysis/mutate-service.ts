@@ -367,7 +367,7 @@ export class TradeAnalysisMutateService {
     // Debug
     const fnName = `${this.clName}.run()`
 
-    console.log(`${fnName}: starting..`)
+    // console.log(`${fnName}: starting..`)
 
     // Get the admin UserProfile
     const adminUserProfile = await
@@ -397,7 +397,7 @@ export class TradeAnalysisMutateService {
     }
 
     // Debug
-    console.log(`${fnName}: completed`)
+    // console.log(`${fnName}: completed`)
   }
 
   async runAnalysis(
@@ -434,7 +434,7 @@ export class TradeAnalysisMutateService {
               prisma,
               analysis.id)
 
-    console.log(`${fnName}: canRun: ${canRun}`)
+    // console.log(`${fnName}: canRun: ${canRun}`)
 
     if (canRun === false) {
       return

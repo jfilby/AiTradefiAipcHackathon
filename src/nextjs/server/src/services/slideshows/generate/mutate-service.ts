@@ -1,4 +1,4 @@
-import { GenerationsSettings, PrismaClient, Slide, SlideTemplate, TradeAnalysis } from '@prisma/client'
+import { PrismaClient, Slide, SlideTemplate, TradeAnalysis } from '@prisma/client'
 import { CustomError } from '@/serene-core-server/types/errors'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { ServerOnlyTypes, SlideTypes } from '@/types/server-only-types'
@@ -128,7 +128,7 @@ export class SlideshowMutateService {
     const fnName = `${this.clName}.run()`
 
     // Debug
-    console.log(`${fnName}: starting..`)
+    // console.log(`${fnName}: starting..`)
 
     // Get TradeAnalysis records without completed slideshows
     const tradeAnalyses = await
@@ -143,7 +143,7 @@ export class SlideshowMutateService {
     }
 
     // Debug
-    console.log(`${fnName}: completed`)
+    // console.log(`${fnName}: completed`)
   }
 
   async updateSlide(
@@ -163,8 +163,8 @@ export class SlideshowMutateService {
     }
 
     // Debug
-    console.log(`${fnName}: slideId: ${slide.id} ` +
-                `narrateAudio: ${narrateAudio}`)
+    // console.log(`${fnName}: slideId: ${slide.id} ` +
+    //             `narrateAudio: ${narrateAudio}`)
 
     // Generate audio
     var generatedAudioId: string | null = null

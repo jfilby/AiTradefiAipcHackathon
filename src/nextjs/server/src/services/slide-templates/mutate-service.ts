@@ -116,7 +116,7 @@ export class SlideTemplatesMutateService {
     // Debug
     const fnName = `${this.clName}.run()`
 
-    console.log(`${fnName}: starting..`)
+    // console.log(`${fnName}: starting..`)
 
     // Get adminUserProfile
     const adminUserProfile = await
@@ -137,7 +137,7 @@ export class SlideTemplatesMutateService {
             analysisModel.filterByNotExistsSlideTemplates(prisma)
 
     // Debug
-    console.log(`${fnName}: analyses: ${analyses.length}`)
+    // console.log(`${fnName}: analyses: ${analyses.length}`)
 
     // Process each Analysis record
     for (const analysis of analyses) {
@@ -150,7 +150,7 @@ export class SlideTemplatesMutateService {
     }
 
     // Debug
-    console.log(`${fnName}: completed`)
+    // console.log(`${fnName}: completed`)
   }
 
   async runAnalysis(
