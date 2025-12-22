@@ -114,18 +114,18 @@ export default function AnalysisCard({
 
         <div style={{ display: 'inline-block', height: '2em', textAlign: 'right', width: '20%' }}>
           <>
-            {thisAnalysis.status === BaseDataTypes.activeStatus ?
+            {thisAnalysis.status === BaseDataTypes.deletePendingStatus ?
 
-              <LabeledIconButton
-                icon={DeleteIcon}
-                label='Delete'
-                onClick={(e: any) => setDeleteDialogOpen(true)}
-                style={{ marginRight: '1em' }} />
-            :
               <LabeledIconButton
                 icon={RestoreFromTrashIcon}
                 label='Undelete'
                 onClick={(e: any) => setUndeleteDialogOpen(true)}
+                style={{ marginRight: '1em' }} />
+            :
+              <LabeledIconButton
+                icon={DeleteIcon}
+                label='Delete'
+                onClick={(e: any) => setDeleteDialogOpen(true)}
                 style={{ marginRight: '1em' }} />
             }
           </>
