@@ -61,7 +61,9 @@ export default function CreateAnalysesPage({
             analysis={analysis}
             setAnalysis={setAnalysis}
             setLoadAction={undefined}
-            setSaveAction={setSaveAction} />
+            setSaveAction={setSaveAction}
+            analysisRefreshed={false}
+            setAnalysisRefreshed={undefined} />
         </div>
 
         <SaveAnalysis
