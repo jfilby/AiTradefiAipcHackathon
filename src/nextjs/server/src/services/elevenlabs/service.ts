@@ -101,6 +101,7 @@ export class ElevenLabsService {
   }
 
   async generateTts(
+          prisma: PrismaClient,
           voiceName: string,
           text: string,
           outputFormat: string = ElevenLabsTypes.defaultOutputFormat) {
@@ -159,6 +160,7 @@ export class ElevenLabsService {
     // Generate TTS
     const ttsResults = await
             this.generateTts(
+              prisma,
               voiceName,
               text)
 
