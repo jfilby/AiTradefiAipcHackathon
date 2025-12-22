@@ -303,6 +303,9 @@ export class TradeAnalysisMutateService {
           instrumentType: string,
           queryResults: any): Promise<InstrumentContextMap> {
 
+    // Debug
+    const fnName = `${this.clName}.processQueryResultsPass2()`
+
     // Process each entry
     var instrumentsMap = new Map<string, YFinanceInstrumentContext | undefined>()
 
@@ -314,12 +317,25 @@ export class TradeAnalysisMutateService {
                 prisma,
                 entry.exchange)
 
+      // Validate
+      if (exchange == null) {
+        throw new CustomError(
+          `${fnName}: exchange == null for name: ${entry.exchange}`)
+      }
+
       // Get Instrument
       var instrument = await
             instrumentModel.getByUniqueKey(
               prisma,
               exchange.id,
               entry.instrument)
+
+      // Validate
+      if (instrument == null) {
+        throw new CustomError(
+          `${fnName}: instrument == null for exchangeId: ${exchange.id} ` +
+          `name: ${entry.instrument}`)
+      }
 
       // Check if TradeAnalysis already exists
       const tradeAnalysis = await
