@@ -51,7 +51,7 @@ export default function AnalysisCard({
 
     if (undeleteAction === true) {
 
-      thisAnalysis.status = BaseDataTypes.activeStatus
+      thisAnalysis.status = BaseDataTypes.newStatus
       setThisAnalysis(thisAnalysis)
       setSaveAction(true)
       setUndeleteAction(false)
