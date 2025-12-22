@@ -96,6 +96,7 @@ export class TradeAnalysisLlmService {
       } else {
         validated = await
           this.validateQueryResults(
+            prisma,
             pass,
             queryResults)
       }
@@ -150,6 +151,7 @@ export class TradeAnalysisLlmService {
   }
 
   async validateQueryResults(
+          prisma: PrismaClient,
           pass: number,
           queryResults: any) {
 
@@ -171,6 +173,7 @@ export class TradeAnalysisLlmService {
 
       const entryValidated = await
               this.validateQueryResultsEntry(
+                prisma,
                 pass,
                 entry)
 
@@ -184,6 +187,7 @@ export class TradeAnalysisLlmService {
   }
 
   async validateQueryResultsEntry(
+          prisma: PrismaClient,
           pass: number,
           entry: any) {
 
