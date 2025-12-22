@@ -116,7 +116,7 @@ export default function LaunchedDetails({}: Props) {
 
       <div style={{ marginBottom: '5em' }} /> */}
 
-      <h1>AI stock research</h1>
+      {/* <h1>AI stock research</h1>
 
       <Typography
         style={{ marginBottom: '1em' }}
@@ -130,21 +130,33 @@ export default function LaunchedDetails({}: Props) {
         Get AI generated audio and video reports.
       </Typography>
 
-      <div style={{ marginBottom: '5em' }} />
+      <div style={{ marginBottom: '5em' }} /> */}
 
       <h1>Powered by Google and ElevenLabs</h1>
 
-      <Typography
-        style={{ marginBottom: '1em' }}
-        variant='body1'>
-        Audio and video by ElevenLabs.
-      </Typography>
+      <Link href='https://elevenlabs.io/'>
+        <Typography
+          style={{ marginBottom: '1em' }}
+          variant='body1'>
+          AI audio by ElevenLabs.
+        </Typography>
+      </Link>
 
-      <Typography
-        style={{ marginBottom: '1em' }}
-        variant='body1'>
-        AI by Google Gemini, hosted on GCP.
-      </Typography>
+      <Link href='https://ai.google.dev/gemini-api/docs'>
+        <Typography
+          style={{ marginBottom: '1em' }}
+          variant='body1'>
+          AI chat &amp; reasoning by Google Gemini.
+        </Typography>
+      </Link>
+
+      <Link href='https://cloud.google.com/'>
+        <Typography
+          style={{ marginBottom: '1em' }}
+          variant='body1'>
+          Hosted on Google Cloud.
+        </Typography>
+      </Link>
 
       <div style={{ marginBottom: '5em' }} />
 
@@ -154,7 +166,7 @@ export default function LaunchedDetails({}: Props) {
         <form onSubmit={waitlistSignup}>
           <TextField
             id='email'
-            label='Email address'
+            placeholder='Email address'
             onChange={(e) => setEmail(e.target.value)}
             style={{ marginBottom: '1em', width: '25em' }}
             value={email}

@@ -15,37 +15,39 @@ export default function GettingStartedDetails({
   return (
     <>
       <div style={{ marginBottom: '2em' }}/>
-      <h1>Save your work by signing-up</h1>
+
+      {authSession == null ?
+        <h1>Try it out</h1>
+      :
+        <h1>Welcome back</h1>
+      }
 
       <div style={{ marginBottom: '2em' }}>
         {authSession == null ?
           <>
             <Button
               onClick={(e: any) => window.location.href = `account/auth/sign-up`}
-              variant='contained'>
+              variant='outlined'>
               Sign-up
             </Button>
-            <Button
+            {/* <Button
               style={{ marginLeft: '1em' }}
               onClick={(e: any) => window.location.href = `account/auth/sign-in`}
-              variant='contained'>
+              variant='outlined'>
               Sign-in
-            </Button>
+            </Button> */}
           </>
         :
           <></>
         }
 
-        {authSession != null ?
-          <Button
-            style={{ marginLeft: '1em' }}
-            onClick={(e: any) => window.location.href = `/projects`}
-            variant='contained'>
-            My projects
-          </Button>
-        :
-          <></>
-        }
+        <Button
+          style={{ marginLeft: '1em' }}
+          onClick={(e: any) => window.location.href = `/analyses`}
+          variant='contained'>
+          Get started
+        </Button>
+
         {/* <Button
           style={{ marginLeft: '1em' }}
           onClick={(e: any) => window.location.href = `/account/subscription`}
@@ -54,15 +56,15 @@ export default function GettingStartedDetails({
         </Button> */}
       </div>
 
-      {/* {authSession == null ?
+      {authSession == null ?
         <Typography
           style={{ marginBottom: '1em' }}
           variant='body1'>
-          You need to sign-in to access your projects.
+          Sign-up to save your work.
         </Typography>
       :
         <></>
-      } */}
+      }
     </>
   )
 }

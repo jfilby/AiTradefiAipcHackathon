@@ -116,6 +116,16 @@ export class GenSlideTextService {
       `  Sentence 1: restates the core point in natural language\n` +
       `  Sentence 2: adds insight or implication\n` +
       `\n` +
+      `You can apply the following tones to the narratedText, but only one ` +
+      `per sentence at most (don't overdo it):\n` +
+      `- Base narration: [neutral] or [calm]\n` +
+      `- Use [emphasize] or [slightly excited] for numbers, trends, or key ` +
+      `  conclusions\n` +
+      `- Key numbers / insights: [slightly excited] or [confident]\n` +
+      `- Methodology / risk discussion: [calm] or [analytical]\n` +
+      `\n` +
+      `Insert each tone at the start of the sentence (as in the example).\n` +
+      `\n` +
       `## Example\n` +
       `[\n` +
       `  {\n` +
@@ -123,7 +133,7 @@ export class GenSlideTextService {
       `    "title": "NVDA as a long-term investment",\n` +
       `    "text": "This slideshow explains why NVDA is a good long-term ` +
       `    investment.",\n` +
-      `    "narratedText": "Why NVDA is a good long-term investment."\n` +
+      `    "narratedText": "[calm]Why NVDA is a good investment."\n` +
       `  }\n` +
       `]\n` +
       `\n` +

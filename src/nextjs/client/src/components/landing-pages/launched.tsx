@@ -9,6 +9,7 @@ import GettingStartedDetails from './launched-getting-started'
 import LaunchedDetails from './launched-details'
 import LaunchedHeader from './header'
 import Layout from '../layouts/layout'
+import styles from './hero.module.css'
 
 interface Props {
   userProfile: any
@@ -41,7 +42,9 @@ export default function LaunchedLandingPage({
     <>
       <Layout userProfile={userProfile}>
 
-        <div style={{ margin: '0 auto', width: pageBodyWidth, textAlign: 'left', verticalAlign: 'textTop' }}>
+        <div
+          className={styles.hero}
+          style={{ margin: '0 auto', width: pageBodyWidth, textAlign: 'left', verticalAlign: 'textTop' }}>
 
           <LaunchedHeader />
 
