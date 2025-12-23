@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { ElevenLabsDefaults, ElevenLabsSettings, NarrationTones, settingsByTone } from '@/types/elevenlabs-types'
+import { ElevenLabsDefaults, NarrationTones, settingsByTone } from '@/types/elevenlabs-types'
 import { NarrationSegmentModel } from '@/models/slideshows/narration-segment-model'
 import { ElevenLabsService } from './service'
 import { CustomError } from '@/serene-core-server/types/errors'
@@ -15,53 +15,47 @@ export class NarrationAudioService {
   clName = 'NarrationAudioService'
 
   // Code
-  async generateFromReplyData(
-          prisma: PrismaClient,
-          userProfileId: string,
-          replyData: any) {
+  async *generateFromReplyData(
+           prisma: PrismaClient,
+           userProfileId: string,
+           replyData: any): AsyncGenerator<Buffer<ArrayBuffer>> {
 
-    // Define ElevenLabsSettings
-    const elevenLabsSettings: ElevenLabsSettings = {
-      stability: ElevenLabsDefaults.stability,
-      similarityBoost: ElevenLabsDefaults.similarityBoost
+    // Debug
+    const fnName = `${this.clName}.generateFromReplyData()`
+
+    // console.log(`${fnName}: starting..`)
+
+    // Contents?
+    if (replyData.contents == null) {
+      return
     }
 
-    if (replyData.chatJson.rawJson) {
+    // Process each sentence
+    for (const message of replyData.contents) {
 
-      for (const entry of replyData.chatJson.rawJson) {
+      // Lookup tone settings
+      const tone = message.tone as string
 
-        if (entry.elevenLabsSettings != null) {
-
-          if (entry.elevenLabsSettings.stability != null) {
-            elevenLabsSettings.stability = entry.elevenLabsSettings.stability
-          }
-
-          if (entry.elevenLabsSettings.similarityBoost != null) {
-            elevenLabsSettings.similarityBoost =
-              entry.elevenLabsSettings.similarityBoost
-          }
-
-          if (entry.elevenLabsSettings.style != null) {
-            elevenLabsSettings.style = entry.elevenLabsSettings.style
-          }
-
-          if (entry.elevenLabsSettings.speed != null) {
-            elevenLabsSettings.speed = entry.elevenLabsSettings.speed
-          }
-        }
+      if (!this.isNarrationTone(tone)) {
+        throw new CustomError(`${fnName}: tone: ${message.tone} not found`)
       }
-    }
 
-    // TTS if enabled
-    const audioBuffer = await
-            elevenLabsService.generateTtsFromChatMessagesIfEnabled(
+      const elevenLabsSettings = settingsByTone[tone]
+
+      // Generate TTS if enabled
+      const audioBuffer = await
+            elevenLabsService.generateTtsBufferIfEnabled(
               prisma,
               userProfileId,
-              replyData,
+              ElevenLabsDefaults.defaultVoiceName,
+              message.text,
               elevenLabsSettings)
 
-    // Return
-    return audioBuffer
+      // Yield
+      if (audioBuffer != null) {
+        yield audioBuffer
+      }
+    }
   }
 
   async generateFromSlideData(

@@ -244,37 +244,6 @@ export class ElevenLabsService {
     return buffer
   }
 
-  async generateTtsFromChatMessagesIfEnabled(
-          prisma: PrismaClient,
-          userProfileId: string,
-          textReplyData: any,
-          elevenLabsSettings: ElevenLabsSettings) {
-
-    // Messages to text
-    var text = ''
-
-    for (const message of textReplyData.contents) {
-
-      if (text.length > 0) {
-        text += '\n'
-      }
-
-      text += message.text
-    }
-
-    // Generate TTS if enabled
-    const buffer = await
-            this.generateTtsBufferIfEnabled(
-              prisma,
-              userProfileId,
-              ElevenLabsDefaults.defaultVoiceName,
-              text,
-              elevenLabsSettings)
-
-    // Return
-    return buffer
-  }
-
   async getSpeakPreference(
           prisma: PrismaClient,
           userProfileId: string) {

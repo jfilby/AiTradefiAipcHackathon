@@ -100,14 +100,14 @@ io.on('connection', (socket) => {
     io.to(chatSessionId).emit('message', replyData)
 
     // Generate narration audio
-    const audioBuffer = await
+    const audioGenerator = await
             narrationAudioService.generateFromReplyData(
               prisma,
               userProfileId,
               replyData)
 
     // Send audio (mp3)
-    if (audioBuffer != null) {
+    for await (const audioBuffer of audioGenerator) {
       io.to(chatSessionId).emit('audio (mp3)', audioBuffer)
     }
   })

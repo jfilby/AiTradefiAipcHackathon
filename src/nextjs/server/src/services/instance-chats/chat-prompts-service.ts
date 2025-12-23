@@ -1,4 +1,5 @@
 import { BaseDataTypes } from '@/shared/types/base-data-types'
+import { NarrationTones } from '@/types/elevenlabs-types'
 
 export class ChatPromptsService {
 
@@ -13,6 +14,8 @@ export class ChatPromptsService {
 
     // console.log(`${fnName}: starting with analysis: ` +
     //             JSON.stringify(analysis))
+
+    const narrationTones = JSON.stringify(NarrationTones)
 
     // Set the prompt
     var prompt =
@@ -31,11 +34,17 @@ export class ChatPromptsService {
           `  instruments (e.g. stocks). This is the field users most ` +
           `  likely want help with.\n` +
           `\n` +
+          `## Tones\n` +
+          `\n` +
+          `You can optionally specify a tone with each message. The ` +
+          `available tones are: ${narrationTones}\n` +
+          `\n` +
           `## Example\n` +
           `\n` +
           `{\n` +
           `  "messages": [\n` +
           `    {\n` +
+          `      "tone": "confident",\n` +
           `      "text": "I have updated the prompt for you.",\n` +
           `    }\n` +
           `  ],\n` +
