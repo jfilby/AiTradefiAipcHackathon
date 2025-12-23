@@ -23,7 +23,7 @@ export default function SlideshowShowcasePage({
   return (
     <>
       <Head>
-        <title>{process.env.NEXT_PUBLIC_APP_NAME} - Slideshows showcase</title>
+        <title>{process.env.NEXT_PUBLIC_APP_NAME} - Slideshow showcase</title>
       </Head>
 
       <Layout userProfile={userProfile}>
@@ -44,7 +44,8 @@ export default function SlideshowShowcasePage({
           <ListSlideshows
             userProfileId={userProfile.id}
             instanceId={undefined}
-            slideshows={slideshows} />
+            slideshows={slideshows}
+            readonly={true} />
         </div>
 
         <LoadSlideshowShowcaseByFilter
