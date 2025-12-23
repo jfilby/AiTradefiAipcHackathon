@@ -9,7 +9,7 @@ import { ServerTestTypes } from './types/server-test-types'
 import { FinnHubApiServiceTests } from './services/external-data/finnhub/api-service-tests'
 import { SetupAnalysesService } from './services/analysis/setup-service'
 import { SetupService } from './services/setup/setup'
-import { SlideshowShowcaseService } from './services/setup/slideshow-showcase-service'
+import { SlideshowShowcaseService } from './services/slideshows/setup/showcase-service'
 import { TestsService } from './services/tests/tests-service'
 
 // Main
