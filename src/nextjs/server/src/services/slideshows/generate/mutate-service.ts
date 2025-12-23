@@ -7,9 +7,9 @@ import { SlideshowModel } from '@/models/slideshows/slideshow-model'
 import { SlideTemplateModel } from '@/models/slideshows/slide-template-model'
 import { GenerationsSettingsModel } from '@/models/trade-analysis/generations-settings-model'
 import { TradeAnalysisModel } from '@/models/trade-analysis/trade-analysis-model'
-import { GenSlideAudioService } from './gen-audio-service'
 import { GenSlideImageService } from './gen-image-service'
 import { GenSlideTextService } from './gen-text-service'
+import { NarrationAudioService } from '@/services/elevenlabs/narration-service'
 
 // Models
 const generationsSettingsModel = new GenerationsSettingsModel()
@@ -19,9 +19,9 @@ const slideTemplateModel = new SlideTemplateModel()
 const tradeAnalysisModel = new TradeAnalysisModel()
 
 // Services
-const genSlideAudioService = new GenSlideAudioService()
 const genSlideImageService = new GenSlideImageService()
 const genSlideTextService = new GenSlideTextService()
+const narrationAudioService = new NarrationAudioService()
 
 // Class
 export class SlideshowMutateService {
@@ -176,14 +176,13 @@ export class SlideshowMutateService {
     //             `narrateAudio: ${narrateAudio}`)
 
     // Generate narration audio
-    var narrationId: string | null = null
+    if (narrateAudio === true &&
+        slide.narrationId != null) {
 
-    if (narrateAudio === true) {
-
-      narrationId = await
-        genSlideAudioService.generate(
-          prisma,
-          slide)
+      // Generate narration
+      await narrationAudioService.generateFromSlideData(
+              prisma,
+              slide.narrationId)
     }
 
     // Generate image
@@ -215,7 +214,7 @@ export class SlideshowMutateService {
         BaseDataTypes.activeStatus,
         undefined,  // slideTemplate.title
         undefined,  // text
-        narrationId,
+        undefined,  // narrationId
         generatedImageId)
   }
 }
