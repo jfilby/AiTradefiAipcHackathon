@@ -13,6 +13,14 @@ Load the analyses into the Analysis records.
 npm run ts-script load-analyses
 
 
+## Run setup
+
+This will apply the currently selected LLMs (their Tech records) to the active
+Analysis records.
+
+npm run ts-script setup
+
+
 ## Setup Serene AI tech provider keys
 
 Run this command, you will be prompted for the locations of the AI tech
@@ -37,14 +45,6 @@ The format of the file is as follows:
 
 - Name should be short but descriptive of the API key.
 - Pricing tier can be "free" or "paid".
-
-
-## Run setup
-
-This will apply the currently selected LLMs (their Tech records) to the active
-Analysis records.
-
-npm run ts-script setup
 
 
 ## Add a slideshow to the showcase
