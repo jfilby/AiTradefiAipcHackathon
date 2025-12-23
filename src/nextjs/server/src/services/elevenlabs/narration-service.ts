@@ -42,13 +42,16 @@ export class NarrationAudioService {
 
       const elevenLabsSettings = settingsByTone[tone]
 
+      // Process message text for narration
+      const text = this.processTextForNarration(message.text)
+
       // Generate TTS if enabled
       const audioBuffer = await
             elevenLabsService.generateTtsBufferIfEnabled(
               prisma,
               userProfileId,
               ElevenLabsDefaults.defaultVoiceName,
-              message.text,
+              text,
               elevenLabsSettings)
 
       // Yield
@@ -88,6 +91,9 @@ export class NarrationAudioService {
 
       const elevenLabsSettings = settingsByTone[narrationSegment.tone]
 
+      // Process message text for narration
+      const text = this.processTextForNarration(narrationSegment.text)
+
       // Define relativePath
       const relativePath =
         `/audio/narrations/${narrationId}/${narrationSegment.id}.mp3`
@@ -97,7 +103,7 @@ export class NarrationAudioService {
               elevenLabsService.generateTtsAndSave(
                 prisma,
                 ElevenLabsDefaults.defaultVoiceName,
-                narrationSegment.text,
+                text,
                 relativePath,
                 elevenLabsSettings)
 
@@ -113,5 +119,21 @@ export class NarrationAudioService {
 
   isNarrationTone(value: string): value is NarrationTones {
     return Object.values(NarrationTones).includes(value as NarrationTones)
+  }
+
+  processTextForNarration(input: string) {
+
+    const result = this.replaceCaseInsensitive(
+      input,
+      'aitradefi',
+      'a-i-trade-fi')
+
+    return result
+  }
+
+  replaceCaseInsensitive(input: string, findStr: string, replaceStr: string) {
+
+    const regex = new RegExp(findStr, 'gi')
+    return input.replace(regex, replaceStr)
   }
 }
