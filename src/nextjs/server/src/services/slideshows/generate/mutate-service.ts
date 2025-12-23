@@ -175,12 +175,12 @@ export class SlideshowMutateService {
     // console.log(`${fnName}: slideId: ${slide.id} ` +
     //             `narrateAudio: ${narrateAudio}`)
 
-    // Generate audio
-    var generatedAudioId: string | null = null
+    // Generate narration audio
+    var narrationId: string | null = null
 
     if (narrateAudio === true) {
 
-      generatedAudioId = await
+      narrationId = await
         genSlideAudioService.generate(
           prisma,
           slide)
@@ -215,8 +215,7 @@ export class SlideshowMutateService {
         BaseDataTypes.activeStatus,
         undefined,  // slideTemplate.title
         undefined,  // text
-        undefined,  // narratedText
-        generatedAudioId,
+        narrationId,
         generatedImageId)
   }
 }

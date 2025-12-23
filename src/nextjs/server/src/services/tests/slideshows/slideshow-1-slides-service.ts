@@ -1,13 +1,20 @@
 import { Analysis, PrismaClient, Slideshow, SlideTemplate } from '@prisma/client'
+import { CustomError } from '@/serene-core-server/types/errors'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
+import { NarrationTones } from '@/types/elevenlabs-types'
+import { ServerTestTypes } from '@/types/server-test-types'
 import { GeneratedAudioModel } from '@/models/generated-media/generated-audio-model'
 import { GeneratedImageModel } from '@/models/generated-media/generated-image-model'
+import { NarrationModel } from '@/models/slideshows/narration-model'
+import { NarrationSegmentModel } from '@/models/slideshows/narration-segment-model'
 import { SlideModel } from '@/models/slideshows/slide-model'
 import { SlideTemplateModel } from '@/models/slideshows/slide-template-model'
 
 // Models
 const generatedAudioModel = new GeneratedAudioModel()
 const generatedImageModel = new GeneratedImageModel()
+const narrationModel = new NarrationModel()
+const narrationSegmentModel = new NarrationSegmentModel()
 const slideModel = new SlideModel()
 const slideTemplateModel = new SlideTemplateModel()
 
@@ -69,11 +76,25 @@ export class Slideshow1SlidesService {
           slideshow: Slideshow,
           slideTemplate: SlideTemplate) {
 
-    // Get the audioPath for slideNo 1
-    const generatedAudio = await
-            generatedAudioModel.getByUniqueKey(
-              prisma,
-              `/audio/nvda-test/overview.mp3`)
+    // Get existing slide 1 if present
+    var introSlide = await
+          slideModel.getByUniqueKey1(
+            prisma,
+            slideshow.id,
+            slideTemplate.id)
+
+    // Get/setup narration
+    var narrationId: string | null = null
+
+    if (introSlide?.narrationId != null) {
+      narrationId = introSlide.narrationId
+
+    } else {
+      const narration = await
+              this.setupSlide1Narration(prisma)
+
+      narrationId = narration.id
+    }
 
     // Get the imagePath for slideNo 1
     const generatedImage = await
@@ -82,19 +103,82 @@ export class Slideshow1SlidesService {
               `/images/nvda-test/nvda-invest-logo.png`)
 
     // Create the intro slide
-    const introSlide = await
-            slideModel.upsert(
+    introSlide = await
+      slideModel.upsert(
+        prisma,
+        undefined,  // id
+        slideshow.id,
+        slideTemplate.id,
+        slideTemplate.slideNo,
+        BaseDataTypes.activeStatus,
+        slideTemplate.title,
+        slideTemplate.textPrompt,
+        narrationId,
+        generatedImage.id)
+  }
+
+  async setupSlide1Narration(
+          prisma: PrismaClient) {
+
+    // Debug
+    const fnName = `${this.clName}.setupSlide1Narration()`
+
+    // Get the GeneratedAudios for slideNo 1
+    const generatedAudio1 = await
+            generatedAudioModel.getByUniqueKey(
               prisma,
-              undefined,  // id
-              slideshow.id,
-              slideTemplate.id,
-              slideTemplate.slideNo,
+              `/audio/nvda-test/overview-1.mp3`)
+
+    const generatedAudio2 = await
+            generatedAudioModel.getByUniqueKey(
+              prisma,
+              `/audio/nvda-test/overview-2.mp3`)
+
+    // Validate
+    if (generatedAudio1 == null) {
+      throw new CustomError(
+        `${fnName}: test generated audio 1 not found: first run the audio ` +
+        `test`)
+    }
+
+    if (generatedAudio2 == null) {
+      throw new CustomError(
+        `${fnName}: test generated audio 2 not found: first run the audio ` +
+        `test`)
+    }
+
+    // Create Narration
+    const narration = await
+            narrationModel.create(
+              prisma,
               BaseDataTypes.activeStatus,
-              slideTemplate.title,
-              slideTemplate.textPrompt,
-              null,       // narratedText
-              generatedAudio.id,
-              generatedImage.id)
+              ServerTestTypes.testNarrationUniqueRef)
+
+    // Create NarrationSegments
+    const narrationSegment1 = await
+            narrationSegmentModel.create(
+              prisma,
+              narration.id,
+              generatedAudio1.id,
+              0,     // sentenceIndex
+              0,     // segmentIndex
+              `NVDA overview (segment 1)`,
+              NarrationTones.confident,
+              null)  // pauseMsAfter
+
+    const narrationSegment2 = await
+            narrationSegmentModel.create(
+              prisma,
+              narration.id,
+              generatedAudio2.id,
+              0,     // sentenceIndex
+              1,     // segmentIndex
+              `NVDA overview (segment 2)`,
+              NarrationTones.slightlyExcited,
+              null)  // pauseMsAfter
+
+    // Return
+    return narration
   }
 
   async setupSlide2(
@@ -113,8 +197,7 @@ export class Slideshow1SlidesService {
               BaseDataTypes.activeStatus,
               slideTemplate.title,
               slideTemplate.textPrompt,
-              null,       // narratedText
-              null,       // generatedAudioId
+              null,       // narrationId
               null)       // generatedImageId
   }
 
@@ -134,9 +217,8 @@ export class Slideshow1SlidesService {
               BaseDataTypes.activeStatus,
               slideTemplate.title,
               slideTemplate.textPrompt,
-              null,       // narratedText
-              null,  // generatedAudioId
-              null)  // generatedImageId
+              null,       // narrationId
+              null)       // generatedImageId
   }
 
   async setupSlide4(
@@ -155,8 +237,7 @@ export class Slideshow1SlidesService {
               BaseDataTypes.activeStatus,
               slideTemplate.title,
               slideTemplate.textPrompt,
-              null,       // narratedText
-              null,       // generatedAudioId
+              null,       // narrationId
               null)       // generatedImageId
   }
 
@@ -176,8 +257,7 @@ export class Slideshow1SlidesService {
               BaseDataTypes.activeStatus,
               slideTemplate.title,
               slideTemplate.textPrompt,
-              null,       // narratedText
-              null,       // generatedAudioId
+              null,       // narrationId
               null)       // generatedImageId
   }
 
@@ -197,8 +277,7 @@ export class Slideshow1SlidesService {
               BaseDataTypes.activeStatus,
               slideTemplate.title,
               slideTemplate.textPrompt,
-              null,       // narratedText
-              null,       // generatedAudioId,
+              null,       // narrationId,
               null)       // generatedImageId
   }
 }

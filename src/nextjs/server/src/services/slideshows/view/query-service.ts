@@ -140,7 +140,8 @@ export class SlideshowsQueryService {
               prisma,
               slideshowId,
               true,  // includeSlides
-              true)  // includeTradeAnalysis
+              true,  // includeTradeAnalysis
+              true)  // includeNarration
 
     // Adjust slides name
     slideshow.slides = slideshow.ofSlides
@@ -152,6 +153,12 @@ export class SlideshowsQueryService {
 
     // Additional slide processing
     for (const slide of slideshow.slides) {
+
+      // Fix narration field name to segments
+      if (slide.narration?.ofNarrationSegments != null) {
+
+        slide.narration = slide.narration.ofNarrationSegments
+      }
 
       // Adjust new-lines (double single new-lines)
       if (slide.text != null) {

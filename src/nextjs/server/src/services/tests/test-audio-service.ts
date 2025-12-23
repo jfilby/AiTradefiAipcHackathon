@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { ElevenLabsTypes } from '@/shared/types/elevenlabs-types'
+import { ElevenLabsDefaults, NarrationTones, settingsByTone } from '@/types/elevenlabs-types'
 import { ElevenLabsService } from '../elevenlabs/service'
 
 // Services
@@ -22,16 +22,46 @@ export class CreateTestAudioService {
     // Debug
     const fnName = `${this.clName}.testTTS()`
 
+    // Call tests
+    await this.testTts1(prisma)
+    await this.testTts2(prisma)
+  }
+
+  async testTts1(prisma: PrismaClient) {
+
     // Consts
-    const prompt = `This is an overview of the NVDA stock's potential.`
-    const relativePath = `/audio/nvda-test/overview.mp3`
+    const prompt = `This is an overview of`
+    const relativePath = `/audio/nvda-test/overview-1.mp3`
+
+    // Get ElevenLabsSettings by tone
+    const elevenLabsSettings = settingsByTone[NarrationTones.confident]
 
     // Generate text-to-speech and save it
     const generatedAudio = await
             elevenLabsService.generateTtsAndSave(
               prisma,
-              ElevenLabsTypes.defaultVoiceName,
+              ElevenLabsDefaults.defaultVoiceName,
               prompt,
-              relativePath)
+              relativePath,
+              elevenLabsSettings)
+  }
+
+  async testTts2(prisma: PrismaClient) {
+
+    // Consts
+    const prompt = `the NVDA stock's potential.`
+    const relativePath = `/audio/nvda-test/overview-2.mp3`
+
+    // Get ElevenLabsSettings by tone
+    const elevenLabsSettings = settingsByTone[NarrationTones.slightlyExcited]
+
+    // Generate text-to-speech and save it
+    const generatedAudio = await
+            elevenLabsService.generateTtsAndSave(
+              prisma,
+              ElevenLabsDefaults.defaultVoiceName,
+              prompt,
+              relativePath,
+              elevenLabsSettings)
   }
 }

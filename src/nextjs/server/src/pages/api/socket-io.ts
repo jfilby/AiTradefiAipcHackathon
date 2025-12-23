@@ -3,8 +3,8 @@ import express from 'express'
 import http from 'http'
 import { prisma } from '@/db'
 import { Server as SocketIoServer } from 'socket.io'
-import { ElevenLabsService } from '@/services/elevenlabs/service'
 import { ChatSessionTurnService } from '@/services/instance-chats/chat-session-turn'
+import { NarrationAudioService } from '@/services/elevenlabs/narration-service'
 
 // const prisma = new PrismaClient()
 const app = express()
@@ -19,8 +19,8 @@ const io = new SocketIoServer(
                  })
 
 // Services
-const elevenLabsService = new ElevenLabsService()
 const chatSessionTurnService = new ChatSessionTurnService()
+const narrationAudioService = new NarrationAudioService()
 
 // On socket.io events
 io.on('connection', (socket) => {
@@ -99,9 +99,9 @@ io.on('connection', (socket) => {
     // Return the reply
     io.to(chatSessionId).emit('message', replyData)
 
-    // TTS if enabled
+    // Generate narration audio
     const audioBuffer = await
-            elevenLabsService.generateTtsFromChatMessagesIfEnabled(
+            narrationAudioService.generateFromReplyData(
               prisma,
               userProfileId,
               replyData)

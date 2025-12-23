@@ -29,10 +29,6 @@ export default function ViewSlide({
                         }: Props) {
 
   // Const
-  const audioUrl = slide.generatedAudioId ?
-    `${process.env.NEXT_PUBLIC_API_URL}/api/audio/${slide.generatedAudioId}/get` :
-    undefined
-
   const imageUrl = slide.generatedImageId ?
     `${process.env.NEXT_PUBLIC_API_URL}/api/image/${slide.generatedImageId}/get` :
     undefined
@@ -97,14 +93,59 @@ export default function ViewSlide({
 
     // console.log(`playing audio..`)
 
+    // Stop any existing audio
     fadeOutAndStop()
 
-    const audio = new Audio(audioUrl)
-    audioRef.current = audio
+    // Return if no validation
+    if (slide.narration == null) {
+      return
+    }
 
-    audio.play().catch(err => {
-      console.warn(`Audio play failed: `, err)
-    })
+    // Wait function
+    const wait = (ms: number) => new Promise(res => setTimeout(res, ms))
+
+    // Process narration
+    var prevSentenceIndex = 0
+    var prevPauseMs = 0
+
+    for (const narrationSegment of slide.narration) {
+
+      // Get the URL
+      const audioUrl = narrationSegment.generatedAudioId ?
+        `${process.env.NEXT_PUBLIC_API_URL}/api/audio/${narrationSegment.generatedAudioId}/get` :
+        undefined
+
+      // Skip if audio URL not found
+      if (!audioUrl) continue
+
+      // Pause before new sentence?
+      if (narrationSegment.sentenceIndex > prevSentenceIndex &&
+          prevPauseMs == null ||
+          prevPauseMs === 0) {
+
+        wait(300)
+      }
+
+      // Play segment's audio
+      await new Promise<void>((resolve, reject) => {
+        const audio = new Audio(audioUrl)
+        audioRef.current = audio
+
+        audio.addEventListener('ended', () => resolve(), { once: true })
+        audio.addEventListener('error', (e) => reject(e), { once: true })
+
+        audio.play().catch(reject)
+      })
+
+      // Pause after?
+      if (narrationSegment.pauseMsAfter != null) {
+        await wait(narrationSegment.pauseMsAfter)
+      }
+
+      // Set prevSentenceIndex
+      prevSentenceIndex = narrationSegment.sentenceIndex
+      prevPauseMs = narrationSegment.pauseMsAfter
+    }
   }
 
   function stopAudio() {
@@ -117,8 +158,7 @@ export default function ViewSlide({
   // Effects
   useEffect(() => {
 
-    if (audioUrl != null &&
-        muteAudio === false) {
+    if (muteAudio === false) {
 
       playAudio()
     }

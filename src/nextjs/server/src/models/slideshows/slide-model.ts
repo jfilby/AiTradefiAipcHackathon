@@ -15,8 +15,7 @@ export class SlideModel {
           status: string,
           title: string,
           text: string | null,
-          narratedText: string | null,
-          generatedAudioId: string | null,
+          narrationId: string | null,
           generatedImageId: string | null) {
 
     // Debug
@@ -32,8 +31,7 @@ export class SlideModel {
           status: status,
           title: title,
           text: text,
-          narratedText: narratedText,
-          generatedAudioId: generatedAudioId,
+          narrationId: narrationId,
           generatedImageId: generatedImageId
         }
       })
@@ -241,8 +239,7 @@ export class SlideModel {
           status: string | undefined,
           title: string | undefined,
           text: string | null | undefined,
-          narratedText: string | null | undefined,
-          generatedAudioId: string | null | undefined,
+          narrationId: string | null | undefined,
           generatedImageId: string | null | undefined) {
 
     // Debug
@@ -258,8 +255,7 @@ export class SlideModel {
           status: status,
           title: title,
           text: text,
-          narratedText: narratedText,
-          generatedAudioId: generatedAudioId,
+          narrationId: narrationId,
           generatedImageId: generatedImageId
         },
         where: {
@@ -281,8 +277,7 @@ export class SlideModel {
           status: string | undefined,
           title: string | undefined,
           text: string | null | undefined,
-          narratedText: string | null | undefined,
-          generatedAudioId: string | null | undefined,
+          narrationId: string | null | undefined,
           generatedImageId: string | null | undefined) {
 
     // Debug
@@ -353,13 +348,8 @@ export class SlideModel {
         throw 'Prisma error'
       }
 
-      if (narratedText === undefined) {
-        console.error(`${fnName}: id is null and narratedText is undefined`)
-        throw 'Prisma error'
-      }
-
-      if (generatedAudioId === undefined) {
-        console.error(`${fnName}: id is null and generatedAudioId is undefined`)
+      if (narrationId === undefined) {
+        console.error(`${fnName}: id is null and narrationId is undefined`)
         throw 'Prisma error'
       }
 
@@ -378,8 +368,7 @@ export class SlideModel {
                  status,
                  title,
                  text,
-                 narratedText,
-                 generatedAudioId,
+                 narrationId,
                  generatedImageId)
     } else {
 
@@ -394,8 +383,7 @@ export class SlideModel {
                  status,
                  title,
                  text,
-                 narratedText,
-                 generatedAudioId,
+                 narrationId,
                  generatedImageId)
     }
   }

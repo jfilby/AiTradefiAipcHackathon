@@ -7,6 +7,9 @@ export class ServerTestTypes {
   // Analyses
   static testAnalysisVersion = '1.0.0'
 
+  // Narrations
+  static testNarrationUniqueRef = 'slideshow-1 (test)'
+
   // Stock symbols
   static nvdaSymbol = 'NVDA'
 }

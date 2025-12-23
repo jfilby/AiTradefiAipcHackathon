@@ -23,7 +23,10 @@ export const getSlideshowQuery = gql`
           title
           text
           slideNo
-          generatedAudioId
+          narration {
+            generatedAudioId
+            pauseMsAfter
+          }
           generatedImageId
 
           isTextSlide
@@ -59,7 +62,10 @@ export const getSlideshowsQuery = gql`
           title
           text
           slideNo
-          generatedAudioId
+          narration {
+            generatedAudioId
+            pauseMsAfter
+          }
           generatedImageId
         }
         tradeAnalysis {

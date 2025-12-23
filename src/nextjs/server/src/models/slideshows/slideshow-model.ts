@@ -107,7 +107,8 @@ export class SlideshowModel {
           prisma: PrismaClient,
           id: string,
           includeSlides: boolean = false,
-          includeTradeAnalysis: boolean = false) {
+          includeTradeAnalysis: boolean = false,
+          includeNarration: boolean = false) {
 
     // Debug
     const fnName = `${this.clName}.getById()`
@@ -120,6 +121,11 @@ export class SlideshowModel {
         include: {
           ofSlides: includeSlides ? {
             include: {
+              narration: includeNarration ? {
+                include: {
+                  ofNarrationSegments: true
+                }
+              } : undefined,
               slideTemplate: true
             },
             orderBy: [

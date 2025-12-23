@@ -1,8 +1,11 @@
-import { PrismaClient, SlideTemplate, Tech, TradeAnalysis } from '@prisma/client'
+import { PrismaClient, SlideTemplate, TradeAnalysis } from '@prisma/client'
 import { CustomError } from '@/serene-core-server/types/errors'
 import { UsersService } from '@/serene-core-server/services/users/service'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
+import { NarrationTones } from '@/types/elevenlabs-types'
 import { ServerTestTypes } from '@/types/server-test-types'
+import { NarrationModel } from '@/models/slideshows/narration-model'
+import { NarrationSegmentModel } from '@/models/slideshows/narration-segment-model'
 import { SlideModel } from '@/models/slideshows/slide-model'
 import { SlideTemplateModel } from '@/models/slideshows/slide-template-model'
 import { GenSlideTextLlmService } from './gen-text-llm-service'
@@ -10,6 +13,8 @@ import { GetTechService } from '../../tech/get-tech-service'
 import { YFinanceQueryService } from '../../external-data/yfinance/query-service'
 
 // Models
+const narrationModel = new NarrationModel()
+const narrationSegmentModel = new NarrationSegmentModel()
 const slideModel = new SlideModel()
 const slideTemplateModel = new SlideTemplateModel()
 
@@ -89,6 +94,8 @@ export class GenSlideTextService {
           tradeAnalysis: TradeAnalysis,
           slideTemplates: SlideTemplate[]) {
 
+    const narrationTones = JSON.stringify(NarrationTones)
+
     // Define the prompt
     var prompt =
       `## General instructions\n` +
@@ -108,23 +115,30 @@ export class GenSlideTextService {
       `  than one point. Use hyphens as bullet points, don't go more than ` +
       `  one level deep.\n` +
       `\n` +
-      `## Narrated text\n` +
+      `## Narration\n` +
       `\n` +
-      `- If a slideTemplate has an audioPrompt that use it to generate a ` +
-      `  narratedText field.\n` +
-      `- The narratedText should be 1-2 sentences:\n` +
+      `If a slideTemplate has an audioPrompt then use it to generate a ` +
+      `narration field: an array of sentences. Each sentence is an array of ` +
+      `segments. Each segment has its own text with an optional tone and ` +
+      `pause in milliseconds.\n` +
+      `\n` +
+      `Stick to one segment per sentence.\n` +
+      `\n` +
+      `- The narration should be 1-2 sentences:\n` +
       `  Sentence 1: restates the core point in natural language\n` +
       `  Sentence 2: adds insight or implication\n` +
       `\n` +
-      `You can apply the following tones to the narratedText, but only one ` +
-      `per sentence at most (don't overdo it):\n` +
+      `Recommended tones:\n` +
       `- Base narration: [neutral] or [calm]\n` +
       `- Use [emphasize] or [slightly excited] for numbers, trends, or key ` +
       `  conclusions\n` +
       `- Key numbers / insights: [slightly excited] or [confident]\n` +
       `- Methodology / risk discussion: [calm] or [analytical]\n` +
       `\n` +
-      `Insert each tone at the start of the sentence (as in the example).\n` +
+      `The available tones are: ${narrationTones}\n` +
+      `\n` +
+      `Use the sentenceIndex and segmentIndex to structure the text with ` +
+      `speech settings.\n` +
       `\n` +
       `## Example\n` +
       `[\n` +
@@ -133,7 +147,22 @@ export class GenSlideTextService {
       `    "title": "NVDA as a long-term investment",\n` +
       `    "text": "This slideshow explains why NVDA is a good long-term ` +
       `    investment.",\n` +
-      `    "narratedText": "[calm]Why NVDA is a good investment."\n` +
+      `    "narration": [\n"` +
+      `      {\n` +
+      `        "segments: [\n` +
+      `          {\n` +
+      `            "text": "Why NVDA is a",\n` +
+      `            "tone": "confident",\n` +
+      `            "pauseMsAfter": 100\n` +
+      `          },\n` +
+      `          {\n` +
+      `            "text": "good investment",\n` +
+      `            "tone": "slightly excited"\n` +
+      `            }\n` +
+      `          }\n` +
+      `        ]\n` +
+      `      }\n` +
+      `    ]\n` +
       `  }\n` +
       `]\n` +
       `\n` +
@@ -187,6 +216,60 @@ export class GenSlideTextService {
     return prompt
   }
 
+  async processNarration(
+          prisma: PrismaClient,
+          narrationEntry: any[]) {
+
+    // Debug
+    const fnName = `${this.clName}.generate()`
+
+    // Create a Narration
+    var narration = await
+          narrationModel.create(
+            prisma,
+            BaseDataTypes.newStatus,
+            null)  // uniqueRef
+
+    // Process each sentence
+    var sentenceIndex = 0
+
+    for (const sentence of narrationEntry) {
+
+      // Process each segment
+      var segmentIndex = 0
+
+      for (const segment of sentence.segments) {
+
+        const narrationSegment = await
+                narrationSegmentModel.create(
+                  prisma,
+                  narration.id,
+                  null,  // generatedAudioId
+                  sentenceIndex,
+                  segmentIndex,
+                  segment.text,
+                  segment.tone,
+                  segment.pauseMsAfter)
+
+        // Inc segmentIndex
+        segmentIndex += 1
+      }
+
+      // Inc sentenceIndex
+      sentenceIndex += 1
+    }
+
+    // Set Narration to active
+    narration = await
+      narrationModel.update(
+        prisma,
+        narration.id,
+        BaseDataTypes.activeStatus)
+
+    // Return
+    return narration
+  }
+
   async processQueryResults(
           prisma: PrismaClient,
           slideshowId: string,
@@ -209,6 +292,12 @@ export class GenSlideTextService {
                 analysisId,
                 entry.slideNo)
 
+      // Get/create Narration
+      const narration = await
+              this.processNarration(
+                prisma,
+                entry.narration)
+
       // Upsert Slide (with new status)
       const slide = await
               slideModel.upsert(
@@ -220,8 +309,7 @@ export class GenSlideTextService {
                 BaseDataTypes.newStatus,
                 entry.title,
                 entry.text,
-                entry.narratedText,
-                null,         // generatedAudioId
+                narration.id,
                 null)         // generatedImageId
     }
   }

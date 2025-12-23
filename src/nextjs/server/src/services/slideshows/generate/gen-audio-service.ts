@@ -1,9 +1,8 @@
 import { PrismaClient, Slide } from '@prisma/client'
-import { ElevenLabsTypes } from '@/shared/types/elevenlabs-types'
-import { ElevenLabsService } from '@/services/elevenlabs/service'
+import { NarrationAudioService } from '@/services/elevenlabs/narration-service'
 
 // Services
-const elevenLabsService = new ElevenLabsService()
+const narrationAudioService = new NarrationAudioService()
 
 // Class
 export class GenSlideAudioService {
@@ -19,24 +18,18 @@ export class GenSlideAudioService {
     // Debug
     const fnName = `${this.clName}.generate()`
 
-    // Validate
-    if (slide.narratedText == null) {
-      return null
-    }
-
     // Define relativePath
     const relativePath =
             `/audio/slideshows/${slide.slideshowId}/slide_${slide.id}.mp3`
 
     // Generate narration
-    const generatedAudio = await
-            elevenLabsService.generateTtsAndSave(
+    const narration = await
+            narrationAudioService.generateFromSlideData(
               prisma,
-              ElevenLabsTypes.defaultVoiceName,
               slide.narratedText,
               relativePath)
 
     // Return
-    return generatedAudio.id
+    return narration.id
   }
 }

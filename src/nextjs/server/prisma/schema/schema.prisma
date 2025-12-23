@@ -419,6 +419,37 @@ model YFinanceQuote {
 
 // AiTradefi: Slideshows
 
+model NarrationSegment {
+  // Generated audio is typically generated in a 2nd stage, and that's why
+  // generatedAudioId is nullable.
+  id                           String               @id @default(cuid())
+  narrationId                  String               @map("narration_id")
+  narration                    Narration            @relation(fields: [narrationId], references: [id])
+  generatedAudioId             String?              @map("generated_audio_id")
+  generatedAudio               GeneratedAudio?      @relation(fields: [generatedAudioId], references: [id])
+  sentenceIndex                Int                  @map("sentence_index")  // 0-based index
+  segmentIndex                 Int                  @map("segment_index")   // 0-based index
+  text                         String
+  tone                         String
+  pauseMsAfter                 Int?                 @map("pause_ms_after")
+
+  @@unique([narrationId, sentenceIndex, segmentIndex])
+  @@map("narration_segment")
+  @@schema("public")
+}
+
+model Narration {
+  id                           String               @id @default(cuid())
+  status                       String               @db.Char(1)
+  uniqueRef                    String?              @unique  // Optional unique ref, e.g. for testing
+
+  ofNarrationSegments          NarrationSegment[]
+  ofSlides                     Slide[]
+
+  @@map("narration")
+  @@schema("public")
+}
+
 model Slide {
   // The slideshowId/index, with a separate slideNo field, allows slides to be
   // set to delete pending (status).
@@ -431,9 +462,8 @@ model Slide {
   status                       String               @db.Char(1)
   title                        String
   text                         String?
-  narratedText                 String?              @map("narrated_text")
-  generatedAudioId             String?              @map("generated_audio_id")
-  generatedAudio               GeneratedAudio?      @relation(fields: [generatedAudioId], references: [id])
+  narrationId                  String?              @map("narration_id")
+  narration                    Narration?           @relation(fields: [narrationId], references: [id])
   generatedImageId             String?              @map("generated_image_id")
   generatedImage               GeneratedImage?      @relation(fields: [generatedImageId], references: [id])
   created                      DateTime             @default(now())
@@ -508,7 +538,7 @@ model GeneratedAudio {
   prompt                       String
   relativePath                 String               @map("relative_path") @unique
 
-  ofSlides                     Slide[]
+  ofNarrationSegments          NarrationSegment[]
 
   @@map("generated_audio")
   @@schema("public")

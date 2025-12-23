@@ -7,7 +7,7 @@ import { PrismaClient } from '@prisma/client'
 import { CustomError } from '@/serene-core-server/types/errors'
 import { UserPreferenceModel } from '@/serene-core-server/models/users/user-preference-model'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
-import { ElevenLabsTypes } from '@/shared/types/elevenlabs-types'
+import { ElevenLabsDefaults, ElevenLabsSettings } from '@/types/elevenlabs-types'
 import { UserPreferenceCategories, UserPreferenceKeys } from '@/types/server-only-types'
 import { ElevenLabsVoiceModel } from '@/models/generated-media/elevenlabs-voice-model'
 import { GeneratedAudioModel } from '@/models/generated-media/generated-audio-model'
@@ -66,7 +66,8 @@ export class ElevenLabsService {
   async generateTtsBuffer(
           voiceId: string,
           text: string,
-          outputFormat: string = ElevenLabsTypes.defaultOutputFormat) {
+          outputFormat: string = ElevenLabsDefaults.defaultOutputFormat,
+          elevenLabsSettings: ElevenLabsSettings) {
 
     // Debug
     const fnName = `${this.clName}.generateTtsBuffer()`
@@ -79,8 +80,10 @@ export class ElevenLabsService {
         modelId: 'eleven_turbo_v2',
         outputFormat: outputFormat as TextToSpeechConvertRequestOutputFormat,
         voiceSettings: {
-          stability: 0.5,
-          similarityBoost: 0.8,
+          stability: elevenLabsSettings.stability ?? ElevenLabsDefaults.stability,
+          similarityBoost: elevenLabsSettings.similarityBoost ?? ElevenLabsDefaults.similarityBoost,
+          style: elevenLabsSettings.style,
+          speed: elevenLabsSettings.speed
         },
       })
 
@@ -104,7 +107,8 @@ export class ElevenLabsService {
           prisma: PrismaClient,
           voiceName: string,
           text: string,
-          outputFormat: string = ElevenLabsTypes.defaultOutputFormat) {
+          outputFormat: string = ElevenLabsDefaults.defaultOutputFormat,
+          elevenLabsSettings: ElevenLabsSettings) {
 
     // Debug
     const fnName = `${this.clName}.generateTts()`
@@ -124,7 +128,8 @@ export class ElevenLabsService {
             this.generateTtsBuffer(
               elevenLabsVoice.voiceId,
               text,
-              outputFormat) 
+              outputFormat,
+              elevenLabsSettings)
 
     // Return
     return {
@@ -138,7 +143,8 @@ export class ElevenLabsService {
           prisma: PrismaClient,
           voiceName: string,
           text: string,
-          relativePath: string) {
+          relativePath: string,
+          elevenLabsSettings: ElevenLabsSettings) {
 
     // Debug
     const fnName = `${this.clName}.generateTtsAndSave()`
@@ -162,7 +168,9 @@ export class ElevenLabsService {
             this.generateTts(
               prisma,
               voiceName,
-              text)
+              text,
+              undefined,  // outputFormat
+              elevenLabsSettings)
 
     // Determine filename
     const filename = `${process.env.BASE_DATA_PATH}${relativePath}`
@@ -196,7 +204,8 @@ export class ElevenLabsService {
           prisma: PrismaClient,
           userProfileId: string,
           voiceName: string,
-          text: string) {
+          text: string,
+          elevenLabsSettings: ElevenLabsSettings) {
 
     // Debug
     const fnName = `${this.clName}.generateTtsBufferIfEnabled()`
@@ -227,7 +236,9 @@ export class ElevenLabsService {
     const buffer = await
             this.generateTtsBuffer(
               elevenLabsVoice.voiceId,
-              text)
+              text,
+              undefined,  // outputFormat
+              elevenLabsSettings)
 
     // Return
     return buffer
@@ -236,7 +247,8 @@ export class ElevenLabsService {
   async generateTtsFromChatMessagesIfEnabled(
           prisma: PrismaClient,
           userProfileId: string,
-          textReplyData: any) {
+          textReplyData: any,
+          elevenLabsSettings: ElevenLabsSettings) {
 
     // Messages to text
     var text = ''
@@ -255,8 +267,9 @@ export class ElevenLabsService {
             this.generateTtsBufferIfEnabled(
               prisma,
               userProfileId,
-              ElevenLabsTypes.defaultVoiceName,
-              text)
+              ElevenLabsDefaults.defaultVoiceName,
+              text,
+              elevenLabsSettings)
 
     // Return
     return buffer

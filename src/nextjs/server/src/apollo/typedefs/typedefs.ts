@@ -175,6 +175,11 @@ export const typeDefs = `#graphql
     instruments: [Instrument]
   }
 
+  type NarrationSegment {
+    generatedAudioId: String
+    pauseMsAfter: Int
+  }
+
   type ServerStartData {
     status: Boolean!
     message: String
@@ -188,7 +193,7 @@ export const typeDefs = `#graphql
     title: String!
     text: String
     slideNo: Int!
-    generatedAudioId: String
+    narration: [NarrationSegment]
     generatedImageId: String
 
     isTextSlide: Boolean!
