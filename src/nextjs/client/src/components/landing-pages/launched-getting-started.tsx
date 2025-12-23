@@ -56,6 +56,13 @@ export default function GettingStartedDetails({
           Get started
         </Button>
 
+        <Button
+          style={{ marginLeft: '1em' }}
+          onClick={(e: any) => window.location.href = `/slideshows/showcase`}
+          variant='contained'>
+          Showcase
+        </Button>
+
         {/* <Button
           style={{ marginLeft: '1em' }}
           onClick={(e: any) => window.location.href = `/account/subscription`}

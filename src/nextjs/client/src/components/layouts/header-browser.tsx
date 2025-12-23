@@ -62,6 +62,12 @@ export function HeaderBrowser({ highLevelLink }: Props) {
       <div style={{ textAlign: 'right' }}>
         <Typography variant='body1'>
           <HeaderBrowserLink
+            name='Showcase'
+            linkName='slideshows/showcase'
+            highLevelLink={highLevelLink} />
+          &nbsp;
+          &nbsp;
+          <HeaderBrowserLink
             name='About'
             linkName='about'
             highLevelLink={highLevelLink} />

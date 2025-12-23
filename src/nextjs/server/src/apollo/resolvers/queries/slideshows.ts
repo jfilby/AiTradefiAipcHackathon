@@ -46,3 +46,22 @@ export async function getSlideshows(
   // Return
   return results
 }
+
+export async function getSlideshowShowcase(
+                        parent: any,
+                        args: any,
+                        context: any,
+                        info: any) {
+
+  // Debug
+  const fnName = `getSlideshowShowcase()`
+
+  console.log(`${fnName}: args: ` + JSON.stringify(args))
+
+  // Get instruments
+  const results = await
+          slideshowsQueryService.getShowcase(prisma)
+
+  // Return
+  return results
+}

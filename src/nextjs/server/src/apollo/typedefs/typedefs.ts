@@ -384,6 +384,7 @@ export const typeDefs = `#graphql
       userProfileId: String!,
       instanceId: String,
       analysisId: String): SlideshowsResults!
+    getSlideshowShowcase: SlideshowsResults!
 
     # Trade analyses
     getTradeAnalysisById(

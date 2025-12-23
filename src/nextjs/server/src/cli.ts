@@ -9,6 +9,7 @@ import { ServerTestTypes } from './types/server-test-types'
 import { FinnHubApiServiceTests } from './services/external-data/finnhub/api-service-tests'
 import { SetupAnalysesService } from './services/analysis/setup-service'
 import { SetupService } from './services/setup/setup'
+import { SlideshowShowcaseService } from './services/setup/slideshow-showcase-service'
 import { TestsService } from './services/tests/tests-service'
 
 // Main
@@ -19,12 +20,14 @@ import { TestsService } from './services/tests/tests-service'
 
   // Consts
   const loadAnalysesCommand = 'load-analyses'
+  const loadSlideshowToShowcaseCommand = 'load-slideshow-to-showcase'
   const loadTechProviderApiKeysCommand = 'load-tech-provider-api-keys'
   const setupCommand = 'setup'
   const testsCommand = 'tests'
 
   const commands = [
           loadAnalysesCommand,
+          loadSlideshowToShowcaseCommand,
           loadTechProviderApiKeysCommand,
           setupCommand,
           testsCommand
@@ -39,6 +42,7 @@ import { TestsService } from './services/tests/tests-service'
   const setupAnalysesService = new SetupAnalysesService()
   const setupService = new SetupService()
   const finnHubApiServiceTests = new FinnHubApiServiceTests()
+  const slideshowShowcaseService = new SlideshowShowcaseService()
   const techProviderMutateService = new TechProviderMutateService()
   const testsService = new TestsService()
   const usersService = new UsersService()
@@ -65,6 +69,13 @@ import { TestsService } from './services/tests/tests-service'
       await setupAnalysesService.setup(
               prisma,
               adminUserProfile.id)
+
+      break
+    }
+
+    case loadSlideshowToShowcaseCommand: {
+
+      await slideshowShowcaseService.setup(prisma)
 
       break
     }

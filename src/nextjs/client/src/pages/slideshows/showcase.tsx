@@ -4,65 +4,51 @@ import { loadServerPage } from '@/services/page/load-server-page'
 import Layout from '@/components/layouts/layout'
 import { Typography } from '@mui/material'
 import ListSlideshows from '@/components/slideshows/list'
-import LoadSlideshowsByFilter from '@/components/slideshows/load-by-filter'
+import LoadSlideshowShowcaseByFilter from '@/components/slideshows/load-by-showcase'
 
 interface Props {
   userProfile: any
   instance: any
 }
 
-export default function SlideshowsPage({
+export default function SlideshowShowcasePage({
                           userProfile,
                           instance
                         }: Props) {
 
   // State
   const [slideshows, setSlideshows] = useState<any>(undefined)
-  const [inNewStatus, setInNewStatus] = useState<number | undefined>(undefined)
 
   // Render
   return (
     <>
       <Head>
-        <title>{process.env.NEXT_PUBLIC_APP_NAME} - Slideshows</title>
+        <title>{process.env.NEXT_PUBLIC_APP_NAME} - Slideshows showcase</title>
       </Head>
 
       <Layout userProfile={userProfile}>
 
         <div style={{ textAlign: 'left', marginBottom: '2em' }}>
 
-          {/* <p>userProfileId: {userProfile.id}</p> */}
+          {/* <p>userProfileId: {userProfile.id}</p>
+          <p>slideshows: {JSON.stringify(slideshows)}</p> */}
 
           <div>
             <Typography
               style={{ marginBottom: '1em' }}
               variant='h3'>
-              Slideshows
+              Slideshow showcase
             </Typography>
           </div>
-
-          {inNewStatus != null &&
-           inNewStatus > 0 ?
-            <Typography
-              style={{ marginBottom: '2em' }}
-              variant='body1'>
-              {inNewStatus} slideshows being generated for you..
-            </Typography>
-          :
-            <></>
-          }
 
           <ListSlideshows
             userProfileId={userProfile.id}
             instanceId={undefined}
-            slideshows={slideshows}
-            readonly={false} />
+            slideshows={slideshows} />
         </div>
 
-        <LoadSlideshowsByFilter
-          userProfileId={userProfile.id}
-          setSlideshows={setSlideshows}
-          setInNewStatus={setInNewStatus} />
+        <LoadSlideshowShowcaseByFilter
+          setSlideshows={setSlideshows} />
 
       </Layout>
     </>

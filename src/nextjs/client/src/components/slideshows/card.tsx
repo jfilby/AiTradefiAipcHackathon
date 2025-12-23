@@ -12,12 +12,14 @@ interface Props {
   userProfileId: string
   instanceId?: string
   slideshow: any
+  readonly: boolean
 }
 
 export default function SlideshowCard({
                           userProfileId,
                           instanceId,
-                          slideshow
+                          slideshow,
+                          readonly
                         }: Props) {
 
   // Consts
@@ -136,19 +138,25 @@ export default function SlideshowCard({
         </div>
         <div style={{ display: 'inline-block', height: '2em', textAlign: 'right', width: '20%' }}>
           <>
-            {thisSlideshow.status === BaseDataTypes.activeStatus ?
+            {readonly === false ?
+              <>
+                {thisSlideshow.status === BaseDataTypes.activeStatus ?
 
-              <LabeledIconButton
-                icon={DeleteIcon}
-                label='Delete'
-                onClick={(e: any) => setDeleteDialogOpen(true)}
-                style={{ marginRight: '1em' }} />
+                  <LabeledIconButton
+                    icon={DeleteIcon}
+                    label='Delete'
+                    onClick={(e: any) => setDeleteDialogOpen(true)}
+                    style={{ marginRight: '1em' }} />
+                :
+                  <LabeledIconButton
+                    icon={RestoreFromTrashIcon}
+                    label='Undelete'
+                    onClick={(e: any) => setUndeleteDialogOpen(true)}
+                    style={{ marginRight: '1em' }} />
+                }
+              </>
             :
-              <LabeledIconButton
-                icon={RestoreFromTrashIcon}
-                label='Undelete'
-                onClick={(e: any) => setUndeleteDialogOpen(true)}
-                style={{ marginRight: '1em' }} />
+              <></>
             }
           </>
         </div>

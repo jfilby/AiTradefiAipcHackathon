@@ -46,3 +46,10 @@ Analysis records.
 
 npm run ts-script setup
 
+
+## Add a slideshow to the showcase
+
+Identify the slideshow's id and run:
+
+npm run ts-script load-slideshow-to-showcase
+

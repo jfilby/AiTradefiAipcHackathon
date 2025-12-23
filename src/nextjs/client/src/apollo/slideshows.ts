@@ -82,3 +82,41 @@ export const getSlideshowsQuery = gql`
     }
   }
 `
+
+export const getSlideshowShowcaseQuery = gql`
+  query getSlideshowShowcase {
+    getSlideshowShowcase {
+
+      status
+      message
+      slideshows {
+        id
+        userProfileId
+        tradeAnalysisId
+        status
+        slides {
+          id
+          status
+          title
+          text
+          slideNo
+          narration {
+            generatedAudioId
+            pauseMsAfter
+          }
+          generatedImageId
+        }
+        tradeAnalysis {
+          instrument {
+            name
+            exchange {
+              name
+            }
+          }
+          score
+        }
+      }
+      inNewStatus
+    }
+  }
+`

@@ -209,6 +209,58 @@ export class SlideshowModel {
     }
   }
 
+  async getByShowcase(prisma: PrismaClient) {
+
+    // Debug
+    const fnName = `${this.clName}.getByShowcase()`
+
+    // console.log(`${fnName}: userProfileId: ${userProfileId}`)
+
+    // Query
+    try {
+      return await prisma.slideshow.findMany({
+        // distinct: ['tradeAnalysisId'],
+        include: {
+          tradeAnalysis: {
+            include: {
+              instrument: {
+                include: {
+                  exchange: true
+                }
+              }
+            }
+          },
+          ofSlides: {
+            orderBy: [
+              {
+                slideNo: 'asc'
+              }
+            ]
+          },
+        },
+        where: {
+          ofSlideshowShowcases: {
+            some: {}
+          },
+          status: BaseDataTypes.activeStatus
+        },
+        orderBy: [
+          {
+            tradeAnalysis: {
+              instrumentId: 'asc'
+            }
+          },
+          {
+            created: 'desc'
+          }
+        ]
+      })
+    } catch(error: any) {
+      console.error(`${fnName}: error: ${error}`)
+      throw 'Prisma error'
+    }
+  }
+
   async getByUniqueKey(
           prisma: PrismaClient,
           tradeAnalysisId: string) {

@@ -475,6 +475,16 @@ model Slide {
   @@schema("public")
 }
 
+model SlideshowShowcase {
+  id                           String               @id @default(cuid())
+  slideshowId                  String               @map("slideshow_id")
+  slideshow                    Slideshow            @relation(fields: [slideshowId], references: [id])
+  created                      DateTime             @default(now())
+
+  @@map("slideshow_showcase")
+  @@schema("public")
+}
+
 model Slideshow {
   id                           String               @id @default(cuid())
   userProfileId                String               @map("user_profile_id")
@@ -486,6 +496,7 @@ model Slideshow {
   updated                      DateTime             @updatedAt
 
   ofSlides                     Slide[]
+  ofSlideshowShowcases         SlideshowShowcase[]
 
   @@map("slideshow")
   @@schema("public")

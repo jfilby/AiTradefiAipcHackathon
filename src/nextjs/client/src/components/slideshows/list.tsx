@@ -5,12 +5,14 @@ interface Props {
   userProfileId: string
   instanceId?: string
   slideshows: any[]
+  readonly: boolean
 }
 
 export default function ListAnalyses({
                           userProfileId,
                           instanceId,
-                          slideshows
+                          slideshows,
+                          readonly
                         }: Props) {
 
   // Render
@@ -23,7 +25,8 @@ export default function ListAnalyses({
               {slideshows.map(slideshow => (
                 <SlideshowCard
                   userProfileId={userProfileId}
-                  slideshow={slideshow} />
+                  slideshow={slideshow}
+                  readonly={readonly} />
               ))}
             </>
           :

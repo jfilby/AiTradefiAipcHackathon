@@ -223,4 +223,29 @@ export class SlideshowsQueryService {
       inNewStatus: inNewStatus
     }
   }
+
+  async getShowcase(prisma: PrismaClient) {
+
+    // Debug
+    const fnName = `${this.clName}.getShowcase()`
+
+    // Query the latst Slideshows with their Slide records
+    const slideshows = await
+            slideshowModel.getByShowcase(prisma)
+
+    // Debug
+    // console.log(`${fnName}: slideshows: ` + JSON.stringify(slideshows))
+
+    // Adjust slides name
+    for (const slideshow of slideshows) {
+
+      (slideshow as any).slides = slideshow.ofSlides
+    }
+
+    // Return
+    return {
+      status: true,
+      slideshows: slideshows
+    }
+  }
 }
