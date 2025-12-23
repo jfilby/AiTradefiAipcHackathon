@@ -174,7 +174,7 @@ export class Slideshow1SlidesService {
               0,     // sentenceIndex
               1,     // segmentIndex
               `NVDA overview (segment 2)`,
-              NarrationTones.slightlyExcited,
+              NarrationTones.emphasize,
               null)  // pauseMsAfter
 
     // Return

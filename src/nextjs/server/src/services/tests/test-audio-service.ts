@@ -53,7 +53,7 @@ export class CreateTestAudioService {
     const relativePath = `/audio/nvda-test/overview-2.mp3`
 
     // Get ElevenLabsSettings by tone
-    const elevenLabsSettings = settingsByTone[NarrationTones.slightlyExcited]
+    const elevenLabsSettings = settingsByTone[NarrationTones.emphasize]
 
     // Generate text-to-speech and save it
     const generatedAudio = await

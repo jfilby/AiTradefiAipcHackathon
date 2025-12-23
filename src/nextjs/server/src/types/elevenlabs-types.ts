@@ -5,7 +5,6 @@ export enum NarrationTones {
   emphasize = 'emphasize',
   excited = 'excited',
   neutral = 'neutral',
-  slightlyExcited = 'slightly excited',
 }
 
 export interface ElevenLabsSettings {
@@ -64,12 +63,5 @@ export const settingsByTone: Record<NarrationTones, ElevenLabsSettings> = {
     similarityBoost: 0.85,
     style: 0.20,
     speed: 1.0,
-  },
-
-  'slightly excited': {
-    stability: 0.55,
-    similarityBoost: 0.80,
-    style: 0.55,
-    speed: 1.03,
   },
 }
