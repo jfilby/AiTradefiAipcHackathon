@@ -16,12 +16,12 @@ export class HousekeepingService {
     // Debug
     const fnName = `${this.clName}.run()`
 
-    console.log(`${fnName}: running..`)
+    // console.log(`${fnName}: running..`)
 
     // Delete old runs
     await tradeAnalysesGroupModel.deleteOldIncompleteRuns(prisma)
 
     // Debug
-    console.log(`${fnName}: completed`)
+    // console.log(`${fnName}: completed`)
   }
 }
