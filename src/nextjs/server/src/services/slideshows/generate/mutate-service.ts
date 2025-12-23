@@ -34,6 +34,9 @@ export class SlideshowMutateService {
           prisma: PrismaClient,
           tradeAnalysis: TradeAnalysis) {
 
+    // Debug
+    const fnName = `${this.clName}.createSlides()`
+
     // Get Analysis record
     const analysis = (tradeAnalysis as any).tradeAnalysesGroup.analysis
 
@@ -60,17 +63,20 @@ export class SlideshowMutateService {
             prisma,
             tradeAnalysis.id)
 
-    if (slideshow != null) {
+    if (slideshow?.status !== BaseDataTypes.newStatus) {
       return
     }
 
     // Create a new record
-    slideshow = await
-      slideshowModel.create(
-        prisma,
-        analysis.userProfileId,
-        tradeAnalysis.id,
-        BaseDataTypes.newStatus)
+    if (slideshow == null) {
+
+      slideshow = await
+        slideshowModel.create(
+          prisma,
+          analysis.userProfileId,
+          tradeAnalysis.id,
+          BaseDataTypes.newStatus)
+    }
 
     // Get SlideTemplates
     const slideTemplates = await
@@ -133,6 +139,9 @@ export class SlideshowMutateService {
     // Get TradeAnalysis records without completed slideshows
     const tradeAnalyses = await
             tradeAnalysisModel.filterWithoutActiveSlideshows(prisma)
+
+    // Debug
+    // console.log(`${fnName}: tradeAnalyses: ${tradeAnalyses.length}`)
 
     // Update/finish slideshows for TradeAnalyses
     for (const tradeAnalysis of tradeAnalyses) {
