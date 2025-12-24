@@ -33,6 +33,7 @@ export class SlideshowModel {
           prisma: PrismaClient,
           userProfileId: string,
           tradeAnalysisId: string,
+          elevenLabsVoiceId: string | null,
           status: string) {
 
     // Debug
@@ -44,6 +45,7 @@ export class SlideshowModel {
         data: {
           userProfileId: userProfileId,
           tradeAnalysisId: tradeAnalysisId,
+          elevenLabsVoiceId: elevenLabsVoiceId,
           status: status
         }
       })
@@ -79,6 +81,7 @@ export class SlideshowModel {
           prisma: PrismaClient,
           userProfileId: string | undefined = undefined,
           tradeAnalysisId: string | undefined = undefined,
+          elevenLabsVoiceId: string | null | undefined = undefined,
           status: string | undefined = undefined,
           includeSlides: boolean = false) {
 
@@ -94,6 +97,7 @@ export class SlideshowModel {
         where: {
           userProfileId: userProfileId,
           tradeAnalysisId: tradeAnalysisId,
+          elevenLabsVoiceId: elevenLabsVoiceId,
           status: status
         }
       })
@@ -299,6 +303,7 @@ export class SlideshowModel {
           id: string,
           userProfileId: string | undefined,
           tradeAnalysisId: string | undefined,
+          elevenLabsVoiceId: string | null | undefined,
           status: string | undefined) {
 
     // Debug
@@ -310,6 +315,7 @@ export class SlideshowModel {
         data: {
           userProfileId: userProfileId,
           tradeAnalysisId: tradeAnalysisId,
+          elevenLabsVoiceId: elevenLabsVoiceId,
           status: status
         },
         where: {
@@ -327,6 +333,7 @@ export class SlideshowModel {
           id: string | undefined,
           userProfileId: string | undefined,
           tradeAnalysisId: string | undefined,
+          elevenLabsVoiceId: string | null | undefined,
           status: string | undefined) {
 
     // Debug
@@ -367,12 +374,18 @@ export class SlideshowModel {
         throw 'Prisma error'
       }
 
+      if (elevenLabsVoiceId === undefined) {
+        console.error(`${fnName}: id is null and elevenLabsVoiceId is undefined`)
+        throw 'Prisma error'
+      }
+
       // Create
       return await
                this.create(
                  prisma,
                  userProfileId,
                  tradeAnalysisId,
+                 elevenLabsVoiceId,
                  status)
     } else {
 
@@ -383,6 +396,7 @@ export class SlideshowModel {
                  id,
                  userProfileId,
                  tradeAnalysisId,
+                 elevenLabsVoiceId,
                  status)
     }
   }

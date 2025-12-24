@@ -9,6 +9,7 @@ import { ServerOnlyTypes, SlideTypes } from '@/types/server-only-types'
 import { ServerTestTypes } from '@/types/server-test-types'
 import { YFinanceFinTypes } from '@/types/yfinance-types'
 import { AnalysisModel } from '@/models/trade-analysis/analysis-model'
+import { ElevenLabsVoiceModel } from '@/models/generated-media/elevenlabs-voice-model'
 import { ExchangeModel } from '@/models/instruments/exchange-model'
 import { GenerationsSettingsModel } from '@/models/trade-analysis/generations-settings-model'
 import { InstrumentModel } from '@/models/instruments/instrument-model'
@@ -20,9 +21,11 @@ import { YFinanceFinModel } from '@/models/yfinance-models/yfinance-fin-model'
 import { GetTechService } from '../../tech/get-tech-service'
 import { Slideshow1SlidesService } from './slideshow-1-slides-service'
 import { YFinanceMutateService } from '@/services/external-data/yfinance/mutate-service'
+import { ElevenLabsDefaults } from '@/types/elevenlabs-types'
 
 // Models
 const analysisModel = new AnalysisModel()
+const elevenLabsVoiceModel = new ElevenLabsVoiceModel()
 const exchangeModel = new ExchangeModel()
 const generationsSettingsModel = new GenerationsSettingsModel()
 const instrumentModel = new InstrumentModel()
@@ -135,6 +138,20 @@ export class Slideshow1DataService {
           adminUserProfileId: string,
           tradeAnalysis: TradeAnalysis) {
 
+    // Debug
+    const fnName = `${this.clName}.setupSlideshow()`
+
+    // Get ElevenLabsVoice
+    const elevenLabsVoice = await
+            elevenLabsVoiceModel.getByName(
+              prisma,
+              ElevenLabsDefaults.defaultVoiceName)
+
+    // Validate
+    if (elevenLabsVoice == null) {
+      throw new CustomError(`${fnName}: elevenLabsVoice == null`)
+    }
+
     // Upsert the test slideshow
     const slideshow = await
             slideshowModel.upsert(
@@ -142,6 +159,7 @@ export class Slideshow1DataService {
               undefined,  // id
               adminUserProfileId,
               tradeAnalysis.id,
+              elevenLabsVoice.id,
               BaseDataTypes.activeStatus)
 
     // Return

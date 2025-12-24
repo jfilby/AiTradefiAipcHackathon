@@ -287,6 +287,8 @@ model GenerationsSettings {
   id                           String               @id @default(cuid())
   userProfileId                String               @map("user_profile_id")
   userProfile                  UserProfile          @relation(fields: [userProfileId], references: [id])
+  elevenLabsVoiceId            String?              @map("elevenlabs_voice_id")
+  elevenLabsVoice              ElevenLabsVoice?     @relation(fields: [elevenLabsVoiceId], references: [id])
   status                       String               @db.Char(1)
   sharedPublicly               Boolean
   name                         String
@@ -491,6 +493,8 @@ model Slideshow {
   userProfile                  UserProfile          @relation(fields: [userProfileId], references: [id])
   tradeAnalysisId              String               @map("trade_analysis_id") @unique
   tradeAnalysis                TradeAnalysis        @relation(fields: [tradeAnalysisId], references: [id])
+  elevenLabsVoiceId            String?              @map("elevenlabs_voice_id")
+  elevenLabsVoice              ElevenLabsVoice?     @relation(fields: [elevenLabsVoiceId], references: [id])
   status                       String               @db.Char(1)
   created                      DateTime             @default(now())
   updated                      DateTime             @updatedAt
@@ -533,6 +537,8 @@ model ElevenLabsVoice {
   highQualityBaseModelIds      Json                 @map("high_quality_base_model_ids") @db.JsonB
 
   ofGeneratedAudios            GeneratedAudio[]
+  ofGenerationsSettings        GenerationsSettings[]
+  ofSlideshows                 Slideshow[]
 
   @@map("eleven_labs_voice")
   @@schema("public")

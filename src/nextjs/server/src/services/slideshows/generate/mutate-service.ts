@@ -1,7 +1,8 @@
-import { PrismaClient, Slide, SlideTemplate, TradeAnalysis } from '@prisma/client'
+import { ElevenLabsVoice, PrismaClient, Slide, SlideTemplate, TradeAnalysis } from '@prisma/client'
 import { CustomError } from '@/serene-core-server/types/errors'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { ServerOnlyTypes, SlideTypes } from '@/types/server-only-types'
+import { ElevenLabsVoiceModel } from '@/models/generated-media/elevenlabs-voice-model'
 import { SlideModel } from '@/models/slideshows/slide-model'
 import { SlideshowModel } from '@/models/slideshows/slideshow-model'
 import { SlideTemplateModel } from '@/models/slideshows/slide-template-model'
@@ -12,6 +13,7 @@ import { GenSlideTextService } from './gen-text-service'
 import { NarrationAudioService } from '@/services/elevenlabs/narration-service'
 
 // Models
+const elevenLabsVoiceModel = new ElevenLabsVoiceModel()
 const generationsSettingsModel = new GenerationsSettingsModel()
 const slideModel = new SlideModel()
 const slideshowModel = new SlideshowModel()
@@ -67,15 +69,33 @@ export class SlideshowMutateService {
       return
     }
 
-    // Create a new record
+    // Create a new Slideshow record?
+    var elevenLabsVoice: ElevenLabsVoice | null = null
+
     if (slideshow == null) {
 
+      // Get ElevenLabsVoice
+      elevenLabsVoice = await
+        elevenLabsVoiceModel.getById(
+          prisma,
+          generationsSettings.elevenLabsVoiceId)
+
+      // Create Slideshow
       slideshow = await
         slideshowModel.create(
           prisma,
           analysis.userProfileId,
           tradeAnalysis.id,
+          elevenLabsVoice?.id ?? null,
           BaseDataTypes.newStatus)
+
+    } else if (slideshow.elevenLabsVoiceId != null) {
+
+      // Get ElevenLabsVoice from existing Slideshow
+      elevenLabsVoice = await
+        elevenLabsVoiceModel.getById(
+          prisma,
+          slideshow.elevenLabsVoiceId)
     }
 
     // Get SlideTemplates
@@ -113,6 +133,7 @@ export class SlideshowMutateService {
       slide = await
         this.updateSlide(
           prisma,
+          elevenLabsVoice,
           slideshowSettings,
           slide,
           slideTemplate)
@@ -125,6 +146,7 @@ export class SlideshowMutateService {
         slideshow.id,
         undefined,  // userProfileId
         undefined,  // tradeAnalysisId
+        undefined,  // elevenLabsVoiceId
         BaseDataTypes.activeStatus)
   }
 
@@ -157,6 +179,7 @@ export class SlideshowMutateService {
 
   async updateSlide(
           prisma: PrismaClient,
+          elevenLabsVoice: ElevenLabsVoice | null,
           slideshowSettings: any,
           slide: Slide,
           slideTemplate: SlideTemplate) {
@@ -171,17 +194,27 @@ export class SlideshowMutateService {
       narrateAudio = true
     }
 
+    if (narrateAudio === true &&
+        elevenLabsVoice == null) {
+
+      console.warn(`${fnName}: can't narrate audio as elevenLabsVoice == null`)
+
+      narrateAudio = false
+    }
+
     // Debug
     // console.log(`${fnName}: slideId: ${slide.id} ` +
     //             `narrateAudio: ${narrateAudio}`)
 
     // Generate narration audio
     if (narrateAudio === true &&
-        slide.narrationId != null) {
+        slide.narrationId != null &&
+        elevenLabsVoice != null) {
 
       // Generate narration
       await narrationAudioService.generateFromSlideData(
               prisma,
+              elevenLabsVoice,
               slide.narrationId)
     }
 

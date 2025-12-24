@@ -1,6 +1,11 @@
-import { PrismaClient } from '@prisma/client'
+import { ElevenLabsVoice, PrismaClient } from '@prisma/client'
+import { CustomError } from '@/serene-core-server/types/errors'
 import { ElevenLabsDefaults, NarrationTones, settingsByTone } from '@/types/elevenlabs-types'
+import { ElevenLabsVoiceModel } from '@/models/generated-media/elevenlabs-voice-model'
 import { ElevenLabsService } from '../elevenlabs/service'
+
+// Models
+const elevenLabsVoiceModel = new ElevenLabsVoiceModel()
 
 // Services
 const elevenLabsService = new ElevenLabsService()
@@ -22,12 +27,30 @@ export class CreateTestAudioService {
     // Debug
     const fnName = `${this.clName}.testTTS()`
 
+    // Get default voice
+    const elevenLabsVoice = await
+            elevenLabsVoiceModel.getByName(
+              prisma,
+              ElevenLabsDefaults.defaultVoiceName)
+
+    // Validate
+    if (elevenLabsVoice == null) {
+      throw new CustomError(`${fnName}: elevenLabsVoice == null`)
+    }
+
     // Call tests
-    await this.testTts1(prisma)
-    await this.testTts2(prisma)
+    await this.testTts1(
+            prisma,
+            elevenLabsVoice)
+
+    await this.testTts2(
+            prisma,
+            elevenLabsVoice)
   }
 
-  async testTts1(prisma: PrismaClient) {
+  async testTts1(
+          prisma: PrismaClient,
+          elevenLabsVoice: ElevenLabsVoice) {
 
     // Consts
     const prompt = `This is an overview of`
@@ -40,13 +63,15 @@ export class CreateTestAudioService {
     const generatedAudio = await
             elevenLabsService.generateTtsAndSave(
               prisma,
-              ElevenLabsDefaults.defaultVoiceName,
+              elevenLabsVoice,
               prompt,
               relativePath,
               elevenLabsSettings)
   }
 
-  async testTts2(prisma: PrismaClient) {
+  async testTts2(
+          prisma: PrismaClient,
+          elevenLabsVoice: ElevenLabsVoice) {
 
     // Consts
     const prompt = `the NVDA stock's potential.`
@@ -59,7 +84,7 @@ export class CreateTestAudioService {
     const generatedAudio = await
             elevenLabsService.generateTtsAndSave(
               prisma,
-              ElevenLabsDefaults.defaultVoiceName,
+              elevenLabsVoice,
               prompt,
               relativePath,
               elevenLabsSettings)

@@ -23,6 +23,7 @@ export class GenerationsSettingsQueryService {
             generationsSettingsModel.filter(
               prisma,
               undefined,  // userProfileId
+              undefined,  // elevenLabsVoiceId
               BaseDataTypes.activeStatus,
               true)       // sharedPublicly
 

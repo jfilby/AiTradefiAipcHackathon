@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { ElevenLabsVoice, PrismaClient } from '@prisma/client'
 import { ElevenLabsDefaults, NarrationTones, settingsByTone } from '@/types/elevenlabs-types'
 import { NarrationSegmentModel } from '@/models/slideshows/narration-segment-model'
 import { ElevenLabsService } from './service'
@@ -63,6 +63,7 @@ export class NarrationAudioService {
 
   async generateFromSlideData(
           prisma: PrismaClient,
+          elevenLabsVoice: ElevenLabsVoice,
           narrationId: string) {
 
     // Debug
@@ -102,7 +103,7 @@ export class NarrationAudioService {
       const generatedAudio = await
               elevenLabsService.generateTtsAndSave(
                 prisma,
-                ElevenLabsDefaults.defaultVoiceName,
+                elevenLabsVoice,
                 text,
                 relativePath,
                 elevenLabsSettings)

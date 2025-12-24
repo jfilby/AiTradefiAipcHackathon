@@ -3,7 +3,7 @@ import path from 'path'
 import { writeFileSync } from 'fs'
 import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js'
 import { TextToSpeechConvertRequestOutputFormat } from '@elevenlabs/elevenlabs-js/api'
-import { PrismaClient } from '@prisma/client'
+import { ElevenLabsVoice, PrismaClient } from '@prisma/client'
 import { CustomError } from '@/serene-core-server/types/errors'
 import { UserPreferenceModel } from '@/serene-core-server/models/users/user-preference-model'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
@@ -104,24 +104,13 @@ export class ElevenLabsService {
   }
 
   async generateTts(
-          prisma: PrismaClient,
-          voiceName: string,
+          elevenLabsVoice: ElevenLabsVoice,
           text: string,
           outputFormat: string = ElevenLabsDefaults.defaultOutputFormat,
           elevenLabsSettings: ElevenLabsSettings) {
 
     // Debug
     const fnName = `${this.clName}.generateTts()`
-
-    // Get voice by name
-    const elevenLabsVoice = await
-            elevenLabsVoiceModel.getByName(
-              prisma,
-              voiceName)
-
-    if (elevenLabsVoice == null) {
-      throw new CustomError(`${fnName}: elevenLabsVoice == null`)
-    }
 
     // TTS
     const buffer = await
@@ -141,7 +130,7 @@ export class ElevenLabsService {
 
   async generateTtsAndSave(
           prisma: PrismaClient,
-          voiceName: string,
+          elevenLabsVoice: ElevenLabsVoice,
           text: string,
           relativePath: string,
           elevenLabsSettings: ElevenLabsSettings) {
@@ -166,8 +155,7 @@ export class ElevenLabsService {
     // Generate TTS
     const ttsResults = await
             this.generateTts(
-              prisma,
-              voiceName,
+              elevenLabsVoice,
               text,
               undefined,  // outputFormat
               elevenLabsSettings)

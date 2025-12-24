@@ -9,6 +9,7 @@ export class GenerationsSettingsModel {
   async create(
           prisma: PrismaClient,
           userProfileId: string,
+          elevenLabsVoiceId: string | null,
           status: string,
           sharedPublicly: boolean,
           name: string,
@@ -23,6 +24,7 @@ export class GenerationsSettingsModel {
       return await prisma.generationsSettings.create({
         data: {
           userProfileId: userProfileId,
+          elevenLabsVoiceId: elevenLabsVoiceId,
           status: status,
           sharedPublicly: sharedPublicly,
           name: name,
@@ -61,6 +63,7 @@ export class GenerationsSettingsModel {
   async filter(
           prisma: PrismaClient,
           userProfileId: string | undefined = undefined,
+          elevenLabsVoiceId: string | null | undefined = undefined,
           status: string | undefined = undefined,
           sharedPublicly: boolean | undefined = undefined,
           name: string | undefined = undefined) {
@@ -73,6 +76,7 @@ export class GenerationsSettingsModel {
       return await prisma.generationsSettings.findMany({
         where: {
           userProfileId: userProfileId,
+          elevenLabsVoiceId: elevenLabsVoiceId,
           status: status,
           sharedPublicly: sharedPublicly,
           name: name
@@ -195,6 +199,7 @@ export class GenerationsSettingsModel {
           prisma: PrismaClient,
           id: string,
           userProfileId: string | undefined,
+          elevenLabsVoiceId: string | null | undefined,
           status: string | undefined,
           sharedPublicly: boolean | undefined,
           name: string | undefined,
@@ -209,6 +214,7 @@ export class GenerationsSettingsModel {
       return await prisma.generationsSettings.update({
         data: {
           userProfileId: userProfileId,
+          elevenLabsVoiceId: elevenLabsVoiceId,
           status: status,
           sharedPublicly: sharedPublicly,
           name: name,
@@ -229,6 +235,7 @@ export class GenerationsSettingsModel {
           prisma: PrismaClient,
           id: string | undefined,
           userProfileId: string | undefined,
+          elevenLabsVoiceId: string | null | undefined,
           status: string | undefined,
           sharedPublicly: boolean | undefined,
           name: string | undefined,
@@ -265,6 +272,11 @@ export class GenerationsSettingsModel {
         throw 'Prisma error'
       }
 
+      if (elevenLabsVoiceId === undefined) {
+        console.error(`${fnName}: id is null and elevenLabsVoiceId is undefined`)
+        throw 'Prisma error'
+      }
+
       if (status == null) {
         console.error(`${fnName}: id is null and status is null`)
         throw 'Prisma error'
@@ -295,6 +307,7 @@ export class GenerationsSettingsModel {
                this.create(
                  prisma,
                  userProfileId,
+                 elevenLabsVoiceId,
                  status,
                  sharedPublicly,
                  name,
@@ -308,6 +321,7 @@ export class GenerationsSettingsModel {
                  prisma,
                  id,
                  userProfileId,
+                 elevenLabsVoiceId,
                  status,
                  sharedPublicly,
                  name,
