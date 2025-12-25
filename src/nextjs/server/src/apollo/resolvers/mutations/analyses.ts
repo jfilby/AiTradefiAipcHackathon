@@ -22,6 +22,7 @@ export async function upsertAnalysis(
             prisma,
             args.id,
             args.userProfileId,
+            args.generationsConfigId,
             args.type,
             args.status,
             args.instrumentType,

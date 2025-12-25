@@ -115,6 +115,7 @@ export const typeDefs = `#graphql
 
   type Analysis {
     id: String!
+    generationsConfigId: String!
     type: String!
     status: String!
     instrumentType: String!
@@ -466,6 +467,7 @@ export const typeDefs = `#graphql
     upsertAnalysis(
       id: String,
       userProfileId: String!,
+      generationsConfigId: String!,
       type: String!,
       status: String!,
       instrumentType: String!

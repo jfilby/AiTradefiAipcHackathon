@@ -2,7 +2,6 @@ import { PrismaClient } from '@prisma/client'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { AnalysisModel } from '@/models/trade-analysis/analysis-model'
 import { AnalysisTechModel } from '@/models/trade-analysis/analysis-tech-model'
-import { GenerationsConfigQueryService } from '../generations-configs/query-service'
 import { SetupAnalysesTechService } from './setup-tech-service'
 
 // Models
@@ -10,7 +9,6 @@ const analysisModel = new AnalysisModel()
 const analysisTechModel = new AnalysisTechModel()
 
 // Services
-const generationsConfigQueryService = new GenerationsConfigQueryService()
 const setupAnalysesTechService = new SetupAnalysesTechService()
 
 // Class
@@ -24,6 +22,7 @@ export class AnalysesMutateService {
           prisma: PrismaClient,
           id: string | undefined,
           userProfileId: string,
+          generationsConfigId: string,
           type: string,
           status: string,
           instrumentType: string,
@@ -42,17 +41,13 @@ export class AnalysesMutateService {
       id = undefined
     }
 
-    // Get the default GenerationsConfig
-    const generationsConfig = await
-            generationsConfigQueryService.getDefault(prisma)
-
     // Upsert Analysis
     const analysis = await
             analysisModel.upsert(
               prisma,
               id ?? undefined,
               userProfileId,
-              generationsConfig.id,
+              generationsConfigId,
               type,
               status,
               instrumentType,

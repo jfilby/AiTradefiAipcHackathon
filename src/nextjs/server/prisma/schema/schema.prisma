@@ -248,7 +248,7 @@ model Analysis {
   id                           String                 @id @default(cuid())
   userProfileId                String                 @map("user_profile_id")
   userProfile                  UserProfile            @relation(fields: [userProfileId], references: [id])
-  generationsConfigId          String                 @map("generations_settings_id")
+  generationsConfigId          String                 @map("generations_config_id")
   generationsConfig            GenerationsConfig      @relation(fields: [generationsConfigId], references: [id])
   type                         String                 @db.Char(1)  // S (screener), E (evaluator)
   status                       String                 @db.Char(1)

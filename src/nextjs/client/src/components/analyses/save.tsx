@@ -54,6 +54,7 @@ export default function SaveAnalysis({
         variables: {
           id: analysis.id,
           userProfileId: userProfileId,
+          generationsConfigId: analysis.generationsConfigId,
           type: analysis.type,
           status: analysis.status,
           instrumentType: analysis.instrumentType,

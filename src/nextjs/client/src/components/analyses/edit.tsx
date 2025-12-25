@@ -6,6 +6,7 @@ import { Alert, FormControl, InputLabel, Select, TextField, Typography } from '@
 import LabeledIconButton from '@/serene-core-client/components/buttons/labeled-icon-button'
 import TextAreaField from '@/serene-core-client/components/basics/text-area-field'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
+import GenerationsConfigSelect from '../configs/select'
 
 interface Props {
   userProfileId: string
@@ -241,6 +242,11 @@ export default function EditAnalysis({
           required
           style={{ marginBottom: '2em' }}
           value={prompt} />
+
+        <GenerationsConfigSelect
+          userProfileId={userProfileId}
+          json={analysis}
+          setJson={setAnalysis} />
 
         {/* <div style={{ marginBottom: '1em' }}>
           <TextField

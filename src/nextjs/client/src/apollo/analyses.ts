@@ -14,6 +14,7 @@ export const getAnalysisQuery = gql`
       message
       analysis {
         id
+        generationsConfigId
         type
         status
         instrumentType
@@ -42,6 +43,7 @@ export const getAnalysesQuery = gql`
       message
       analyses {
         id
+        generationsConfigId
         type
         status
         instrumentType
@@ -60,6 +62,7 @@ export const upsertAnalysisMutation = gql`
   mutation upsertAnalysis(
              $id: String,
              $userProfileId: String!,
+             $generationsConfigId: String!,
              $type: String!,
              $status: String!,
              $instrumentType: String!
@@ -70,6 +73,7 @@ export const upsertAnalysisMutation = gql`
     upsertAnalysis(
       id: $id,
       userProfileId: $userProfileId,
+      generationsConfigId: $generationsConfigId,
       type: $type,
       status: $status,
       instrumentType: $instrumentType,
