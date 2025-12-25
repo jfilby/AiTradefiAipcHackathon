@@ -138,6 +138,19 @@ export const typeDefs = `#graphql
     analyses: [Analysis]
   }
 
+  type ElevenLabsVoice {
+    id: String!
+    status: String!
+    name: String!
+    description: String!
+  }
+
+  type ElevenLabsVoicesResults {
+    status: Boolean!
+    message: String
+    elevenLabsVoices: [ElevenLabsVoice]
+  }
+
   type Exchange {
     id: String!
     name: String!
@@ -362,6 +375,10 @@ export const typeDefs = `#graphql
       userProfileId: String!,
       instanceId: String,
       instrumentType: String): AnalysesResults!
+
+    # ElevenLabs voices
+    getElevenLabsVoices(
+      userProfileId: String!): ElevenLabsVoicesResults!
 
     # Generations configs
     getGenerationsConfigList(

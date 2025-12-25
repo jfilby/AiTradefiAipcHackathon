@@ -14,6 +14,7 @@ import { upsertUserPreference } from '@/serene-core-server/apollo/resolvers/muta
 
 // Concept queries imports
 import { getAnalyses, getAnalysisById } from './queries/analyses'
+import { getElevenLabsVoices } from './queries/elevenlabs-voices'
 import { getGenerationsConfig, getGenerationsConfigList, getGenerationsConfigs } from './queries/generations-configs'
 // import { filterInstances, filterProjectInstances, instanceById } from './queries/instances'
 import { getInstrumentById, getInstruments } from './queries/instruments'
@@ -67,6 +68,9 @@ const Query = {
   // Analyses
   getAnalysisById,
   getAnalyses,
+
+  // ElevenLabs voices
+  getElevenLabsVoices,
 
   // Generations config
   getGenerationsConfigs,

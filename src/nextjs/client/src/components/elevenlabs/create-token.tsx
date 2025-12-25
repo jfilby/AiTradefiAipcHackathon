@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useMutation } from '@apollo/client/react'
-import { createElevenLabsTokenMutation } from '@/apollo/eleven-labs'
+import { createElevenLabsTokenMutation } from '@/apollo/elevenlabs'
 
 interface Props {
   userProfileId: string

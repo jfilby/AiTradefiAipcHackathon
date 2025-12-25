@@ -14,7 +14,7 @@ interface Props {
   generationsConfig: any
 }
 
-export default function GenerationsConfigCard({
+export default function ElevenLabsVoiceCard({
                           userProfileId,
                           instanceId,
                           generationsConfig

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useMutation } from '@apollo/client/react'
-import { upsertSpeakPreferenceMutation } from '@/apollo/eleven-labs'
+import { upsertSpeakPreferenceMutation } from '@/apollo/elevenlabs'
 
 interface Props {
   userProfileId: string
