@@ -45,7 +45,7 @@ export class GenerationsConfigSetupService {
               BaseDataTypes.activeStatus,
               true,       // sharedPublicly
               ServerOnlyTypes.defaultGenerationsConfigName,
-              ServerOnlyTypes.defaultSlideShowSettings,
-              ServerOnlyTypes.defaultVideoSettings)
+              ServerOnlyTypes.defaultSlideShowConfig,
+              ServerOnlyTypes.defaultVideoConfig)
   }
 }

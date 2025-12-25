@@ -13,8 +13,8 @@ export class GenerationsConfigModel {
           status: string,
           sharedPublicly: boolean,
           name: string,
-          slideshowSettings: any,
-          videoSettings: any) {
+          slideshowConfig: any,
+          videoConfig: any) {
 
     // Debug
     const fnName = `${this.clName}.create()`
@@ -28,8 +28,8 @@ export class GenerationsConfigModel {
           status: status,
           sharedPublicly: sharedPublicly,
           name: name,
-          slideshowSettings: slideshowSettings,
-          videoSettings: videoSettings
+          slideshowConfig: slideshowConfig,
+          videoConfig: videoConfig
         }
       })
     } catch(error) {
@@ -203,8 +203,8 @@ export class GenerationsConfigModel {
           status: string | undefined,
           sharedPublicly: boolean | undefined,
           name: string | undefined,
-          slideshowSettings: any,
-          videoSettings: any) {
+          slideshowConfig: any,
+          videoConfig: any) {
 
     // Debug
     const fnName = `${this.clName}.update()`
@@ -218,8 +218,8 @@ export class GenerationsConfigModel {
           status: status,
           sharedPublicly: sharedPublicly,
           name: name,
-          slideshowSettings: slideshowSettings,
-          videoSettings: videoSettings
+          slideshowConfig: slideshowConfig,
+          videoConfig: videoConfig
         },
         where: {
           id: id
@@ -239,8 +239,8 @@ export class GenerationsConfigModel {
           status: string | undefined,
           sharedPublicly: boolean | undefined,
           name: string | undefined,
-          slideshowSettings: any,
-          videoSettings: any) {
+          slideshowConfig: any,
+          videoConfig: any) {
 
     // Debug
     const fnName = `${this.clName}.upsert()`
@@ -292,13 +292,13 @@ export class GenerationsConfigModel {
         throw 'Prisma error'
       }
 
-      if (slideshowSettings === undefined) {
-        console.error(`${fnName}: id is null and slideshowSettings is undefined`)
+      if (slideshowConfig === undefined) {
+        console.error(`${fnName}: id is null and slideshowConfig is undefined`)
         throw 'Prisma error'
       }
 
-      if (videoSettings === undefined) {
-        console.error(`${fnName}: id is null and videoSettings is undefined`)
+      if (videoConfig === undefined) {
+        console.error(`${fnName}: id is null and videoConfig is undefined`)
         throw 'Prisma error'
       }
 
@@ -311,8 +311,8 @@ export class GenerationsConfigModel {
                  status,
                  sharedPublicly,
                  name,
-                 slideshowSettings,
-                 videoSettings)
+                 slideshowConfig,
+                 videoConfig)
     } else {
 
       // Update
@@ -325,8 +325,8 @@ export class GenerationsConfigModel {
                  status,
                  sharedPublicly,
                  name,
-                 slideshowSettings,
-                 videoSettings)
+                 slideshowConfig,
+                 videoConfig)
     }
   }
 }

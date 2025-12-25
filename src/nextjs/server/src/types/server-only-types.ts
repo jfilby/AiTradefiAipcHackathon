@@ -38,13 +38,13 @@ export class ServerOnlyTypes {
   // Generations settings
   static defaultGenerationsConfigName = 'Default'
 
-  static defaultSlideShowSettings = {
+  static defaultSlideShowConfig = {
     withIntroImage: false,
     requirementsSlide: true,
     withAudioNarration: true,
   }
   
-  static defaultVideoSettings = {
+  static defaultVideoConfig = {
     withIntroImage: false,
     requirementsIntro: true,
     withAudioNarration: true,

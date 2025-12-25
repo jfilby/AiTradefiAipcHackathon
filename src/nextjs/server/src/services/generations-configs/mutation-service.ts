@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { CustomError } from '@/serene-core-server/types/errors'
+import { ServerOnlyTypes } from '@/types/server-only-types'
 import { GenerationsConfigModel } from '@/models/trade-analysis/generations-settings-model'
 
 // Models
@@ -23,6 +24,10 @@ export class GenerationsConfigMutateService {
     // Debug
     const fnName = `${this.clName}.upsert()`
 
+    // Get defaults
+    const slideshowConfig = ServerOnlyTypes.defaultSlideShowConfig
+    const videoConfig = ServerOnlyTypes.defaultVideoConfig
+
     // Upsert
     const generationsConfig = await
             generationsConfigModel.upsert(
@@ -33,8 +38,8 @@ export class GenerationsConfigMutateService {
               status,
               false,  // sharedPublicly
               name,
-              null,   // slideshowSettings
-              null)   // videoSettings
+              slideshowConfig,
+              videoConfig)
 
     // Return
     return {

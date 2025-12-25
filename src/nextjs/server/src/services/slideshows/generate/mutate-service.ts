@@ -49,14 +49,14 @@ export class SlideshowMutateService {
               analysis.userProfileId,
               ServerOnlyTypes.defaultGenerationsConfigName)
 
-    // Get slideshowSettings
-    var slideshowSettings: any = undefined
+    // Get slideshowConfig
+    var slideshowConfig: any = undefined
 
-    if (generationsConfig?.slideshowSettings != null) {
-      slideshowSettings = generationsConfig.slideshowSettings
+    if (generationsConfig?.slideshowConfig != null) {
+      slideshowConfig = generationsConfig.slideshowConfig
 
     } else {
-      slideshowSettings = ServerOnlyTypes.defaultSlideShowSettings
+      slideshowConfig = ServerOnlyTypes.defaultSlideShowConfig
     }
 
     // Try to get an existing record
@@ -134,7 +134,7 @@ export class SlideshowMutateService {
         this.updateSlide(
           prisma,
           elevenLabsVoice,
-          slideshowSettings,
+          slideshowConfig,
           slide,
           slideTemplate)
     }
@@ -180,7 +180,7 @@ export class SlideshowMutateService {
   async updateSlide(
           prisma: PrismaClient,
           elevenLabsVoice: ElevenLabsVoice | null,
-          slideshowSettings: any,
+          slideshowConfig: any,
           slide: Slide,
           slideTemplate: SlideTemplate) {
 
@@ -190,7 +190,7 @@ export class SlideshowMutateService {
     // Narrate audio
     var narrateAudio = false
 
-    if (slideshowSettings.withAudioNarration === true) {
+    if (slideshowConfig.withAudioNarration === true) {
       narrateAudio = true
     }
 
@@ -223,7 +223,7 @@ export class SlideshowMutateService {
     var generatedImageId: string | null = null
 
     if (slideTemplate.type === SlideTypes.intro &&
-        slideshowSettings.withIntroImage === true) {
+        slideshowConfig.withIntroImage === true) {
 
       generateImage = true
     }
