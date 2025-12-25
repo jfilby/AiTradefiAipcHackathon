@@ -2,25 +2,24 @@ import Head from 'next/head'
 import { useState } from 'react'
 import { loadServerPage } from '@/services/page/load-server-page'
 import Layout from '@/components/layouts/layout'
-import ListGenerationsConfigs from '@/components/generations-config/list'
-import LoadGenerationsConfigByFilter from '@/components/generations-config/load-by-filter'
+import { Button, Typography } from '@mui/material'
+import ListConfigs from '@/components/configs/list'
+import LoadConfigsByFilter from '@/components/configs/load-by-filter'
 
 interface Props {
   userProfile: any
   instance: any
-  slideshowId: string
 }
 
-export default function SettingsPage({
+export default function ConfigsPage({
                           userProfile,
-                          instance,
-                          slideshowId
+                          instance
                         }: Props) {
 
-  // State
-  const [alertSeverity, setAlertSeverity] = useState<any>(undefined)
-  const [message, setMessage] = useState<string | undefined>(undefined)
+  // Consts
+  const createUrl = `/configs/create`
 
+  // State
   const [generationsConfigs, setGenerationsConfigs] = useState<any>(undefined)
   const [loaded, setLoaded] = useState<boolean>(false)
 
@@ -28,26 +27,37 @@ export default function SettingsPage({
   return (
     <>
       <Head>
-        <title>{process.env.NEXT_PUBLIC_APP_NAME} - Settings</title>
+        <title>{process.env.NEXT_PUBLIC_APP_NAME} - Configs</title>
       </Head>
 
       <Layout userProfile={userProfile}>
 
         <div style={{ textAlign: 'left', marginBottom: '2em' }}>
 
-          {/* <p>generationsConfig: {JSON.stringify(generationsConfig)}</p> */}
+          {/* <p>userProfileId: {userProfile.id}</p> */}
 
-          {generationsConfigs != null ?
-            <ListGenerationsConfigs
-              userProfileId={userProfile.id}
-              instanceId={undefined}
-              generationsConfigs={generationsConfigs} />
-          :
-            <></>
-          }
+          <div style={{ display: 'inline-block', width: '80%' }}>
+            <Typography
+              style={{ marginBottom: '0.5em' }}
+              variant='h3'>
+              Configs
+            </Typography>
+          </div>
+          <div style={{ display: 'inline-block', textAlign: 'right', width: '20%' }}>
+            <Button
+              onClick={(e) => window.location.href = createUrl}
+              variant='contained'>
+              Create
+            </Button>
+          </div>
+
+          <ListConfigs
+            userProfileId={userProfile.id}
+            instanceId={undefined}
+            generationsConfigs={generationsConfigs} />
         </div>
 
-        <LoadGenerationsConfigByFilter
+        <LoadConfigsByFilter
           userProfileId={userProfile.id}
           setGenerationsConfigs={setGenerationsConfigs}
           setLoaded={setLoaded} />

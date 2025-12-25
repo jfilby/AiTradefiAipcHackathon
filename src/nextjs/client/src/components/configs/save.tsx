@@ -29,7 +29,7 @@ export default function SaveGenerationsConfig({
                         }: Props) {
 
   // Consts
-  const indexUrl = `/analyses`
+  const indexUrl = `/configs`
 
   // GraphQL
   const [sendUpsertGenerationsConfigMutation] =
