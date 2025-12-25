@@ -21,11 +21,7 @@ export default function ElevenLabsVoiceCard({
                         }: Props) {
 
   // Consts
-  const viewUrl = `/generationsConfig/${generationsConfig.id}`
-  const firstSlide = generationsConfig.slides.length > 0 ? generationsConfig.slides[0] : {
-    title: '?',
-    text: '..'
-  }
+  const viewUrl = `/config/${generationsConfig.id}`
 
   // State
   const [alertSeverity, setAlertSeverity] = useState<any>('')
@@ -96,21 +92,7 @@ export default function ElevenLabsVoiceCard({
                     '&:hover': { textDecoration: 'underline' },
                   }}
                 >
-                  {thisGenerationsConfig.tradeAnalysis.instrument.name}
-                </Typography>
-
-                <Typography
-                  variant='body2'
-                  sx={{
-                    display: 'inline-block',
-                    marginLeft: '0.5em',
-                    width: '50%',
-                  }}
-                >
-                  <span>{thisGenerationsConfig.tradeAnalysis.instrument.exchange.name}</span>
-                  <span style={{ color: '#660', marginLeft: '1em' }}>
-                    {Math.floor(thisGenerationsConfig.tradeAnalysis.score * 100)}%
-                  </span>
+                  {thisGenerationsConfig.name}
                 </Typography>
               </a>
             </Link>
@@ -119,7 +101,7 @@ export default function ElevenLabsVoiceCard({
               <Typography
                 style={{ color: 'gray' }}
                 variant='h5'>
-                <>{firstSlide.title}</>
+                <>{generationsConfig.name}</>
               </Typography>
               <Typography
                 style={{ color: 'gray' }}
@@ -129,9 +111,9 @@ export default function ElevenLabsVoiceCard({
             </>
           }
 
-          <Typography variant='body1'>
-            {firstSlide.text}
-          </Typography>
+          {/* <Typography variant='body1'>
+            {generationsConfig.text}
+          </Typography> */}
 
         </div>
         <div style={{ display: 'inline-block', height: '2em', textAlign: 'right', width: '20%' }}>

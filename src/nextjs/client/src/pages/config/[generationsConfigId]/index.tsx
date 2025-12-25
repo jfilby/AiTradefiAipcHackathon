@@ -2,9 +2,9 @@ import Head from 'next/head'
 import { useState } from 'react'
 import { loadServerPage } from '@/services/page/load-server-page'
 import Layout from '@/components/layouts/layout'
-import LoadGenerationsConfigById from '@/components/generations-config/load-by-id'
-import SaveGenerationsConfig from '@/components/generations-config/save'
-import EditGenerationsConfig from '@/components/generations-config/edit'
+import LoadGenerationsConfigById from '@/components/configs/load-by-id'
+import SaveGenerationsConfig from '@/components/configs/save'
+import EditGenerationsConfig from '@/components/configs/edit'
 
 interface Props {
   userProfile: any
@@ -44,10 +44,10 @@ export default function SettingsPage({
             <EditGenerationsConfig
               userProfileId={userProfile.id}
               instanceId={undefined}
-              alertSeverity={undefined}
-              setAlertSeverity={undefined}
-              message={undefined}
-              setMessage={undefined}
+              alertSeverity={alertSeverity}
+              setAlertSeverity={setAlertSeverity}
+              message={message}
+              setMessage={setMessage}
               generationsConfig={generationsConfig}
               setGenerationsConfig={setGenerationsConfig}
               setSaveAction={setSaveAction} />

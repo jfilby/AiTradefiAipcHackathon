@@ -392,7 +392,7 @@ export const typeDefs = `#graphql
     getGenerationsConfig(
       userProfileId: String!,
       instanceId: String,
-      id: String!): GenerationsConfigResults
+      generationsConfigId: String!): GenerationsConfigResults
     getGenerationsConfigs(
       userProfileId: String!,
       instanceId: String): GenerationsConfigsResults

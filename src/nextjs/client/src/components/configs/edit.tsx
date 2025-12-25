@@ -185,7 +185,7 @@ export default function EditGenerationsConfig({
                   onChange={(e) => {
                     setElevenLabsVoiceId(e.target.value)
 
-                    generationsConfig.elevenlabsVoiceId = e.target.value
+                    generationsConfig.elevenLabsVoiceId = e.target.value
                     setGenerationsConfig(generationsConfig)
                   }}
                   variant='outlined'

@@ -43,7 +43,8 @@ export default function LoadGenerationsConfigByFilter({
     const { data } = await
             fetchGetGenerationsConfigQuery({
               userProfileId: userProfileId,
-              instanceId: instanceId
+              instanceId: instanceId,
+              generationsConfigId: generationsConfigId
           })
 
     const results = data.getGenerationsConfig

@@ -44,7 +44,7 @@ export default function LoadGenerationsConfigByFilter({
               instanceId: instanceId
           })
 
-    const results = data.getGenerationsConfig
+    const results = data.getGenerationsConfigs
 
     setGenerationsConfigs(results.generationsConfigs)
     setLoaded(true)

@@ -19,7 +19,7 @@ export async function getGenerationsConfig(
           generationsConfigQueryService.getById(
             prisma,
             args.userProfileId,
-            args.id)
+            args.generationsConfigId)
 
   // Return
   return results
