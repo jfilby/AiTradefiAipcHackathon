@@ -5,6 +5,7 @@ import { getElevenLabsVoicesQuery } from '@/apollo/elevenlabs-voices'
 interface Props {
   userProfileId: string
   status: string
+  addBlank: boolean
   setElevenLabsVoices: any
   setLoaded: any
 }
@@ -12,6 +13,7 @@ interface Props {
 export default function LoadElevenLabsVoicesByFilter({
                           userProfileId,
                           status,
+                          addBlank,
                           setElevenLabsVoices,
                           setLoaded
                         }: Props) {
@@ -45,6 +47,17 @@ export default function LoadElevenLabsVoicesByFilter({
           })
 
     const results = data.getElevenLabsVoices
+
+    if (addBlank === true) {
+      results.elevenLabsVoices = [
+        {
+          id: null,
+          name: 'None',
+          description: ''
+        },
+        ...results.elevenLabsVoices
+      ]
+    }
 
     setElevenLabsVoices(results.elevenLabsVoices)
     setLoaded(true)

@@ -136,19 +136,17 @@ export default function EditGenerationsConfig({
         </div>
 
         {elevenLabsVoices != null ?
-          <div style={{ marginBottom: '1em', width: '15em' }}>
+          <div style={{ marginBottom: '1em', width: '25em' }}>
             <FormControl fullWidth>
               <InputLabel
-                htmlFor='select-elevenlabs-voice'
-                required
-                shrink>
+                htmlFor='select-elevenlabs-voice'>
                 ElevenLabs voice
               </InputLabel>
               <Select
                 label='ElevenLabs voice'
                 value={elevenlabsVoiceId}
                 onChange={(e) => {
-                  setStatus(e.target.value)
+                  setElevenlabsVoiceId(e.target.value)
 
                   generationsConfig.elevenlabsVoiceId = e.target.value
                   setGenerationsConfig(generationsConfig)
@@ -215,6 +213,7 @@ export default function EditGenerationsConfig({
       <LoadElevenLabsVoicesByFilter
         userProfileId={userProfileId}
         status={BaseDataTypes.activeStatus}
+        addBlank={true}
         setElevenLabsVoices={setElevenLabsVoices}
         setLoaded={setElevenLabsVoicesLoaded} />
     </div>
