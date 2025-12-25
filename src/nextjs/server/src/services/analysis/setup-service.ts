@@ -5,7 +5,7 @@ import { ConsoleService } from '@/serene-core-server/services/console/service'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { AnalysisModel } from '@/models/trade-analysis/analysis-model'
 import { ServerOnlyTypes } from '@/types/server-only-types'
-import { GenerationsSettingsQueryService } from '../generations-settings/query-service'
+import { GenerationsConfigQueryService } from '../generations-configs/query-service'
 import { SetupAnalysesTechService } from './setup-tech-service'
 
 // Models
@@ -13,7 +13,7 @@ const analysisModel = new AnalysisModel()
 
 // Services
 const consoleService = new ConsoleService()
-const generationsSettingsQueryService = new GenerationsSettingsQueryService()
+const generationsConfigQueryService = new GenerationsConfigQueryService()
 const setupAnalysesTechService = new SetupAnalysesTechService()
 
 // Class
@@ -61,9 +61,9 @@ export class SetupAnalysesService {
           userProfileId: string,
           definitions: any[]) {
 
-    // Get the default GenerationsSettings
-    const generationsSettings = await
-            generationsSettingsQueryService.getDefault(prisma)
+    // Get the default GenerationsConfig
+    const generationsConfig = await
+            generationsConfigQueryService.getDefault(prisma)
 
     // Load definitions
     for (const definition of definitions) {
@@ -83,7 +83,7 @@ export class SetupAnalysesService {
                 prisma,
                 undefined,  // id
                 userProfileId,
-                generationsSettings.id,
+                generationsConfig.id,
                 type,
                 BaseDataTypes.activeStatus,
                 definition.instrumentType,

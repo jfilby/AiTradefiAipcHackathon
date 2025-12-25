@@ -11,7 +11,7 @@ import { YFinanceFinTypes } from '@/types/yfinance-types'
 import { AnalysisModel } from '@/models/trade-analysis/analysis-model'
 import { ElevenLabsVoiceModel } from '@/models/generated-media/elevenlabs-voice-model'
 import { ExchangeModel } from '@/models/instruments/exchange-model'
-import { GenerationsSettingsModel } from '@/models/trade-analysis/generations-settings-model'
+import { GenerationsConfigModel } from '@/models/trade-analysis/generations-settings-model'
 import { InstrumentModel } from '@/models/instruments/instrument-model'
 import { SlideshowModel } from '@/models/slideshows/slideshow-model'
 import { SlideTemplateModel } from '@/models/slideshows/slide-template-model'
@@ -27,7 +27,7 @@ import { ElevenLabsDefaults } from '@/types/elevenlabs-types'
 const analysisModel = new AnalysisModel()
 const elevenLabsVoiceModel = new ElevenLabsVoiceModel()
 const exchangeModel = new ExchangeModel()
-const generationsSettingsModel = new GenerationsSettingsModel()
+const generationsConfigModel = new GenerationsConfigModel()
 const instrumentModel = new InstrumentModel()
 const slideshowModel = new SlideshowModel()
 const slideTemplateModel = new SlideTemplateModel()
@@ -102,15 +102,15 @@ export class Slideshow1DataService {
     // Debug
     const fnName = `${this.clName}.setupAnalysis()`
 
-    // Get defautl GenerationsSettings
-    const generationsSettings = await
-            generationsSettingsModel.getByUniqueKey(
+    // Get defautl GenerationsConfig
+    const generationsConfig = await
+            generationsConfigModel.getByUniqueKey(
               prisma,
               adminUserProfileId,
-              ServerOnlyTypes.defaultGenerationsSettingsName)
+              ServerOnlyTypes.defaultGenerationsConfigName)
 
-    if (generationsSettings == null) {
-      throw new CustomError(`${fnName}: generationsSettings == null`)
+    if (generationsConfig == null) {
+      throw new CustomError(`${fnName}: generationsConfig == null`)
     }
 
     // Upsert Analysis
@@ -119,7 +119,7 @@ export class Slideshow1DataService {
               prisma,
               undefined,  // id
               adminUserProfileId,
-              generationsSettings.id,
+              generationsConfig.id,
               BaseDataTypes.screenerType,
               BaseDataTypes.activeStatus,
               BaseDataTypes.stocksType,

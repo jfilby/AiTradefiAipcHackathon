@@ -92,7 +92,7 @@ model UserProfile {
   ofUserAccounts                UserAccount[]
 
   ofAnalyses                    Analysis[]
-  ofGenerationsSettings         GenerationsSettings[]
+  ofGenerationsConfig           GenerationsConfig[]
   ofSlideshows                  Slideshow[]
   ofTradeAnalysesGroups         TradeAnalysesGroup[]
 

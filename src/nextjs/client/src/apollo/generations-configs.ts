@@ -1,0 +1,84 @@
+import { gql } from '@apollo/client'
+
+export const getGenerationsConfigListQuery = gql`
+  query getGenerationsConfigList(
+          $userProfileId: String!) {
+    getGenerationsConfigList(
+      userProfileId: $userProfileId) {
+
+      status
+      message
+      generationsConfigList {
+        id
+        publiclyShared
+        name
+      }
+    }
+  }
+`
+
+export const getGenerationsConfigQuery = gql`
+  query getGenerationsConfig(
+          $userProfileId: String!,
+          $instanceId: String,
+          $generationsConfigId: String!) {
+    getGenerationsConfig(
+      userProfileId: $userProfileId,
+      instanceId: $instanceId,
+      generationsConfigId: $generationsConfigId) {
+
+      status
+      message
+      generationsConfig {
+        id
+        userProfileId
+        elevenLabsVoiceId
+        status
+        name
+        created
+        updated
+      }
+    }
+  }
+`
+
+export const getGenerationsConfigsQuery = gql`
+  query getGenerationsConfigs(
+          $userProfileId: String!,
+          $instanceId: String) {
+    getGenerationsConfigs(
+      userProfileId: $userProfileId,
+      instanceId: $instanceId) {
+
+      status
+      message
+      generationsConfigs {
+        id
+        userProfileId
+        elevenLabsVoiceId
+        status
+        name
+        created
+        updated
+      }
+    }
+  }
+`
+
+export const upsertGenerationsConfigMutation = gql`
+  mutation upsertGenerationsConfig(
+             $id: String,
+             $elevenLabsVoiceId: String,
+             $status: String!,
+             $name: String!) {
+    upsertGenerationsConfig(
+      id: $id,
+      elevenLabsVoiceId: $elevenLabsVoiceId,
+      status: $status,
+      name: $name) {
+
+      status
+      message
+    }
+  }
+`

@@ -248,8 +248,8 @@ model Analysis {
   id                           String                 @id @default(cuid())
   userProfileId                String                 @map("user_profile_id")
   userProfile                  UserProfile            @relation(fields: [userProfileId], references: [id])
-  generationsSettingsId        String                 @map("generations_settings_id")
-  generationsSettings          GenerationsSettings    @relation(fields: [generationsSettingsId], references: [id])
+  generationsConfigId          String                 @map("generations_settings_id")
+  generationsConfig            GenerationsConfig      @relation(fields: [generationsConfigId], references: [id])
   type                         String                 @db.Char(1)  // S (screener), E (evaluator)
   status                       String                 @db.Char(1)
   instrumentType               String                 @map("instrument_type")
@@ -283,7 +283,7 @@ model AnalysisTech {
   @@schema("public")
 }
 
-model GenerationsSettings {
+model GenerationsConfig {
   id                           String               @id @default(cuid())
   userProfileId                String               @map("user_profile_id")
   userProfile                  UserProfile          @relation(fields: [userProfileId], references: [id])
@@ -292,15 +292,15 @@ model GenerationsSettings {
   status                       String               @db.Char(1)
   sharedPublicly               Boolean
   name                         String
-  slideshowSettings            Json?                @map("slideshow_settings") @db.JsonB
-  videoSettings                Json?                @map("video_settings") @db.JsonB
+  slideshowConfig              Json?                @map("slideshow_config") @db.JsonB
+  videoConfig                  Json?                @map("video_config") @db.JsonB
   created                      DateTime             @default(now())
   updated                      DateTime             @updatedAt
 
   ofAnalyses                   Analysis[]
 
   @@unique([userProfileId, name])
-  @@map("generations_settings")
+  @@map("generations_config")
   @@schema("public")
 }
 
@@ -537,7 +537,7 @@ model ElevenLabsVoice {
   highQualityBaseModelIds      Json                 @map("high_quality_base_model_ids") @db.JsonB
 
   ofGeneratedAudios            GeneratedAudio[]
-  ofGenerationsSettings        GenerationsSettings[]
+  ofGenerationsConfig          GenerationsConfig[]
   ofSlideshows                 Slideshow[]
 
   @@map("eleven_labs_voice")

@@ -66,8 +66,7 @@ export const upsertAnalysisMutation = gql`
              $defaultMinScore: Float!,
              $name: String!,
              $description: String!,
-             $prompt: String!)
-  {
+             $prompt: String!) {
     upsertAnalysis(
       id: $id,
       userProfileId: $userProfileId,

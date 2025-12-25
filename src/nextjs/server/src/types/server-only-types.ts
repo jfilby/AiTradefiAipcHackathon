@@ -36,7 +36,7 @@ export class ServerOnlyTypes {
   static finnHubNewsSourceName = 'FinnHub'
 
   // Generations settings
-  static defaultGenerationsSettingsName = 'Default'
+  static defaultGenerationsConfigName = 'Default'
 
   static defaultSlideShowSettings = {
     withIntroImage: false,

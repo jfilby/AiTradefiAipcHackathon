@@ -143,16 +143,40 @@ export const typeDefs = `#graphql
     name: String!
   }
 
-  type GenerationsSettingsListItem {
+  type GenerationsConfig {
+    id: String!
+    userProfileId: String!
+    elevenLabsVoiceId: String
+    status: String!
+    name: String!
+    created: String!
+    updated: String!
+  }
+
+  type GenerationsConfigResults {
+    status: Boolean!
+    message: String
+
+    generationsConfig: GenerationsConfig
+  }
+
+  type GenerationsConfigsResults {
+    status: Boolean!
+    message: String
+
+    generationsConfigs: [GenerationsConfig]
+  }
+
+  type GenerationsConfigListItem {
     id: String!
     publiclyShared: Boolean!
     name: String!
   }
 
-  type GenerationsSettingsListResults {
+  type GenerationsConfigListResults {
     status: Boolean!
     message: String
-    generationsSettingsList: [GenerationsSettingsListItem]
+    generationsConfigList: [GenerationsConfigListItem]
   }
 
   type Instrument {
@@ -339,9 +363,16 @@ export const typeDefs = `#graphql
       instanceId: String,
       instrumentType: String): AnalysesResults!
 
-    # Generations settings
-    getGenerationsSettingsList(
-      userProfileId: String!): GenerationsSettingsListResults!
+    # Generations configs
+    getGenerationsConfigList(
+      userProfileId: String!): GenerationsConfigListResults!
+    getGenerationsConfig(
+      userProfileId: String!,
+      instanceId: String,
+      id: String!): GenerationsConfigResults
+    getGenerationsConfigs(
+      userProfileId: String!,
+      instanceId: String): GenerationsConfigsResults
 
     # Instances
     filterInstances(
@@ -458,6 +489,13 @@ export const typeDefs = `#graphql
     upsertSpeakPreference(
       userProfileId: String!,
       enabled: Boolean!): StatusAndMessage!
+
+    # Generations configs
+    upsertGenerationsConfig(
+      id: String,
+      elevenLabsVoiceId: String,
+      status: String!,
+      name: String!): StatusAndMessage!
 
     # Instance chats
     getOrCreateInstanceChatSession(

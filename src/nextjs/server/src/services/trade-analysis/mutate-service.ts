@@ -400,7 +400,7 @@ export class TradeAnalysisMutateService {
             analysisModel.filter(
               prisma,
               undefined,  // userProfileId
-              undefined,  // generationsSettingsId
+              undefined,  // generationsConfigId
               undefined,  // type
               BaseDataTypes.activeStatus)
 

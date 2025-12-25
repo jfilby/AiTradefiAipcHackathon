@@ -75,7 +75,7 @@ export class SetupAnalysesTechService {
             analysisModel.filter(
               prisma,
               userProfileId,
-              undefined,  // generationsSettingsId
+              undefined,  // generationsConfigId
               undefined,  // type
               BaseDataTypes.activeStatus)
 

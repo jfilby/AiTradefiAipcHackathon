@@ -14,7 +14,7 @@ import { upsertUserPreference } from '@/serene-core-server/apollo/resolvers/muta
 
 // Concept queries imports
 import { getAnalyses, getAnalysisById } from './queries/analyses'
-import { getGenerationsSettingsList } from './queries/generations-settings'
+import { getGenerationsConfig, getGenerationsConfigList, getGenerationsConfigs } from './queries/generations-configs'
 // import { filterInstances, filterProjectInstances, instanceById } from './queries/instances'
 import { getInstrumentById, getInstruments } from './queries/instruments'
 import { getSlideshowById, getSlideshows, getSlideshowShowcase } from './queries/slideshows'
@@ -23,6 +23,7 @@ import { getLatestTradeAnalysesGroups, getTradeAnalysesGroupById, getTradeAnalys
 // Concept mutations imports
 import { upsertAnalysis } from './mutations/analyses'
 import { createElevenLabsToken, upsertSpeakPreference } from './mutations/eleven-labs'
+import { upsertGenerationsConfig } from './mutations/generations-configs'
 import { getOrCreateInstanceChatSession } from './mutations/instance-chats'
 import { loadServerStartData } from './mutations/server-data-start'
 import { signUpForWaitlist } from './mutations/sign-ups'
@@ -67,8 +68,10 @@ const Query = {
   getAnalysisById,
   getAnalyses,
 
-  // Generations settings
-  getGenerationsSettingsList,
+  // Generations config
+  getGenerationsConfigs,
+  getGenerationsConfig,
+  getGenerationsConfigList,
 
   // Instances
   // filterInstances,
@@ -122,6 +125,9 @@ const Mutation = {
 
   // Analyses
   upsertAnalysis,
+
+  // Generations config
+  upsertGenerationsConfig,
 
   // Instances
   // upsertInstance,

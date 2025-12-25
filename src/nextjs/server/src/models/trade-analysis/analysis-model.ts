@@ -10,7 +10,7 @@ export class AnalysisModel {
   async create(
           prisma: PrismaClient,
           userProfileId: string,
-          generationsSettingsId: string,
+          generationsConfigId: string,
           type: string,
           status: string,
           instrumentType: string,
@@ -27,7 +27,7 @@ export class AnalysisModel {
       return await prisma.analysis.create({
         data: {
           userProfileId: userProfileId,
-          generationsSettingsId: generationsSettingsId,
+          generationsConfigId: generationsConfigId,
           type: type,
           status: status,
           instrumentType: instrumentType,
@@ -68,7 +68,7 @@ export class AnalysisModel {
   async filter(
           prisma: PrismaClient,
           userProfileId: string | undefined = undefined,
-          generationsSettingsId: string | undefined = undefined,
+          generationsConfigId: string | undefined = undefined,
           type: string | undefined = undefined,
           status: string | undefined = undefined,
           instrumentType: string | undefined = undefined,
@@ -82,7 +82,7 @@ export class AnalysisModel {
       return await prisma.analysis.findMany({
         where: {
           userProfileId: userProfileId,
-          generationsSettingsId: generationsSettingsId,
+          generationsConfigId: generationsConfigId,
           type: type,
           status: status,
           instrumentType: instrumentType,
@@ -195,7 +195,7 @@ export class AnalysisModel {
           prisma: PrismaClient,
           id: string,
           userProfileId: string | undefined,
-          generationsSettingsId: string | undefined,
+          generationsConfigId: string | undefined,
           type: string | undefined,
           status: string | undefined,
           instrumentType: string | undefined,
@@ -212,7 +212,7 @@ export class AnalysisModel {
       return await prisma.analysis.update({
         data: {
           userProfileId: userProfileId,
-          generationsSettingsId: generationsSettingsId,
+          generationsConfigId: generationsConfigId,
           type: type,
           status: status,
           instrumentType: instrumentType,
@@ -235,7 +235,7 @@ export class AnalysisModel {
           prisma: PrismaClient,
           id: string | undefined,
           userProfileId: string | undefined,
-          generationsSettingsId: string | undefined,
+          generationsConfigId: string | undefined,
           type: string | undefined,
           status: string | undefined,
           instrumentType: string | undefined,
@@ -274,8 +274,8 @@ export class AnalysisModel {
         throw 'Prisma error'
       }
 
-      if (generationsSettingsId == null) {
-        console.error(`${fnName}: id is null and generationsSettingsId is null`)
+      if (generationsConfigId == null) {
+        console.error(`${fnName}: id is null and generationsConfigId is null`)
         throw 'Prisma error'
       }
 
@@ -319,7 +319,7 @@ export class AnalysisModel {
                this.create(
                  prisma,
                  userProfileId,
-                 generationsSettingsId,
+                 generationsConfigId,
                  type,
                  status,
                  instrumentType,
@@ -335,7 +335,7 @@ export class AnalysisModel {
                  prisma,
                  id,
                  userProfileId,
-                 generationsSettingsId,
+                 generationsConfigId,
                  type,
                  status,
                  instrumentType,

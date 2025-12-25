@@ -1,17 +1,17 @@
 import { FormControl, InputLabel, Select } from '@mui/material'
 
 interface Props {
-  generationsSettingsList: any[]
-  generationsSettings: string
-  setGenerationsSettings: any
+  generationsConfigList: any[]
+  generationsConfig: string
+  setGenerationsConfig: any
   json: any
   setJson: any
 }
 
-export default function GenerationsSettingsSelect({
-                          generationsSettingsList,
-                          generationsSettings,
-                          setGenerationsSettings,
+export default function GenerationsConfigSelect({
+                          generationsConfigList,
+                          generationsConfig,
+                          setGenerationsConfig,
                           json,
                           setJson
                         }: Props) {
@@ -35,18 +35,18 @@ export default function GenerationsSettingsSelect({
             label='Generations settings'
             native
             onChange={(e) => {
-              setGenerationsSettings(e.target.value)
+              setGenerationsConfig(e.target.value)
 
               if (json != null) {
-                json.generationsSettings = e.target.value
+                json.generationsConfig = e.target.value
                 setJson(json)
               }
             }}
             variant='outlined'
-            value={generationsSettings}>
-            {generationsSettingsList.map((generationsSettings) => (
-              <option key={generationsSettings.name} value={generationsSettings.value}>
-                {generationsSettings.name}
+            value={generationsConfig}>
+            {generationsConfigList.map((generationsConfig) => (
+              <option key={generationsConfig.name} value={generationsConfig.value}>
+                {generationsConfig.name}
               </option>
             ))}
           </Select>

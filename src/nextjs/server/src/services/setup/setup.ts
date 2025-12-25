@@ -11,7 +11,7 @@ import { ExchangeModel } from '@/models/instruments/exchange-model'
 import { DocSourceModel } from '@/models/documents/doc-source-model'
 import { AgentUserService } from '@/services/agents/agent-user-service'
 import { ElevenLabsService } from '../elevenlabs/service'
-import { GenerationsSettingsSetupService } from '../generations-settings/setup-service'
+import { GenerationsConfigSetupService } from '../generations-configs/setup-service'
 import { SetupAnalysesTechService } from '../analysis/setup-tech-service'
 import { SetupPreGeneratedImagesService } from '../generated-data/images/setup-service'
 import { YFinanceUtilsService } from '../external-data/yfinance/utils-service'
@@ -25,7 +25,7 @@ const docSourceModel = new DocSourceModel()
 // Services
 const agentUserService = new AgentUserService()
 const elevenLabsService = new ElevenLabsService()
-const generationsSettingsSetupService = new GenerationsSettingsSetupService()
+const generationsConfigSetupService = new GenerationsConfigSetupService()
 const sereneAiSetup = new SereneAiSetup()
 const setupPreGeneratedImagesService = new SetupPreGeneratedImagesService()
 const setupAnalysesTechService = new SetupAnalysesTechService()
@@ -107,7 +107,7 @@ export class SetupService {
             adminUserProfile.id)
 
     // Setup generations settings
-    await generationsSettingsSetupService.setup(
+    await generationsConfigSetupService.setup(
             prisma,
             adminUserProfile.id)
 

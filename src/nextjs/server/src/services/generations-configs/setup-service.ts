@@ -4,17 +4,17 @@ import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { ElevenLabsDefaults } from '@/types/elevenlabs-types'
 import { ServerOnlyTypes } from '@/types/server-only-types'
 import { ElevenLabsVoiceModel } from '@/models/generated-media/elevenlabs-voice-model'
-import { GenerationsSettingsModel } from '@/models/trade-analysis/generations-settings-model'
+import { GenerationsConfigModel } from '@/models/trade-analysis/generations-settings-model'
 
 // Models
 const elevenLabsVoiceModel = new ElevenLabsVoiceModel()
-const generationsSettingsModel = new GenerationsSettingsModel()
+const generationsConfigModel = new GenerationsConfigModel()
 
 // Class
-export class GenerationsSettingsSetupService {
+export class GenerationsConfigSetupService {
 
   // Consts
-  clName = 'GenerationsSettingsSetupService'
+  clName = 'GenerationsConfigSetupService'
 
   // Code
   async setup(
@@ -36,15 +36,15 @@ export class GenerationsSettingsSetupService {
     }
 
     // Create
-    const generationsSettings = await
-            generationsSettingsModel.upsert(
+    const generationsConfig = await
+            generationsConfigModel.upsert(
               prisma,
               undefined,  // id
               adminUserProfileId,
               elevenLabsVoice.id,
               BaseDataTypes.activeStatus,
               true,       // sharedPublicly
-              ServerOnlyTypes.defaultGenerationsSettingsName,
+              ServerOnlyTypes.defaultGenerationsConfigName,
               ServerOnlyTypes.defaultSlideShowSettings,
               ServerOnlyTypes.defaultVideoSettings)
   }

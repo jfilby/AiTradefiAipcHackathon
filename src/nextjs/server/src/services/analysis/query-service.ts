@@ -27,7 +27,7 @@ export class AnalysesQueryService {
             analysisModel.filter(
               prisma,
               userProfileId,
-              undefined,  // generationsSettingsId
+              undefined,  // generationsConfigId
               undefined,  // type
               status,
               instrumentType)

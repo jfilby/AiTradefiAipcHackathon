@@ -6,7 +6,7 @@ import { ElevenLabsVoiceModel } from '@/models/generated-media/elevenlabs-voice-
 import { SlideModel } from '@/models/slideshows/slide-model'
 import { SlideshowModel } from '@/models/slideshows/slideshow-model'
 import { SlideTemplateModel } from '@/models/slideshows/slide-template-model'
-import { GenerationsSettingsModel } from '@/models/trade-analysis/generations-settings-model'
+import { GenerationsConfigModel } from '@/models/trade-analysis/generations-settings-model'
 import { TradeAnalysisModel } from '@/models/trade-analysis/trade-analysis-model'
 import { GenSlideImageService } from './gen-image-service'
 import { GenSlideTextService } from './gen-text-service'
@@ -14,7 +14,7 @@ import { NarrationAudioService } from '@/services/elevenlabs/narration-service'
 
 // Models
 const elevenLabsVoiceModel = new ElevenLabsVoiceModel()
-const generationsSettingsModel = new GenerationsSettingsModel()
+const generationsConfigModel = new GenerationsConfigModel()
 const slideModel = new SlideModel()
 const slideshowModel = new SlideshowModel()
 const slideTemplateModel = new SlideTemplateModel()
@@ -42,18 +42,18 @@ export class SlideshowMutateService {
     // Get Analysis record
     const analysis = (tradeAnalysis as any).tradeAnalysesGroup.analysis
 
-    // Get GenerationsSettings
-    const generationsSettings = await
-            generationsSettingsModel.getByUniqueKey(
+    // Get GenerationsConfig
+    const generationsConfig = await
+            generationsConfigModel.getByUniqueKey(
               prisma,
               analysis.userProfileId,
-              ServerOnlyTypes.defaultGenerationsSettingsName)
+              ServerOnlyTypes.defaultGenerationsConfigName)
 
     // Get slideshowSettings
     var slideshowSettings: any = undefined
 
-    if (generationsSettings?.slideshowSettings != null) {
-      slideshowSettings = generationsSettings.slideshowSettings
+    if (generationsConfig?.slideshowSettings != null) {
+      slideshowSettings = generationsConfig.slideshowSettings
 
     } else {
       slideshowSettings = ServerOnlyTypes.defaultSlideShowSettings
@@ -78,7 +78,7 @@ export class SlideshowMutateService {
       elevenLabsVoice = await
         elevenLabsVoiceModel.getById(
           prisma,
-          generationsSettings.elevenLabsVoiceId)
+          generationsConfig.elevenLabsVoiceId)
 
       // Create Slideshow
       slideshow = await

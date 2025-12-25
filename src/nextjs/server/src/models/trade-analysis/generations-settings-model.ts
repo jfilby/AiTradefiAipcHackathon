@@ -1,9 +1,9 @@
 import { PrismaClient } from '@prisma/client'
 
-export class GenerationsSettingsModel {
+export class GenerationsConfigModel {
 
   // Consts
-  clName = 'GenerationsSettingsModel'
+  clName = 'GenerationsConfigModel'
 
   // Code
   async create(
@@ -21,7 +21,7 @@ export class GenerationsSettingsModel {
 
     // Create record
     try {
-      return await prisma.generationsSettings.create({
+      return await prisma.generationsConfig.create({
         data: {
           userProfileId: userProfileId,
           elevenLabsVoiceId: elevenLabsVoiceId,
@@ -47,7 +47,7 @@ export class GenerationsSettingsModel {
 
     // Delete
     try {
-      return await prisma.generationsSettings.delete({
+      return await prisma.generationsConfig.delete({
         where: {
           id: id
         }
@@ -73,7 +73,7 @@ export class GenerationsSettingsModel {
 
     // Query
     try {
-      return await prisma.generationsSettings.findMany({
+      return await prisma.generationsConfig.findMany({
         where: {
           userProfileId: userProfileId,
           elevenLabsVoiceId: elevenLabsVoiceId,
@@ -99,7 +99,7 @@ export class GenerationsSettingsModel {
 
     // Query
     try {
-      return await prisma.generationsSettings.findMany({
+      return await prisma.generationsConfig.findMany({
         where: {
           OR: [
             {
@@ -136,10 +136,10 @@ export class GenerationsSettingsModel {
     const fnName = `${this.clName}.getById()`
 
     // Query
-    var generationsSettings: any = null
+    var generationsConfig: any = null
 
     try {
-      generationsSettings = await prisma.generationsSettings.findUnique({
+      generationsConfig = await prisma.generationsConfig.findUnique({
         where: {
           id: id
         }
@@ -152,7 +152,7 @@ export class GenerationsSettingsModel {
     }
 
     // Return
-    return generationsSettings
+    return generationsConfig
   }
 
   async getByUniqueKey(
@@ -175,10 +175,10 @@ export class GenerationsSettingsModel {
     }
 
     // Query
-    var generationsSettings: any = null
+    var generationsConfig: any = null
 
     try {
-      generationsSettings = await prisma.generationsSettings.findFirst({
+      generationsConfig = await prisma.generationsConfig.findFirst({
         where: {
           userProfileId: userProfileId,
           name: name
@@ -192,7 +192,7 @@ export class GenerationsSettingsModel {
     }
 
     // Return
-    return generationsSettings
+    return generationsConfig
   }
 
   async update(
@@ -211,7 +211,7 @@ export class GenerationsSettingsModel {
 
     // Update record
     try {
-      return await prisma.generationsSettings.update({
+      return await prisma.generationsConfig.update({
         data: {
           userProfileId: userProfileId,
           elevenLabsVoiceId: elevenLabsVoiceId,
@@ -252,14 +252,14 @@ export class GenerationsSettingsModel {
         userProfileId != null &&
         name != null) {
 
-      const generationsSettings = await
+      const generationsConfig = await
               this.getByUniqueKey(
                 prisma,
                 userProfileId,
                 name)
 
-      if (generationsSettings != null) {
-        id = generationsSettings.id
+      if (generationsConfig != null) {
+        id = generationsConfig.id
       }
     }
 
