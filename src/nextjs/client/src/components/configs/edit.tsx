@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import SaveIcon from '@mui/icons-material/Save'
-import { Alert, FormControl, InputLabel, Select, TextField, Typography } from '@mui/material'
+import { Alert, FormControl, InputLabel, ListItemText, MenuItem, Select, TextField, Typography } from '@mui/material'
 import LabeledIconButton from '@/serene-core-client/components/buttons/labeled-icon-button'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import LoadElevenLabsVoicesByFilter from '../elevenlabs-voices/load-by-filter'
-import ListElevenLabsVoices from '../elevenlabs-voices/list'
 
 interface Props {
   userProfileId: string
@@ -137,13 +136,46 @@ export default function EditGenerationsConfig({
         </div>
 
         {elevenLabsVoices != null ?
-          <ListElevenLabsVoices
-            userProfileId={userProfileId}
-            elevenLabsVoices={elevenLabsVoices} />
-        :
-          <Typography>
-            Loading ElevenLabs voices..
-          </Typography>
+          <div style={{ marginBottom: '1em', width: '15em' }}>
+            <FormControl fullWidth>
+              <InputLabel
+                htmlFor='select-elevenlabs-voice'
+                required
+                shrink>
+                ElevenLabs voice
+              </InputLabel>
+              <Select
+                label='ElevenLabs voice'
+                value={elevenlabsVoiceId}
+                onChange={(e) => {
+                  setStatus(e.target.value)
+
+                  generationsConfig.elevenlabsVoiceId = e.target.value
+                  setGenerationsConfig(generationsConfig)
+                }}
+                variant='outlined'
+                renderValue={(selected) => {
+                  const voice = elevenLabsVoices.find(v => v.id === selected)
+                  return voice?.name ?? ''
+                }}>
+                {elevenLabsVoices.map((voice) => (
+                  <MenuItem key={voice.id} value={voice.id}>
+                    <ListItemText
+                      primary={voice.name}
+                      secondary={
+                        <Typography
+                          variant='body2'
+                          color='text.secondary'>
+                          {voice.description}
+                        </Typography>
+                      } />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+          :
+          <></>
         }
 
         <div style={{ textAlign: 'right', width: '100%' }}>
