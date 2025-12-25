@@ -108,11 +108,11 @@ export default function EditGenerationsConfig({
           <FormControl fullWidth>
             <InputLabel
               htmlFor='select-status'
-              required
-              shrink>
+              required>
               Status
             </InputLabel>
             <Select
+              labelId='select-status'
               inputProps={{
                 id: 'select-status',
               }}
@@ -196,6 +196,14 @@ export default function EditGenerationsConfig({
           :
             <></>
           }
+
+          <div style={{ display: 'inline-block' }}>
+            <LabeledIconButton
+              icon={SaveIcon}
+              label='Save'
+              onClick={(e: any) => setSaveAction(true)}
+              style={{ marginLeft: '1em' }} />
+          </div>
 
           <div style={{ display: 'inline-block' }}>
             <LabeledIconButton
