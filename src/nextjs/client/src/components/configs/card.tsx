@@ -6,7 +6,7 @@ import LabeledIconButton from '@/serene-core-client/components/buttons/labeled-i
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import DeleteDialog from '../dialogs/delete-dialog'
 import UndeleteDialog from '../dialogs/undelete-dialog'
-// import SaveGenerationsConfig from './save'
+import SaveGenerationsConfig from './save'
 
 interface Props {
   userProfileId: string
@@ -136,7 +136,7 @@ export default function ElevenLabsVoiceCard({
         </div>
       </div>
 
-      {/* <SaveGenerationsConfig
+      <SaveGenerationsConfig
         userProfileId={userProfileId}
         generationsConfig={thisGenerationsConfig}
         isAdd={false}
@@ -145,7 +145,7 @@ export default function ElevenLabsVoiceCard({
         saveAction={saveAction}
         setSaveAction={setSaveAction}
         setEditMode={undefined}
-        redirectToIndexOnSave={false} /> */}
+        redirectToIndexOnSave={false} />
 
       <DeleteDialog
         open={deleteDialogOpen}
