@@ -47,6 +47,8 @@ export default function SaveGenerationsConfig({
   // Functions
   async function upsertGenerationsConfig() {
 
+    console.log(`saving with userProfileId: ${userProfileId}`)
+
     // Query
     var sendUpsertGenerationsConfigData: any = undefined
 
@@ -54,13 +56,10 @@ export default function SaveGenerationsConfig({
         variables: {
           id: generationsConfig.id,
           userProfileId: userProfileId,
-          type: generationsConfig.type,
+          elevenLabsVoiceId: generationsConfig.elevenLabsVoiceId,
           status: generationsConfig.status,
-          instrumentType: generationsConfig.instrumentType,
-          defaultMinScore: generationsConfig.defaultMinScore,
           name: generationsConfig.name,
-          description: generationsConfig.description,
-          prompt: generationsConfig.prompt
+          description: generationsConfig.description
         }
       }).then(result => sendUpsertGenerationsConfigData = result)
 

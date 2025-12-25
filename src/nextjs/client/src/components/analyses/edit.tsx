@@ -103,6 +103,9 @@ export default function EditAnalysis({
     }
 
     // Verified OK
+    setAlertSeverity(undefined)
+    setMessage(undefined)
+
     return true
   }
 

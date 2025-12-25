@@ -17,3 +17,16 @@ export const getElevenLabsVoicesQuery = gql`
     }
   }
 `
+
+export const getVoicePreviewAudioQuery = gql`
+  mutation getVoicePreviewAudio(
+             $elevenLabsVoiceId: String!) {
+    getVoicePreviewAudio(
+      elevenLabsVoiceId: $elevenLabsVoiceId) {
+
+      status
+      message
+      generatedAudioId
+    }
+  }
+`

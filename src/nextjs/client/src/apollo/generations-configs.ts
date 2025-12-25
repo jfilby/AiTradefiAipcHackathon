@@ -68,11 +68,13 @@ export const getGenerationsConfigsQuery = gql`
 export const upsertGenerationsConfigMutation = gql`
   mutation upsertGenerationsConfig(
              $id: String,
+             $userProfileId: String!,
              $elevenLabsVoiceId: String,
              $status: String!,
              $name: String!) {
     upsertGenerationsConfig(
       id: $id,
+      userProfileId: $userProfileId,
       elevenLabsVoiceId: $elevenLabsVoiceId,
       status: $status,
       name: $name) {

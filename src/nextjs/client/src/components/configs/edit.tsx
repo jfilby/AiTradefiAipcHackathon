@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import SaveIcon from '@mui/icons-material/Save'
+import { PlayArrow } from '@mui/icons-material'
 import { Alert, FormControl, InputLabel, ListItemText, MenuItem, Select, TextField, Typography } from '@mui/material'
 import LabeledIconButton from '@/serene-core-client/components/buttons/labeled-icon-button'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
+import GetVoicePreviewAudio from '../elevenlabs-voices/get-voice-preview-audio'
 import LoadElevenLabsVoicesByFilter from '../elevenlabs-voices/load-by-filter'
 
 interface Props {
@@ -35,13 +37,44 @@ export default function EditGenerationsConfig({
 
   // State
   const [name, setName] = useState<string>(generationsConfig.name)
-  const [elevenlabsVoiceId, setElevenlabsVoiceId] = useState<string>(generationsConfig.elevenlabsVoiceId)
+  const [elevenLabsVoiceId, setElevenLabsVoiceId] = useState<string>(generationsConfig.elevenLabsVoiceId)
   const [status, setStatus] = useState<string>(generationsConfig.status)
 
   const [elevenLabsVoices, setElevenLabsVoices] = useState<any[] | undefined>(undefined)
   const [elevenLabsVoicesLoaded, setElevenLabsVoicesLoaded] = useState<boolean>(false)
+  const [loadVoicePreviewAudio, setLoadVoicePreviewAudio] = useState<boolean>(false)
+  const [generatedAudioId, setGeneratedAudioId] = useState<string | undefined>(undefined)
+
+  // Effects
+  useEffect(() => {
+
+    playAudio()
+
+  }, [generatedAudioId])
 
   // Functions
+  async function playAudio() {
+
+    // console.log(`playing audio..`)
+
+    // Validate
+    if (generatedAudioId == null) {
+      return
+    }
+
+    // Get the URL
+    const audioUrl = generatedAudioId ?
+      `${process.env.NEXT_PUBLIC_API_URL}/api/audio/${generatedAudioId}/get` :
+      undefined
+
+      // Skip if audio URL not found
+    if (!audioUrl) return
+
+    // Play audio
+    const audio = new Audio(audioUrl)
+    audio.play()
+  }
+
   function verifyFields() {
 
     if (name == null ||
@@ -61,6 +94,9 @@ export default function EditGenerationsConfig({
     }
 
     // Verified OK
+    setAlertSeverity(undefined)
+    setMessage(undefined)
+
     return true
   }
 
@@ -69,7 +105,8 @@ export default function EditGenerationsConfig({
     <div style={{ minWidth: 275 }}>
 
       {/* <p>alertSeverity: {alertSeverity}</p>
-      <p>message: {message}</p> */}
+      <p>message: {message}</p>
+      <p>name: {name}</p> */}
 
       {message != null ?
         <Alert
@@ -86,7 +123,6 @@ export default function EditGenerationsConfig({
         <div style={{ marginBottom: '1em' }}>
           <TextField
             autoComplete='off'
-            disabled={generationsConfig.status !== BaseDataTypes.newStatus}
             label='Name'
             onChange={(e) => {
               setName(e.target.value)
@@ -136,73 +172,68 @@ export default function EditGenerationsConfig({
         </div>
 
         {elevenLabsVoices != null ?
-          <div style={{ marginBottom: '1em', width: '25em' }}>
-            <FormControl fullWidth>
-              <InputLabel
-                htmlFor='select-elevenlabs-voice'>
-                ElevenLabs voice
-              </InputLabel>
-              <Select
-                label='ElevenLabs voice'
-                value={elevenlabsVoiceId}
-                onChange={(e) => {
-                  setElevenlabsVoiceId(e.target.value)
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1em' }}>
+            <div style={{ width: '25em' }}>
+              <FormControl fullWidth>
+                <InputLabel
+                  htmlFor='select-elevenlabs-voice'>
+                  ElevenLabs voice
+                </InputLabel>
+                <Select
+                  label='ElevenLabs voice'
+                  value={elevenLabsVoiceId}
+                  onChange={(e) => {
+                    setElevenLabsVoiceId(e.target.value)
 
-                  generationsConfig.elevenlabsVoiceId = e.target.value
-                  setGenerationsConfig(generationsConfig)
-                }}
-                variant='outlined'
-                renderValue={(selected) => {
-                  const voice = elevenLabsVoices.find(v => v.id === selected)
-                  return voice?.name ?? ''
-                }}>
-                {elevenLabsVoices.map((voice) => (
-                  <MenuItem key={voice.id} value={voice.id}>
-                    <ListItemText
-                      primary={voice.name}
-                      secondary={
-                        <Typography
-                          variant='body2'
-                          color='text.secondary'>
-                          {voice.description}
-                        </Typography>
-                      } />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+                    generationsConfig.elevenlabsVoiceId = e.target.value
+                    setGenerationsConfig(generationsConfig)
+                  }}
+                  variant='outlined'
+                  renderValue={(selected) => {
+                    const voice = elevenLabsVoices.find(v => v.id === selected)
+                    return voice?.name ?? ''
+                  }}>
+                  {elevenLabsVoices.map((voice) => (
+                    <MenuItem key={voice.id} value={voice.id}>
+                      <ListItemText
+                        primary={voice.name}
+                        secondary={
+                          <Typography
+                            variant='body2'
+                            color='text.secondary'>
+                            {voice.description}
+                          </Typography>
+                        } />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+            <LabeledIconButton
+              icon={PlayArrow}
+              label='Preview'
+              onClick={(e: any) => setLoadVoicePreviewAudio(true)}
+              style={{ marginLeft: '1em' }} />
           </div>
-          :
+        :
           <></>
         }
 
         <div style={{ textAlign: 'right', width: '100%' }}>
 
-          {generationsConfig.status === BaseDataTypes.newStatus ?
-            <div style={{ display: 'inline-block' }}>
-              <LabeledIconButton
-                icon={SaveIcon}
-                label='Save'
-                onClick={(e: any) => {
-                  generationsConfig.status = status
-
-                  if (verifyFields() === true) {
-
-                    setGenerationsConfig(generationsConfig)
-                    setSaveAction(true)
-                  }
-                }} />
-            </div>
-          :
-            <></>
-          }
-
           <div style={{ display: 'inline-block' }}>
             <LabeledIconButton
               icon={SaveIcon}
               label='Save'
-              onClick={(e: any) => setSaveAction(true)}
-              style={{ marginLeft: '1em' }} />
+              onClick={(e: any) => {
+                generationsConfig.status = status
+
+                if (verifyFields() === true) {
+
+                  setGenerationsConfig(generationsConfig)
+                  setSaveAction(true)
+                }
+              }} />
           </div>
 
           <div style={{ display: 'inline-block' }}>
@@ -217,6 +248,14 @@ export default function EditGenerationsConfig({
         </div>
 
       </div>
+
+      <GetVoicePreviewAudio
+        elevenLabsVoiceId={elevenLabsVoiceId}
+        setAlertSeverity={setAlertSeverity}
+        setMessage={setMessage}
+        setGeneratedAudioId={setGeneratedAudioId}
+        loadVoicePreviewAudio={loadVoicePreviewAudio}
+        setLoadVoicePreviewAudio={setLoadVoicePreviewAudio} />
 
       <LoadElevenLabsVoicesByFilter
         userProfileId={userProfileId}

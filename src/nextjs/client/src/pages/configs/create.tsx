@@ -22,6 +22,7 @@ export default function CreateConfigPage({
   const [message, setMessage] = useState<string | undefined>(undefined)
 
   const [generationsConfig, setGenerationsConfig] = useState<any>({
+    elevenLabsVoiceId: null,
     status: BaseDataTypes.activeStatus
   })
 

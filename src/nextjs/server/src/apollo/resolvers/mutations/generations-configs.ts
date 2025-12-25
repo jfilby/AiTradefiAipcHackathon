@@ -14,7 +14,7 @@ export async function upsertGenerationsConfig(
   // Debug
   const fnName = `upsertGenerationsConfig()`
 
-  // console.log(`${fnName}: args: ` + JSON.stringify(args))
+  console.log(`${fnName}: args: ` + JSON.stringify(args))
 
   // Get instruments
   const results = await

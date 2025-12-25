@@ -151,6 +151,12 @@ export const typeDefs = `#graphql
     elevenLabsVoices: [ElevenLabsVoice]
   }
 
+  type VoicePreviewAudioResults {
+    status: Boolean!
+    message: String
+    generatedAudioId: String!
+  }
+
   type Exchange {
     id: String!
     name: String!
@@ -507,9 +513,14 @@ export const typeDefs = `#graphql
       userProfileId: String!,
       enabled: Boolean!): StatusAndMessage!
 
+    # ElevenLabs voices
+    getVoicePreviewAudio(
+      elevenLabsVoiceId: String!): VoicePreviewAudioResults!
+
     # Generations configs
     upsertGenerationsConfig(
       id: String,
+      userProfileId: String!,
       elevenLabsVoiceId: String,
       status: String!,
       name: String!): StatusAndMessage!

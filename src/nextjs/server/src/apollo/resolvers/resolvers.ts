@@ -23,7 +23,8 @@ import { getLatestTradeAnalysesGroups, getTradeAnalysesGroupById, getTradeAnalys
 
 // Concept mutations imports
 import { upsertAnalysis } from './mutations/analyses'
-import { createElevenLabsToken, upsertSpeakPreference } from './mutations/eleven-labs'
+import { createElevenLabsToken, upsertSpeakPreference } from './mutations/elevenlabs'
+import { getVoicePreviewAudio } from './mutations/elevenlabs-voices'
 import { upsertGenerationsConfig } from './mutations/generations-configs'
 import { getOrCreateInstanceChatSession } from './mutations/instance-chats'
 import { loadServerStartData } from './mutations/server-data-start'
@@ -126,6 +127,9 @@ const Mutation = {
   // ElevenLabs
   createElevenLabsToken,
   upsertSpeakPreference,
+
+  // ElevenLabs voice
+  getVoicePreviewAudio,
 
   // Analyses
   upsertAnalysis,
