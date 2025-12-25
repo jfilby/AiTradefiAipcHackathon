@@ -4,8 +4,8 @@ import { loadServerPage } from '@/services/page/load-server-page'
 import Layout from '@/components/layouts/layout'
 import { Typography } from '@mui/material'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
-import EditConfig from '@/components/configs/edit'
-import SaveConfig from '@/components/configs/save'
+import EditGenerationsConfig from '@/components/configs/edit'
+import SaveGenerationsConfig from '@/components/configs/save'
 
 interface Props {
   userProfile: any
@@ -48,7 +48,7 @@ export default function CreateConfigPage({
             </Typography>
           </div>
 
-          <EditConfig
+          <EditGenerationsConfig
             userProfileId={userProfile.id}
             instanceId={undefined}
             alertSeverity={alertSeverity}
@@ -61,7 +61,7 @@ export default function CreateConfigPage({
         </div>
       </Layout>
 
-      <SaveConfig
+      <SaveGenerationsConfig
         userProfileId={userProfile.id}
         instanceId={undefined}
         generationsConfig={generationsConfig}
