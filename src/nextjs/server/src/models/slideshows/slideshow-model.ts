@@ -199,7 +199,7 @@ export class SlideshowModel {
         orderBy: [
           {
             tradeAnalysis: {
-              instrumentId: 'asc'
+              score: 'desc'
             }
           },
           {
@@ -251,7 +251,7 @@ export class SlideshowModel {
         orderBy: [
           {
             tradeAnalysis: {
-              instrumentId: 'asc'
+              score: 'desc'
             }
           },
           {
