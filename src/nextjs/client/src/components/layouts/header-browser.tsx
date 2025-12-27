@@ -47,12 +47,12 @@ export function HeaderBrowser({ highLevelLink }: Props) {
             highLevelLink={highLevelLink} />
           &nbsp;
           &nbsp;
-          <HeaderBrowserLink
+          {/* <HeaderBrowserLink
             name='Results'
             linkName='results'
             highLevelLink={highLevelLink} />
           &nbsp;
-          &nbsp;
+          &nbsp; */}
           <HeaderBrowserLink
             name='Slideshows'
             linkName='slideshows'

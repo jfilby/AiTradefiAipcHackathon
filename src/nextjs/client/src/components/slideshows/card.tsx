@@ -88,7 +88,8 @@ export default function SlideshowCard({
           style={{ display: 'inline-block', marginBottom: '1em', width: '80%' }}>
 
           {thisSlideshow.status === BaseDataTypes.activeStatus ?
-            <Link href={viewUrl}>
+            <Link
+              href={viewUrl}>
               <a style={{ textDecoration: 'none', color: 'inherit' }}>
                 <Typography
                   variant='h5'
@@ -96,8 +97,7 @@ export default function SlideshowCard({
                     display: 'inline-block',
                     marginBottom: '0.5em',
                     '&:hover': { textDecoration: 'underline' },
-                  }}
-                >
+                  }}>
                   {thisSlideshow.tradeAnalysis.instrument.name}
                 </Typography>
 
@@ -107,8 +107,7 @@ export default function SlideshowCard({
                     display: 'inline-block',
                     marginLeft: '0.5em',
                     width: '50%',
-                  }}
-                >
+                  }}>
                   <span>{thisSlideshow.tradeAnalysis.instrument.exchange.name}</span>
                   <span style={{ color: '#660', marginLeft: '1em' }}>
                     {Math.floor(thisSlideshow.tradeAnalysis.score * 100)}%

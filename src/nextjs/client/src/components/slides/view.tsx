@@ -228,7 +228,7 @@ export default function ViewSlide({
 
       {/* <p>slide: {JSON.stringify(slide)}</p> */}
 
-      {/* Sldie title */}
+      {/* Slide title */}
       <div style={{ marginBottom: '2em' }}>
         <div style={{ marginBottom: '1em', width: '80%' }}>
 

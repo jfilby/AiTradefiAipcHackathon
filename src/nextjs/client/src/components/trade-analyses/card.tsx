@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Alert, Typography } from '@mui/material'
+import { Alert, Link, Typography } from '@mui/material'
 
 interface Props {
   instanceId?: string
@@ -12,7 +12,7 @@ export default function TradeAnalysisCard({
                         }: Props) {
 
   // Consts
-  const pathsUrl = `/i/${instanceId}/trade-analysis/${tradeAnalysis.id}`
+  const tradeAnalysisUrl = `/results/${tradeAnalysis.id}`
 
   // State
   const [alertSeverity, setAlertSeverity] = useState<any>('')
@@ -38,11 +38,20 @@ export default function TradeAnalysisCard({
         <div style={{ display: 'block', marginBottom: '1em' }}>
 
           <div style={{ marginBottom: '0.5em' }}>
-            <Typography
-              style={{ display: 'inline-block' }}
-              variant='h5'>
-              {tradeAnalysis.instrument.name}
-            </Typography>
+
+            <Link href={tradeAnalysisUrl}>
+              <a style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Typography
+                  sx={{
+                    display: 'inline-block',
+                    marginBottom: '0.5em',
+                    '&:hover': { textDecoration: 'underline' },
+                  }}
+                  variant='h5'>
+                  {tradeAnalysis.instrument.name}
+                </Typography>
+              </a>
+            </Link>
 
             <Typography
               style={{ display: 'inline-block', marginLeft: '0.5em', width: '50%' }}

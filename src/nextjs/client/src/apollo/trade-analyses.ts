@@ -51,6 +51,7 @@ export const getLatestTradeAnalysesGroupsQuery = gql`
         }
         day
         ofTradeAnalyses {
+          id
           instrument {
             exchange {
               name

@@ -286,7 +286,7 @@ export const typeDefs = `#graphql
   }
 
   type TradeAnalysis {
-    id: String
+    id: String!
     tradeAnalysesGroupId: String!
     instrument: Instrument!
     score: Float!
