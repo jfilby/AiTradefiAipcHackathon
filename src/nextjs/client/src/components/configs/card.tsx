@@ -77,61 +77,57 @@ export default function ElevenLabsVoiceCard({
 
       <div style={{ marginBottom: '2em' }}>
 
-        <div
-          onClick={(e) => window.location.href = viewUrl}
-          style={{ display: 'inline-block', marginBottom: '1em', width: '80%' }}>
+        <Link href={viewUrl}>
+          <div style={{ display: 'inline-block', marginBottom: '1em', width: '80%' }}>
 
-          {thisGenerationsConfig.status === BaseDataTypes.activeStatus ?
-            <Link href={viewUrl}>
-              <a style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Typography
-                  variant='h5'
-                  sx={{
-                    display: 'inline-block',
-                    marginBottom: '0.5em',
-                    '&:hover': { textDecoration: 'underline' },
-                  }}
-                >
-                  {thisGenerationsConfig.name}
-                </Typography>
-              </a>
-            </Link>
-          :
-            <>
+            {thisGenerationsConfig.status === BaseDataTypes.activeStatus ?
               <Typography
-                style={{ color: 'gray' }}
-                variant='h5'>
-                <>{generationsConfig.name}</>
+                variant='h5'
+                sx={{
+                  display: 'inline-block',
+                  marginBottom: '0.5em',
+                  '&:hover': { textDecoration: 'underline' },
+                }}>
+                {thisGenerationsConfig.name}
               </Typography>
+            :
+              <>
+                <Typography
+                  style={{ color: 'gray' }}
+                  variant='h5'>
+                  <>{generationsConfig.name}</>
+                </Typography>
+                <Typography
+                  style={{ color: 'gray' }}
+                  variant='body2'>
+                  <i>Deleted</i>
+                </Typography>
+              </>
+            }
+
+            {generationsConfig.elevenLabsVoice?.name ?
+              <Typography
+                style={{ marginBottom: '1em' }}
+                variant='body1'>
+                Voiced by {generationsConfig.elevenLabsVoice?.name}
+              </Typography>
+            :
+              <></>
+            }
+
+            {generationsConfig.isDefault ?
               <Typography
                 style={{ color: 'gray' }}
                 variant='body2'>
-                <i>Deleted</i>
+                Default
               </Typography>
-            </>
-          }
+            :
+              <></>
+            }
 
-          {generationsConfig.elevenLabsVoice?.name ?
-            <Typography
-              style={{ marginBottom: '1em' }}
-              variant='body1'>
-              Voiced by {generationsConfig.elevenLabsVoice?.name}
-            </Typography>
-          :
-            <></>
-          }
+          </div>
+        </Link>
 
-          {generationsConfig.isDefault ?
-            <Typography
-              style={{ color: 'gray' }}
-              variant='body2'>
-              Default
-            </Typography>
-          :
-            <></>
-          }
-
-        </div>
         <div style={{ display: 'inline-block', height: '2em', textAlign: 'right', width: '20%' }}>
           <>
             {thisGenerationsConfig.status === BaseDataTypes.activeStatus ?
