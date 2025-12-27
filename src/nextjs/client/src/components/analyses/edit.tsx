@@ -181,7 +181,7 @@ export default function EditAnalysis({
           </FormControl>
         </div> */}
 
-        <div style={{ marginBottom: '1em', width: '15em' }}>
+        <div style={{ marginBottom: '2em', width: '15em' }}>
           <FormControl fullWidth>
             <InputLabel
               htmlFor='select-instrument-type'

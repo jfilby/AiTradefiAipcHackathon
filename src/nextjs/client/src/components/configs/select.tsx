@@ -24,7 +24,7 @@ export default function GenerationsConfigSelect({
     <div style={{ minWidth: 275 }}>
 
       {generationsConfigs != null ?
-        <div style={{ marginBottom: '1em', width: '15em' }}>
+        <div style={{ marginBottom: '2em', width: '15em' }}>
           <FormControl fullWidth>
             <InputLabel
               htmlFor='select-generations-config'
