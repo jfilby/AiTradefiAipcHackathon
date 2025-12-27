@@ -11,7 +11,7 @@ interface Props {
   instance: any
 }
 
-export default function LatestResearchPage({
+export default function LatestResultsPage({
                           userProfile,
                           instance
                         }: Props) {
@@ -24,7 +24,7 @@ export default function LatestResearchPage({
   return (
     <>
       <Head>
-        <title>{process.env.NEXT_PUBLIC_APP_NAME} - Latest research</title>
+        <title>{process.env.NEXT_PUBLIC_APP_NAME} - Results</title>
       </Head>
 
       <Layout userProfile={userProfile}>
@@ -36,7 +36,7 @@ export default function LatestResearchPage({
           <Typography
             style={{ marginBottom: '1em' }}
             variant='h3'>
-            Latest stock research
+            Results
           </Typography>
 
           {inNewStatus != null &&
