@@ -37,7 +37,7 @@ export default function SlideControls({
 
           {/* <p>isTextSlide: {JSON.stringify(isTextSlide)}</p> */}
 
-          {slide.generatedAudioId != null?
+          {slide.narration != null ?
             <>
               <div style={{ display: 'inline-block' }}>
                 <LabeledIconButton
