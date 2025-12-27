@@ -66,7 +66,8 @@ export class ElevenLabsVoiceModel {
           voiceId: string | undefined = undefined,
           status: string | undefined = undefined,
           name: string | undefined = undefined,
-          category: string | undefined = undefined) {
+          category: string | undefined = undefined,
+          sortByName: boolean = false) {
 
     // Debug
     const fnName = `${this.clName}.filter()`
@@ -79,7 +80,12 @@ export class ElevenLabsVoiceModel {
           status: status,
           name: name,
           category: category
-        }
+        },
+        orderBy: [
+          {
+            name: sortByName ? 'asc' : undefined
+          }
+        ]
       })
     } catch(error: any) {
       console.error(`${fnName}: error: ${error}`)

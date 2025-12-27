@@ -21,7 +21,10 @@ export async function getElevenLabsVoices(
           elevenLabsVoiceModel.filter(
             prisma,
             undefined,  // voiceId
-            args.status)
+            args.status,
+            undefined,  // name
+            undefined,  // category
+            true)       // sortByName
 
   // Return
   return {
