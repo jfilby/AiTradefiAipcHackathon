@@ -77,40 +77,42 @@ export default function AnalysisCard({
 
       <div style={{ marginBottom: '2em' }}>
 
-        <div
-          onClick={(e) => window.location.href = viewUrl}
-          style={{ display: 'inline-block', marginBottom: '1em', width: '80%' }}>
+        <Link href={viewUrl}>
+          <div style={{ display: 'inline-block', marginBottom: '1em', width: '80%' }}>
 
-          {thisAnalysis.status !== BaseDataTypes.deletePendingStatus ?
-            <Link href={viewUrl}>
+            {thisAnalysis.status !== BaseDataTypes.deletePendingStatus ?
               <Typography
-                style={{ marginBottom: '0.5em' }}
+                sx={{
+                  display: 'inline-block',
+                  marginBottom: '0.5em',
+                  '&:hover': { textDecoration: 'underline' },
+                }}
                 variant='h5'>
                 {thisAnalysis.name}
               </Typography>
-            </Link>
-          :
-            <>
-              <Typography
-                style={{ color: 'gray' }}
-                variant='h5'>
-                {thisAnalysis.name}
-              </Typography>
-            </>
-          }
+            :
+              <>
+                <Typography
+                  style={{ color: 'gray' }}
+                  variant='h5'>
+                  {thisAnalysis.name}
+                </Typography>
+              </>
+            }
 
-          <Typography
-            style={{ marginBottom: '1em' }}
-            variant='body1'>
-            {analysis.description}
-          </Typography>
+            <Typography
+              style={{ marginBottom: '1em' }}
+              variant='body1'>
+              {analysis.description}
+            </Typography>
 
-          <Typography
-            style={{ color: 'gray' }}
-            variant='body2'>
-            {BaseDataTypes.analysisStatusMap[analysis.status]}
-          </Typography>
-        </div>
+            <Typography
+              style={{ color: 'gray' }}
+              variant='body2'>
+              {BaseDataTypes.analysisStatusMap[analysis.status]}
+            </Typography>
+          </div>
+        </Link>
 
         <div style={{ display: 'inline-block', height: '2em', textAlign: 'right', width: '20%' }}>
           <>

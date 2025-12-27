@@ -83,14 +83,11 @@ export default function SlideshowCard({
 
       <div style={{ marginBottom: '2em' }}>
 
-        <div
-          onClick={(e) => window.location.href = viewUrl}
-          style={{ display: 'inline-block', marginBottom: '1em', width: '80%' }}>
+        <Link href={viewUrl}>
+          <div style={{ display: 'inline-block', marginBottom: '1em', width: '80%' }}>
 
-          {thisSlideshow.status === BaseDataTypes.activeStatus ?
-            <Link
-              href={viewUrl}>
-              <a style={{ textDecoration: 'none', color: 'inherit' }}>
+            {thisSlideshow.status === BaseDataTypes.activeStatus ?
+              <>
                 <Typography
                   variant='h5'
                   sx={{
@@ -113,28 +110,29 @@ export default function SlideshowCard({
                     {Math.floor(thisSlideshow.tradeAnalysis.score * 100)}%
                   </span>
                 </Typography>
-              </a>
-            </Link>
-          :
-            <>
-              <Typography
-                style={{ color: 'gray' }}
-                variant='h5'>
-                <>{firstSlide.title}</>
-              </Typography>
-              <Typography
-                style={{ color: 'gray' }}
-                variant='body2'>
-                <i>Deleted</i>
-              </Typography>
-            </>
-          }
+              </>
+            :
+              <>
+                <Typography
+                  style={{ color: 'gray' }}
+                  variant='h5'>
+                  <>{firstSlide.title}</>
+                </Typography>
+                <Typography
+                  style={{ color: 'gray' }}
+                  variant='body2'>
+                  <i>Deleted</i>
+                </Typography>
+              </>
+            }
 
-          <Typography variant='body1'>
-            {firstSlide.text}
-          </Typography>
+            <Typography variant='body1'>
+              {firstSlide.text}
+            </Typography>
 
-        </div>
+          </div>
+        </Link>
+
         <div style={{ display: 'inline-block', height: '2em', textAlign: 'right', width: '20%' }}>
           <>
             {readonly === false ?
