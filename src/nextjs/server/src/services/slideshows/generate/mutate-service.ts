@@ -6,7 +6,7 @@ import { ElevenLabsVoiceModel } from '@/models/generated-media/elevenlabs-voice-
 import { SlideModel } from '@/models/slideshows/slide-model'
 import { SlideshowModel } from '@/models/slideshows/slideshow-model'
 import { SlideTemplateModel } from '@/models/slideshows/slide-template-model'
-import { GenerationsConfigModel } from '@/models/trade-analysis/generations-settings-model'
+import { GenerationsConfigModel } from '@/models/trade-analysis/generations-config-model'
 import { TradeAnalysisModel } from '@/models/trade-analysis/trade-analysis-model'
 import { GenSlideImageService } from './gen-image-service'
 import { GenSlideTextService } from './gen-text-service'

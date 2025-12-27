@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import SaveIcon from '@mui/icons-material/Save'
 import { PlayArrow } from '@mui/icons-material'
-import { Alert, FormControl, InputLabel, ListItemText, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Alert, Checkbox, FormControl, FormControlLabel, InputLabel, ListItemText, MenuItem, Select, TextField, Typography } from '@mui/material'
 import LabeledIconButton from '@/serene-core-client/components/buttons/labeled-icon-button'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
 import GetVoicePreviewAudio from '../elevenlabs-voices/get-voice-preview-audio'
@@ -39,6 +39,7 @@ export default function EditGenerationsConfig({
   const [name, setName] = useState<string>(generationsConfig.name)
   const [elevenLabsVoiceId, setElevenLabsVoiceId] = useState<string>(generationsConfig.elevenLabsVoiceId)
   const [status, setStatus] = useState<string>(generationsConfig.status)
+  const [isDefault, setIsDefault] = useState<boolean>(generationsConfig.isDefault)
 
   const [elevenLabsVoices, setElevenLabsVoices] = useState<any[] | undefined>(undefined)
   const [elevenLabsVoicesLoaded, setElevenLabsVoicesLoaded] = useState<boolean>(false)
@@ -140,7 +141,7 @@ export default function EditGenerationsConfig({
             value={name} />
         </div>
 
-        <div style={{ marginBottom: '1em', width: '15em' }}>
+        <div style={{ marginBottom: '2em', width: '15em' }}>
           <FormControl fullWidth>
             <InputLabel
               htmlFor='select-status'
@@ -218,6 +219,21 @@ export default function EditGenerationsConfig({
         :
           <></>
         }
+
+        <div style={{ display: 'inline-block', marginBottom: '1em' }}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={isDefault}
+                onChange={(e) => {
+                  setIsDefault(e.target.checked)
+
+                  generationsConfig.isDefault = e.target.checked
+                  setGenerationsConfig(generationsConfig)
+                }} />
+            }
+            label='Default' />
+        </div>
 
         <div style={{ textAlign: 'right', width: '100%' }}>
 

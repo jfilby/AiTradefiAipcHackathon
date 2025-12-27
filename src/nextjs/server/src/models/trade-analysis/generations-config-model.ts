@@ -11,6 +11,7 @@ export class GenerationsConfigModel {
           userProfileId: string,
           elevenLabsVoiceId: string | null,
           status: string,
+          isDefault: boolean,
           sharedPublicly: boolean,
           name: string,
           slideshowConfig: any,
@@ -26,6 +27,7 @@ export class GenerationsConfigModel {
           userProfileId: userProfileId,
           elevenLabsVoiceId: elevenLabsVoiceId,
           status: status,
+          isDefault: isDefault,
           sharedPublicly: sharedPublicly,
           name: name,
           slideshowConfig: slideshowConfig,
@@ -65,8 +67,10 @@ export class GenerationsConfigModel {
           userProfileId: string | undefined = undefined,
           elevenLabsVoiceId: string | null | undefined = undefined,
           status: string | undefined = undefined,
+          isDefault: boolean | undefined = undefined,
           sharedPublicly: boolean | undefined = undefined,
-          name: string | undefined = undefined) {
+          name: string | undefined = undefined,
+          includeElevenLabsVoice: boolean = false) {
 
     // Debug
     const fnName = `${this.clName}.filter()`
@@ -74,13 +78,25 @@ export class GenerationsConfigModel {
     // Query
     try {
       return await prisma.generationsConfig.findMany({
+        include: {
+          elevenLabsVoice: includeElevenLabsVoice
+        },
         where: {
           userProfileId: userProfileId,
           elevenLabsVoiceId: elevenLabsVoiceId,
           status: status,
+          isDefault: isDefault,
           sharedPublicly: sharedPublicly,
           name: name
-        }
+        },
+        orderBy: [
+          {
+            isDefault: 'desc'
+          },
+          {
+            name: 'asc'
+          }
+        ]
       })
     } catch(error: any) {
       console.error(`${fnName}: error: ${error}`)
@@ -116,6 +132,9 @@ export class GenerationsConfigModel {
         orderBy: [
           {
             sharedPublicly: 'desc'  // true, then false
+          },
+          {
+            isDefault: 'desc'
           },
           {
             name: 'asc'
@@ -198,13 +217,14 @@ export class GenerationsConfigModel {
   async update(
           prisma: PrismaClient,
           id: string,
-          userProfileId: string | undefined,
-          elevenLabsVoiceId: string | null | undefined,
-          status: string | undefined,
-          sharedPublicly: boolean | undefined,
-          name: string | undefined,
-          slideshowConfig: any,
-          videoConfig: any) {
+          userProfileId: string | undefined = undefined,
+          elevenLabsVoiceId: string | null | undefined = undefined,
+          status: string | undefined = undefined,
+          isDefault: boolean | undefined = undefined,
+          sharedPublicly: boolean | undefined = undefined,
+          name: string | undefined = undefined,
+          slideshowConfig: any = undefined,
+          videoConfig: any = undefined) {
 
     // Debug
     const fnName = `${this.clName}.update()`
@@ -216,6 +236,7 @@ export class GenerationsConfigModel {
           userProfileId: userProfileId,
           elevenLabsVoiceId: elevenLabsVoiceId,
           status: status,
+          isDefault: isDefault,
           sharedPublicly: sharedPublicly,
           name: name,
           slideshowConfig: slideshowConfig,
@@ -231,12 +252,49 @@ export class GenerationsConfigModel {
     }
   }
 
+  async updateByUserProfileId(
+          prisma: PrismaClient,
+          userProfileId: string,
+          elevenLabsVoiceId: string | null | undefined = undefined,
+          status: string | undefined = undefined,
+          isDefault: boolean | undefined = undefined,
+          sharedPublicly: boolean | undefined = undefined,
+          name: string | undefined = undefined,
+          slideshowConfig: any = undefined,
+          videoConfig: any = undefined) {
+
+    // Debug
+    const fnName = `${this.clName}.update()`
+
+    // Update record
+    try {
+      return await prisma.generationsConfig.updateMany({
+        data: {
+          elevenLabsVoiceId: elevenLabsVoiceId,
+          status: status,
+          isDefault: isDefault,
+          sharedPublicly: sharedPublicly,
+          name: name,
+          slideshowConfig: slideshowConfig,
+          videoConfig: videoConfig
+        },
+        where: {
+          userProfileId: userProfileId
+        }
+      })
+    } catch(error) {
+      console.error(`${fnName}: error: ${error}`)
+      throw 'Prisma error'
+    }
+  }
+
   async upsert(
           prisma: PrismaClient,
           id: string | undefined,
           userProfileId: string | undefined,
           elevenLabsVoiceId: string | null | undefined,
           status: string | undefined,
+          isDefault: boolean | undefined,
           sharedPublicly: boolean | undefined,
           name: string | undefined,
           slideshowConfig: any,
@@ -282,6 +340,11 @@ export class GenerationsConfigModel {
         throw 'Prisma error'
       }
 
+      if (isDefault == null) {
+        console.error(`${fnName}: id is null and isDefault is null`)
+        throw 'Prisma error'
+      }
+
       if (sharedPublicly == null) {
         console.error(`${fnName}: id is null and sharedPublicly is null`)
         throw 'Prisma error'
@@ -309,6 +372,7 @@ export class GenerationsConfigModel {
                  userProfileId,
                  elevenLabsVoiceId,
                  status,
+                 isDefault,
                  sharedPublicly,
                  name,
                  slideshowConfig,
@@ -323,6 +387,7 @@ export class GenerationsConfigModel {
                  userProfileId,
                  elevenLabsVoiceId,
                  status,
+                 isDefault,
                  sharedPublicly,
                  name,
                  slideshowConfig,

@@ -58,6 +58,7 @@ export default function SaveGenerationsConfig({
           userProfileId: userProfileId,
           elevenLabsVoiceId: generationsConfig.elevenLabsVoiceId,
           status: generationsConfig.status,
+          isDefault: generationsConfig.isDefault,
           name: generationsConfig.name,
           description: generationsConfig.description
         }

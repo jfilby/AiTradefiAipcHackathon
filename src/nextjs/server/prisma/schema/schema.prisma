@@ -290,6 +290,7 @@ model GenerationsConfig {
   elevenLabsVoiceId            String?              @map("elevenlabs_voice_id")
   elevenLabsVoice              ElevenLabsVoice?     @relation(fields: [elevenLabsVoiceId], references: [id])
   status                       String               @db.Char(1)
+  isDefault                    Boolean              @map("is_default")
   sharedPublicly               Boolean
   name                         String
   slideshowConfig              Json?                @map("slideshow_config") @db.JsonB

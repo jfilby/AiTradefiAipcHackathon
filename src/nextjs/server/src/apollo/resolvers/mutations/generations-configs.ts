@@ -23,6 +23,7 @@ export async function upsertGenerationsConfig(
             args.id,
             args.userProfileId,
             args.status,
+            args.isDefault,
             args.name,
             args.elevenLabsVoiceId)
 

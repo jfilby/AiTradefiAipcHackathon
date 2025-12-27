@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { CustomError } from '@/serene-core-server/types/errors'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
-import { GenerationsConfigModel } from '@/models/trade-analysis/generations-settings-model'
+import { GenerationsConfigModel } from '@/models/trade-analysis/generations-config-model'
 
 // Models
 const generationsConfigModel = new GenerationsConfigModel()
@@ -42,7 +42,11 @@ export class GenerationsConfigQueryService {
               prisma,
               userProfileId,
               undefined,  // elevenLabsVoiceId
-              status)
+              status,
+              undefined,  // isDefault
+              undefined,  // sharedPublicly
+              undefined,  // name
+              true)       // includeElevenLabsVoice
 
     // Return
     return {
@@ -63,6 +67,7 @@ export class GenerationsConfigQueryService {
               undefined,  // userProfileId
               undefined,  // elevenLabsVoiceId
               BaseDataTypes.activeStatus,
+              undefined,  // isDefault
               true)       // sharedPublicly
 
     // Validate

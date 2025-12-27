@@ -4,7 +4,7 @@ import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { ElevenLabsDefaults } from '@/types/elevenlabs-types'
 import { ServerOnlyTypes } from '@/types/server-only-types'
 import { ElevenLabsVoiceModel } from '@/models/generated-media/elevenlabs-voice-model'
-import { GenerationsConfigModel } from '@/models/trade-analysis/generations-settings-model'
+import { GenerationsConfigModel } from '@/models/trade-analysis/generations-config-model'
 
 // Models
 const elevenLabsVoiceModel = new ElevenLabsVoiceModel()
@@ -35,6 +35,19 @@ export class GenerationsConfigSetupService {
       throw new CustomError(`${fnName}: elevenLabsVoice == null`)
     }
 
+    // Is there an existing default?
+    const defaults = await
+            generationsConfigModel.filter(
+              prisma,
+              adminUserProfileId,
+              undefined,  // elevenLabsVoiceId
+              undefined,
+              true)       // isDefault
+
+    if (defaults.length > 0) {
+      return
+    }
+
     // Create
     const generationsConfig = await
             generationsConfigModel.upsert(
@@ -43,6 +56,7 @@ export class GenerationsConfigSetupService {
               adminUserProfileId,
               elevenLabsVoice.id,
               BaseDataTypes.activeStatus,
+              true,       // isDefault
               true,       // sharedPublicly
               ServerOnlyTypes.defaultGenerationsConfigName,
               ServerOnlyTypes.defaultSlideShowConfig,

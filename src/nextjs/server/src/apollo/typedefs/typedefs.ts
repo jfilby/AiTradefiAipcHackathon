@@ -167,7 +167,9 @@ export const typeDefs = `#graphql
     id: String!
     userProfileId: String!
     elevenLabsVoiceId: String
+    elevenLabsVoice: ElevenLabsVoice
     status: String!
+    isDefault: Boolean!
     name: String!
     created: String!
     updated: String!
@@ -525,6 +527,7 @@ export const typeDefs = `#graphql
       userProfileId: String!,
       elevenLabsVoiceId: String,
       status: String!,
+      isDefault: Boolean!,
       name: String!): StatusAndMessage!
 
     # Instance chats

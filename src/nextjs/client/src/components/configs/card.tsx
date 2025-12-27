@@ -111,9 +111,23 @@ export default function ElevenLabsVoiceCard({
             </>
           }
 
-          {/* <Typography variant='body1'>
-            {generationsConfig.text}
-          </Typography> */}
+          {generationsConfig.elevenLabsVoice?.name ?
+            <Typography
+              style={{ marginBottom: '0.5em' }}
+              variant='body1'>
+              Voiced by {generationsConfig.elevenLabsVoice?.name}
+            </Typography>
+          :
+            <></>
+          }
+
+          {generationsConfig.isDefault ?
+            <Typography variant='body2'>
+              Default
+            </Typography>
+          :
+            <></>
+          }
 
         </div>
         <div style={{ display: 'inline-block', height: '2em', textAlign: 'right', width: '20%' }}>

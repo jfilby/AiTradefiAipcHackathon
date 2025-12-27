@@ -12,6 +12,7 @@ export const getGenerationsConfigListQuery = gql`
         id
         publiclyShared
         name
+        isDefault
       }
     }
   }
@@ -34,6 +35,7 @@ export const getGenerationsConfigQuery = gql`
         userProfileId
         elevenLabsVoiceId
         status
+        isDefault
         name
         created
         updated
@@ -56,7 +58,11 @@ export const getGenerationsConfigsQuery = gql`
         id
         userProfileId
         elevenLabsVoiceId
+        elevenLabsVoice {
+          name
+        }
         status
+        isDefault
         name
         created
         updated
@@ -71,12 +77,14 @@ export const upsertGenerationsConfigMutation = gql`
              $userProfileId: String!,
              $elevenLabsVoiceId: String,
              $status: String!,
+             $isDefault: Boolean!,
              $name: String!) {
     upsertGenerationsConfig(
       id: $id,
       userProfileId: $userProfileId,
       elevenLabsVoiceId: $elevenLabsVoiceId,
       status: $status,
+      isDefault: $isDefault,
       name: $name) {
 
       status
