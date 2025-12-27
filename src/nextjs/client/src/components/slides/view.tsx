@@ -120,10 +120,10 @@ export default function ViewSlide({
 
       // Pause before new sentence?
       if (narrationSegment.sentenceIndex > prevSentenceIndex &&
-          prevPauseMs == null ||
-          prevPauseMs === 0) {
+          (prevPauseMs == null ||
+           prevPauseMs === 0)) {
 
-        wait(300)
+        await wait(300)
       }
 
       // Play segment's audio
