@@ -53,8 +53,8 @@ export default function UnpublishDialog({
           <Typography variant='body1'>
             Are you sure you want to unpublish this analysis?
             <br/><br/>
-            Any generated results and slideshows will remain. If you later
-            publish this record again existing results and slideshows may not
+            Any generated {/*results and*/} slideshows will remain. If you later
+            publish this record again existing {/*results and*/} slideshows may not
             match the latest prompt.
           </Typography>
         </div>

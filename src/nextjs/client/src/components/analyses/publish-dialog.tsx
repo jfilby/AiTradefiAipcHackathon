@@ -99,9 +99,9 @@ export default function PublishDialog({
               <>
                 Are you sure you're ready to publish this analysis?
                 <br/><br/>
-                This will generate results and slideshows based on this analysis.
-                The generation process takes a few minutes, first for the results
-                and then for the slideshows.
+                This will generate {/* results and */} slideshows based on this analysis.
+                The generation process takes a few minutes.{/*, first for the results
+                and then for the slideshows.*/}
               </>
             :
               <>
