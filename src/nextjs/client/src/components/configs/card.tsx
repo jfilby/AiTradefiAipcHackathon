@@ -113,7 +113,7 @@ export default function ElevenLabsVoiceCard({
 
           {generationsConfig.elevenLabsVoice?.name ?
             <Typography
-              style={{ marginBottom: '0.5em' }}
+              style={{ marginBottom: '1em' }}
               variant='body1'>
               Voiced by {generationsConfig.elevenLabsVoice?.name}
             </Typography>
@@ -122,7 +122,9 @@ export default function ElevenLabsVoiceCard({
           }
 
           {generationsConfig.isDefault ?
-            <Typography variant='body2'>
+            <Typography
+              style={{ color: 'gray' }}
+              variant='body2'>
               Default
             </Typography>
           :
