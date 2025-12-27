@@ -191,7 +191,7 @@ export class ElevenLabsService {
   async generateTtsBufferIfEnabled(
           prisma: PrismaClient,
           userProfileId: string,
-          voiceName: string,
+          elevenLabsVoice: ElevenLabsVoice,
           text: string,
           elevenLabsSettings: ElevenLabsSettings) {
 
@@ -208,16 +208,6 @@ export class ElevenLabsService {
         speakPreference === false) {
 
       return undefined
-    }
-
-    // Get voice by name
-    const elevenLabsVoice = await
-            elevenLabsVoiceModel.getByName(
-              prisma,
-              voiceName)
-
-    if (elevenLabsVoice == null) {
-      throw new CustomError(`${fnName}: elevenLabsVoice == null`)
     }
 
     // TTS

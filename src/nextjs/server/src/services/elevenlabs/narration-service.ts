@@ -1,8 +1,14 @@
 import { ElevenLabsVoice, PrismaClient } from '@prisma/client'
-import { ElevenLabsDefaults, NarrationTones, settingsByTone } from '@/types/elevenlabs-types'
-import { NarrationSegmentModel } from '@/models/slideshows/narration-segment-model'
-import { ElevenLabsService } from './service'
 import { CustomError } from '@/serene-core-server/types/errors'
+import { ElevenLabsDefaults, NarrationTones, settingsByTone } from '@/types/elevenlabs-types'
+import { ElevenLabsVoiceModel } from '@/models/generated-media/elevenlabs-voice-model'
+import { NarrationSegmentModel } from '@/models/slideshows/narration-segment-model'
+import { GenerationsConfigModel } from '@/models/trade-analysis/generations-config-model'
+import { ElevenLabsService } from './service'
+
+// Models
+const elevenLabsVoiceModel = new ElevenLabsVoiceModel()
+const generationsConfigModel = new GenerationsConfigModel()
 
 // Services
 const elevenLabsService = new ElevenLabsService()
@@ -18,6 +24,7 @@ export class NarrationAudioService {
   async *generateFromReplyData(
            prisma: PrismaClient,
            userProfileId: string,
+           generationsConfigId: string,
            replyData: any): AsyncGenerator<Buffer<ArrayBuffer>> {
 
     // Debug
@@ -28,6 +35,31 @@ export class NarrationAudioService {
     // Contents?
     if (replyData.contents == null) {
       return
+    }
+
+    // Get GenerationsConfig
+    const generationsConfig = await
+            generationsConfigModel.getById(
+              prisma,
+              generationsConfigId,
+              true)  // includeElevenLabsVoice
+
+    // Get ElevenLabsVoice
+    var elevenLabsVoice: ElevenLabsVoice | undefined = undefined
+
+    if (generationsConfig?.elevenLabsVoice != null) {
+      elevenLabsVoice = generationsConfig.elevenLabsVoice
+
+    } else {
+      elevenLabsVoice = await
+        elevenLabsVoiceModel.getByName(
+          prisma,
+          ElevenLabsDefaults.defaultVoiceName)
+    }
+
+    // Validate
+    if (elevenLabsVoice == null) {
+      throw new CustomError(`${fnName}: elevenLabsVoice == null`)
     }
 
     // Process each sentence
@@ -50,7 +82,7 @@ export class NarrationAudioService {
             elevenLabsService.generateTtsBufferIfEnabled(
               prisma,
               userProfileId,
-              ElevenLabsDefaults.defaultVoiceName,
+              elevenLabsVoice,
               text,
               elevenLabsSettings)
 

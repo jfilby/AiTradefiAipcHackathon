@@ -149,7 +149,8 @@ export class GenerationsConfigModel {
 
   async getById(
           prisma: PrismaClient,
-          id: string) {
+          id: string,
+          includeElevenLabsVoice: boolean = false) {
 
     // Debug
     const fnName = `${this.clName}.getById()`
@@ -159,6 +160,9 @@ export class GenerationsConfigModel {
 
     try {
       generationsConfig = await prisma.generationsConfig.findUnique({
+        include: {
+          elevenLabsVoice: includeElevenLabsVoice
+        },
         where: {
           id: id
         }

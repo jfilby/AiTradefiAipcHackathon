@@ -129,6 +129,7 @@ export default function ChatDialog({
           {chatSession != null ?
             <ViewInstanceChatSession
               userProfileId={userProfileId}
+              generationsConfigId={analysis.generationsConfigId}
               chatSession={chatSession}
               chatSpeakPreference={chatSpeakPreference}
               showInputTip={undefined}

@@ -69,6 +69,7 @@ io.on('connection', (socket) => {
 
     // Broadcast the message to all clients in the specified chat session
     const {
+      generationsConfigId,
       chatSessionId,
       chatParticipantId,
       instanceId,
@@ -104,6 +105,7 @@ io.on('connection', (socket) => {
             narrationAudioService.generateFromReplyData(
               prisma,
               userProfileId,
+              generationsConfigId,
               replyData)
 
     // Send audio (mp3)

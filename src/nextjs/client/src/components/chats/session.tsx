@@ -17,6 +17,7 @@ const socket = io(`${process.env.NEXT_PUBLIC_SOCKET_IO_URL}`)
 // Page function interface
 interface Props {
   userProfileId: string
+  generationsConfigId: string
   chatSession: any
   chatSpeakPreference: boolean | null
   showInputTip: boolean | undefined
@@ -28,6 +29,7 @@ interface Props {
 
 export default function ViewInstanceChatSession({
   userProfileId,  // should be fromChatParticipantId (or both)
+  generationsConfigId,
   chatSession,
   chatSpeakPreference,
   showInputTip,
@@ -146,6 +148,7 @@ export default function ViewInstanceChatSession({
 
     // Emit a 'message' event to the server
     socket.emit('message', {
+      generationsConfigId: generationsConfigId,
       sentByAi: false,
       chatSessionId: chatSessionId,
       chatParticipantId: chatParticipant.id,
@@ -188,6 +191,7 @@ export default function ViewInstanceChatSession({
   // Handle received messages from the server
   useEffect(() => {
     const handleMessage = (newMessage: any) => {
+
       if (!newMessage) return
 
       if (newMessage.contents?.[0]?.type === 'error') {
@@ -225,7 +229,7 @@ export default function ViewInstanceChatSession({
     return () => {
       socket.off('message', handleMessage)
     }
-  }, [lastMyMessage, setChatRawJson]); // include deps you use inside the effect
+  }, [lastMyMessage, setChatRawJson])  // include deps you use inside the effect
 
   useEffect(() => {
     const handler = (data: ArrayBuffer) => {
@@ -240,7 +244,7 @@ export default function ViewInstanceChatSession({
     return () => {
       socket.off('audio (mp3)', handler)
     }
-  }, [])
+  }, [])  // attach once
 
   // chatSessionJoined
   useEffect(() => {
@@ -254,7 +258,7 @@ export default function ViewInstanceChatSession({
     return () => {
       socket.off('chatSessionJoined', handleJoined)
     }
-  }, []); // attach once
+  }, [])  // attach once
 
   // authorizationFailed
   useEffect(() => {
@@ -268,7 +272,7 @@ export default function ViewInstanceChatSession({
     return () => {
       socket.off('authorizationFailed', handleFailed)
     }
-  }, []); // attach once
+  }, [])  // attach once
 
   /* Note: wrap these in useEffects if uncommented (see others)
   socket.on('connection', (socket) => {
