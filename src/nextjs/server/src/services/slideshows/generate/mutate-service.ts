@@ -44,10 +44,10 @@ export class SlideshowMutateService {
 
     // Get GenerationsConfig
     const generationsConfig = await
-            generationsConfigModel.getByUniqueKey(
+            generationsConfigModel.getById(
               prisma,
-              analysis.userProfileId,
-              ServerOnlyTypes.defaultGenerationsConfigName)
+              analysis.generationsConfigId,
+              true)  // includeElevenLabsVoice
 
     // Get slideshowConfig
     var slideshowConfig: any = undefined
@@ -65,7 +65,8 @@ export class SlideshowMutateService {
             prisma,
             tradeAnalysis.id)
 
-    if (slideshow?.status !== BaseDataTypes.newStatus) {
+    if (slideshow != null &&
+        slideshow.status !== BaseDataTypes.newStatus) {
       return
     }
 
@@ -75,10 +76,7 @@ export class SlideshowMutateService {
     if (slideshow == null) {
 
       // Get ElevenLabsVoice
-      elevenLabsVoice = await
-        elevenLabsVoiceModel.getById(
-          prisma,
-          generationsConfig.elevenLabsVoiceId)
+      elevenLabsVoice = generationsConfig.elevenLabsVoice
 
       // Create Slideshow
       slideshow = await

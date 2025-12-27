@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FormControl, InputLabel, Select } from '@mui/material'
 import LoadGenerationsConfigByFilter from './load-by-filter'
 
@@ -18,6 +18,25 @@ export default function GenerationsConfigSelect({
   const [generationsConfigs, setGenerationsConfigs] = useState<any[] | undefined>(undefined)
   const [generationsConfigId, setGenerationsConfigId] = useState<string>(json.setGenerationsConfigId)
   const [loaded, setLoaded] = useState<boolean>(false)
+
+  // Effects
+  useEffect(() => {
+
+    if (loaded === false ||
+        generationsConfigs == null ||
+        generationsConfigs?.length === 0) {
+
+      return
+    }
+
+    // Set default?
+    if (json.generationsConfigId == null ||
+        json.generationsConfigId.length === 0) {
+
+      json.generationsConfigId = generationsConfigs[0].id
+    }
+
+  }, [loaded])
 
   // Render
   return (

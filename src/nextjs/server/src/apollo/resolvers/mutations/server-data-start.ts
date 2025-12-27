@@ -17,7 +17,7 @@ export async function loadServerStartData(
   // Debug
   const fnName = `loadServerStartData()`
 
-  console.log(`${fnName}: args: ` + JSON.stringify(args))
+  // console.log(`${fnName}: args: ` + JSON.stringify(args))
 
   /* Load instance
   var instance: any = null
