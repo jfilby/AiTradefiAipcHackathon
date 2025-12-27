@@ -226,23 +226,23 @@ export default function ViewSlide({
         <></>
       }
 
-      {/* <p>slide: {JSON.stringify(slide)}</p> */}
+      {/* <p>slide: {JSON.stringify(slide)}</p>
+      <p>slideshow: {JSON.stringify(slideshow)}</p> */}
 
-      {/* Slide title */}
+      {/* Slide title: h3 (h2 caused line-wrap too easily) */}
       <div style={{ marginBottom: '2em' }}>
-        <div style={{ marginBottom: '1em', width: '80%' }}>
+        <div style={{ width: '80%' }}>
 
           {slide.status === BaseDataTypes.activeStatus ?
             <Typography
-              style={{ marginBottom: '0.5em' }}
-              variant='h2'>
+              variant='h3'>
               <>{slide.title}</>
             </Typography>
           :
             <>
               <Typography
                 style={{ color: 'gray' }}
-                variant='h2'>
+                variant='h3'>
                 <>{slide.title}</>
               </Typography>
               <Typography
@@ -253,6 +253,12 @@ export default function ViewSlide({
             </>
           }
         </div>
+
+        <Typography
+          variant='body2'>
+          {slideshow.tradeAnalysis.instrument.name}&nbsp;
+          ({slideshow.tradeAnalysis.instrument.exchange.name})
+        </Typography>
       </div>
 
       {/* Slide image */}

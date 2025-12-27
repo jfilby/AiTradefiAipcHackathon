@@ -138,7 +138,15 @@ export class SlideshowModel {
               }
             ]
           } : undefined,
-          tradeAnalysis: includeTradeAnalysis
+          tradeAnalysis: includeTradeAnalysis ? {
+            include: {
+              instrument: {
+                include: {
+                  exchange: true
+                }
+              }
+            }
+          } : undefined
         },
         where: {
           id: id

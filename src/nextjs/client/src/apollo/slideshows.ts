@@ -34,6 +34,15 @@ export const getSlideshowQuery = gql`
           quarterlyFinancials
           dailyChart
         }
+        tradeAnalysis {
+          instrument {
+            name
+            exchange {
+              name
+            }
+          }
+          score
+        }
       }
     }
   }

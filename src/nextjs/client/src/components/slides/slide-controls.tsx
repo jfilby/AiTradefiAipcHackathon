@@ -102,26 +102,20 @@ export default function SlideControls({
           {/* Note: slideNo starts from 1
           <p>slide.slideNo: {slide.slideNo}</p> */}
 
-          {slide.slideNo > 1 ?
-            <Button
-              onClick={(e) => setSlide(slideshow.slides[slide.slideNo - 2])}
-              variant='outlined'>
-              Previous
-            </Button>
-          :
-            <></>
-          }
+          <Button
+            disabled={slide.slideNo === 1}
+            onClick={(e) => setSlide(slideshow.slides[slide.slideNo - 2])}
+            variant='outlined'>
+            Previous
+          </Button>
 
-          {slide.slideNo < slideshow.slides.length ?
-            <Button
-              onClick={(e) => setSlide(slideshow.slides[slide.slideNo])}
-              style={{ marginLeft: '0.5em' }}
-              variant='contained'>
-              Next
-            </Button>
-          :
-            <></>
-          }
+          <Button
+            disabled={slide.slideNo === slideshow.slides.length}
+            onClick={(e) => setSlide(slideshow.slides[slide.slideNo])}
+            style={{ marginLeft: '0.5em' }}
+            variant='contained'>
+            Next
+          </Button>
         </div>
       </div>
 

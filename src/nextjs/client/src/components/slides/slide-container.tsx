@@ -47,7 +47,7 @@ export default function SlideContainer({
         <div>
           <Typography
             style={{ marginBottom: '2em' }}
-            variant='h1'>
+            variant='h2'>
             {slide.title}
           </Typography>
 
