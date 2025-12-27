@@ -20,7 +20,7 @@ export class AnalysesQueryService {
     // Debug
     const fnName = `${this.clName}.filter()`
 
-    console.log(`${fnName}: starting with userProfileId: ${userProfileId}`)
+    // console.log(`${fnName}: starting with userProfileId: ${userProfileId}`)
 
     // Filter
     const analyses = await
