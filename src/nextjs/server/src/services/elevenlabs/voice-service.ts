@@ -37,9 +37,7 @@ export class ElevenLabsVoiceService {
     }
 
     // Determine the relativePath
-    const relativePath =
-            `${process.env.BASE_DATA_PATH}/audio/voice-test/` +
-            `${elevenLabsVoice.voiceId}.mp3`
+    const relativePath = `/audio/voice-test/${elevenLabsVoice.voiceId}.mp3`
 
     // Get GeneratedAudio record if available
     var generatedAudio = await
