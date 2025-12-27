@@ -5,6 +5,7 @@ import Layout from '@/components/layouts/layout'
 import { Typography } from '@mui/material'
 import ListSlideshows from '@/components/slideshows/list'
 import LoadSlideshowsByFilter from '@/components/slideshows/load-by-filter'
+import LoadLatestTradeAnalyses from '@/components/trade-analyses-groups/load-by-latest'
 
 interface Props {
   userProfile: any
@@ -18,7 +19,10 @@ export default function SlideshowsPage({
 
   // State
   const [slideshows, setSlideshows] = useState<any>(undefined)
-  const [inNewStatus, setInNewStatus] = useState<number | undefined>(undefined)
+  const [slideshowsInNewStatus, setSlideshowsInNewStatus] = useState<number | undefined>(undefined)
+
+  const [tradeAnalysesGroups, setTradeAnalysesGroups] = useState<any>(undefined)
+  const [tradeAnalysesGroupsInNewStatus, setTradeAnalysesGroupsInNewStatus] = useState<number | undefined>(undefined)
 
   // Render
   return (
@@ -41,12 +45,23 @@ export default function SlideshowsPage({
             </Typography>
           </div>
 
-          {inNewStatus != null &&
-           inNewStatus > 0 ?
+          {slideshowsInNewStatus != null &&
+           slideshowsInNewStatus > 0 ?
             <Typography
               style={{ marginBottom: '2em' }}
               variant='body1'>
-              {inNewStatus} slideshows being generated for you..
+              {slideshowsInNewStatus} slideshows being generated for you..
+            </Typography>
+          :
+            <></>
+          }
+
+          {tradeAnalysesGroupsInNewStatus != null &&
+           tradeAnalysesGroupsInNewStatus > 0 ?
+            <Typography
+              style={{ marginBottom: '2em' }}
+              variant='body1'>
+              {tradeAnalysesGroupsInNewStatus} results being generated for you..
             </Typography>
           :
             <></>
@@ -62,7 +77,13 @@ export default function SlideshowsPage({
         <LoadSlideshowsByFilter
           userProfileId={userProfile.id}
           setSlideshows={setSlideshows}
-          setInNewStatus={setInNewStatus} />
+          setInNewStatus={setSlideshowsInNewStatus} />
+
+        <LoadLatestTradeAnalyses
+          userProfileId={userProfile.id}
+          instanceId={undefined}
+          setTradeAnalysesGroups={setTradeAnalysesGroups}
+          setInNewStatus={setTradeAnalysesGroupsInNewStatus} />
 
       </Layout>
     </>
