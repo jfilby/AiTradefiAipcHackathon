@@ -1,8 +1,9 @@
-AiTradeFi is an AI investment research platform.
+AiTradeFi is an AI investment research platform written by Jason Filby.
 
 Powered by:
 - Google Gemini + Cloud
 - ElevenLabs
+
 
 ## DevPost entry
 
@@ -12,6 +13,8 @@ https://ai-partner-catalyst.devpost.com
 AiTradefi project on Devpost:
 https://devpost.com/software/aitradefi
 
+
 ## Documentation
 
 Available in the docs directory.
+
