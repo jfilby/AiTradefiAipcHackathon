@@ -6,6 +6,7 @@ import { prisma } from './db'
 import { TechProviderMutateService } from '@/serene-core-server/services/tech/tech-provider-mutate-service'
 import { UsersService } from '@/serene-core-server/services/users/service'
 import { ServerTestTypes } from './types/server-test-types'
+import { ElevenLabsApiKeyService } from './services/elevenlabs/api-key-service'
 import { FinnHubApiServiceTests } from './services/external-data/finnhub/api-service-tests'
 import { SetupAnalysesService } from './services/analysis/setup-service'
 import { SetupService } from './services/setup/setup'
@@ -19,6 +20,7 @@ import { TestsService } from './services/tests/tests-service'
   const fnName = 'cli.ts'
 
   // Consts
+  const elevenLabsCheckCommand = 'elevenlabs-check'
   const loadAnalysesCommand = 'load-analyses'
   const loadSlideshowToShowcaseCommand = 'load-slideshow-to-showcase'
   const loadTechProviderApiKeysCommand = 'load-tech-provider-api-keys'
@@ -26,6 +28,7 @@ import { TestsService } from './services/tests/tests-service'
   const testsCommand = 'tests'
 
   const commands = [
+          elevenLabsCheckCommand,
           loadAnalysesCommand,
           loadSlideshowToShowcaseCommand,
           loadTechProviderApiKeysCommand,
@@ -39,6 +42,7 @@ import { TestsService } from './services/tests/tests-service'
   console.log(`${fnName}: comand to run: ${command}`)
 
   // Services
+  const elevenLabsApiKeyService = new ElevenLabsApiKeyService()
   const setupAnalysesService = new SetupAnalysesService()
   const setupService = new SetupService()
   const finnHubApiServiceTests = new FinnHubApiServiceTests()
@@ -63,6 +67,13 @@ import { TestsService } from './services/tests/tests-service'
 
   // Run the chosen command
   switch (command) {
+
+    case elevenLabsCheckCommand: {
+
+      await elevenLabsApiKeyService.check()
+
+      break
+    }
 
     case loadAnalysesCommand: {
 
