@@ -5,6 +5,11 @@ Powered by:
 - ElevenLabs
 
 
+## Try it out
+
+https://aitradefi.com
+
+
 ## DevPost entry
 
 Written for the AI Partner Catalyst hackathon:
