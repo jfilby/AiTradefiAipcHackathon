@@ -4,6 +4,7 @@ import { io } from 'socket.io-client'
 import { Alert, Button, Checkbox, FormControlLabel, TextareaAutosize } from '@mui/material'
 import ChatSessionMessages from '../../../deployed/serene-ai-client/components/chat/view/messages'
 import { getChatMessagesQuery } from '@/apollo/instance-chats'
+import { ElevenLabsClientService } from '@/services/elevenlabs/service'
 import CreateElevenLabsToken from '../elevenlabs/create-token'
 import SaveSpeakPreference from '../elevenlabs/save-speak-user-preference'
 import StreamMicComponent from '../elevenlabs/stream-mic'
@@ -43,6 +44,9 @@ export default function ViewInstanceChatSession({
   const chatSessionId = chatSession.id
   const chatSessionToken = chatSession.token
 
+  // Services
+  const elevenLabsClientService = new ElevenLabsClientService()
+
   // Refs
   const myMessageInput = useRef<any>(null)
 
@@ -60,6 +64,9 @@ export default function ViewInstanceChatSession({
   const [elevenlabsToken, setElevenlabsToken] = useState<string | undefined>(undefined)
   const [speak, setSpeak] = useState<boolean>(chatSpeakPreference != null ? chatSpeakPreference : true)
 
+  // Refs
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+
   // GraphQL
   const { refetch: fetchChatMessages } =
     useQuery<any>(getChatMessagesQuery, {
@@ -73,7 +80,6 @@ export default function ViewInstanceChatSession({
       } */
     })
 
-  // Functions
   function getChatBoxHeight() {
 
     var height = 58
@@ -233,9 +239,33 @@ export default function ViewInstanceChatSession({
 
   useEffect(() => {
     const handler = (data: ArrayBuffer) => {
+
+      // Fade out and stop any existing audio
+      if (audioRef != null) {
+
+        elevenLabsClientService.fadeOutAndStop(
+          audioRef.current)
+      }
+
+      // Get blob with data
       const blob = new Blob([data], { type: 'audio/mpeg' })
-      const audio = new Audio(URL.createObjectURL(blob))
-      audio.play()
+
+      // Play segment's audio
+      const play = async () => {
+        await new Promise<void>((resolve, reject) => {
+          const audio = new Audio(URL.createObjectURL(blob))
+          audioRef.current = audio
+
+          audio.addEventListener('ended', () => resolve(), { once: true })
+          audio.addEventListener('error', (e) => reject(e), { once: true })
+
+          audio.play().catch(reject)
+        })
+      }
+
+      // Async call
+      const result = play()
+        .catch(console.error)
     }
 
     socket.on('audio (mp3)', handler)

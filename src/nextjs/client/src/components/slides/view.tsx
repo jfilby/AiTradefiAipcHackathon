@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Alert, Typography } from '@mui/material'
 import { Image } from 'mui-image'
 import { BaseDataTypes } from '@/shared/types/base-data-types'
+import { ElevenLabsClientService } from '@/services/elevenlabs/service'
 import FinancialChart from './financial-chart'
 
 interface Props {
@@ -45,6 +46,9 @@ export default function ViewSlide({
     JSON.parse(slide.dailyChart) :
     undefined
 
+  // Services
+  const elevenLabsClientService = new ElevenLabsClientService()
+
   // Use a reduced text size if an image is present
   const textVariant = 'h5'
 
@@ -62,39 +66,14 @@ export default function ViewSlide({
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   // Functions
-  function fadeOutAndStop(duration = 200): Promise<void> {
-    return new Promise(resolve => {
-      const audio = audioRef.current
-      if (!audio) return resolve()
-
-      const startVolume = audio.volume
-      const steps = duration / 20
-      let currentStep = 0
-
-      const interval = setInterval(() => {
-        currentStep++
-        audio.volume = Math.max(
-          0,
-          startVolume * (1 - currentStep / steps)
-        )
-
-        if (currentStep >= steps) {
-          clearInterval(interval)
-          audio.pause()
-          audio.currentTime = 0
-          audio.volume = startVolume
-          resolve()
-        }
-      }, 20)
-    })
-  }
-
   async function playAudio() {
 
     // console.log(`playing audio..`)
 
     // Stop any existing audio
-    fadeOutAndStop()
+    if (audioRef != null) {
+      elevenLabsClientService.fadeOutAndStop(audioRef.current)
+    }
 
     // Return if no validation
     if (slide.narration == null) {
@@ -184,7 +163,9 @@ export default function ViewSlide({
       return
     }
 
-    fadeOutAndStop()
+    if (audioRef != null) {
+      elevenLabsClientService.fadeOutAndStop(audioRef)
+    }
 
   }, [slide, muteAudio])
 
