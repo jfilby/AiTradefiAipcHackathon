@@ -162,12 +162,18 @@ export default function ViewInstanceChatSession({
          analysis.description != null ||
          analysis.prompt != null)) {
 
+      // Define analysisJson
+      const analysisJson: any = {
+        status: BaseDataTypes.analysisStatusMap[analysis.status],
+        name: analysis.name,
+        description: analysis.description,
+        prompt: analysis.prompt
+      }
+
       contents.push({
         type: 'metadata',
         text: `FYI: the current Analysis record is: ` +
-        analysis.name != null ? `name: ${analysis.name} ` : '' +
-        analysis.description != null ? `description: ${analysis.description} ` : '' +
-        analysis.prompt != null ? `prompt: ${analysis.prompt} ` : ''
+              JSON.stringify(analysisJson)
       })
 
       setAnalysisSent(true)

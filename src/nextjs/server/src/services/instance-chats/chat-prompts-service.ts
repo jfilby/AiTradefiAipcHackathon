@@ -56,47 +56,17 @@ export class ChatPromptsService {
           `\n` +
           `The output includes these fields (see the example section for ` +
           `the expected structure):\n` +
-          `- messages: the chat response goes here (markdown).\n`
-
-    // Don't specify Analysis-related fields to return if not in draft status
-    if (analysis?.status === BaseDataTypes.newStatus) {
-
-      prompt +=
-        `- name: a new name for the Analysis.\n` +
-        `- description: a new description.\n` +
-        `- prompt: a new prompt to screen instruments with.\n` +
-        `\n` +
-        // `Only offer name and description fields if not yet set.\n` +
-        // `\n` +
-        `The name, description and prompt fields should only be ` +
-        `specified on confirmation by that they want these fields ` +
-        `updated.\n`
-    }
-
-    // If an Analysis record is available, add its details to the prompt
-    if (analysis != null) {
-
-      var status = '?'
-
-      if (analysis.status === BaseDataTypes.newStatus) {
-        status = 'Draft'
-      } else if (analysis.status === BaseDataTypes.activeStatus) {
-        status = 'Published'
-      } else if (analysis.status === BaseDataTypes.deletePendingStatus) {
-        status = 'Delete pending'
-      }
-
-      prompt +=
-        `## Existing Analysis record\n` +
-        `\n` +
-        `Note: if not in Draft status then refuse to set any fields.\n` +
-        `\n` +
-        `- status: ${BaseDataTypes}\n` +
-        `- name: ${analysis.name}\n` +
-        `- description: ${analysis.description}\n` +
-        `- prompt: ${analysis.prompt}\n` +
-        `\n`
-    }
+          `- messages: the chat response goes here (markdown).\n` +
+          `- name: a new name for the Analysis.\n` +
+          `- description: a new description.\n` +
+          `- prompt: a new prompt to screen instruments with.\n` +
+          `\n` +
+          `Don't set name, description or prompt fields unless the analysis ` +
+          `is in draft status.\n` +
+          `\n` +
+          `The name, description and prompt fields should only be ` +
+          `specified on confirmation by that they want these fields ` +
+          `updated.\n`
 
     // Return
     return prompt
