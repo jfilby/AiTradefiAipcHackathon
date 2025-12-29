@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 import { useQuery } from '@apollo/client/react'
 import { io } from 'socket.io-client'
 import { Alert, Button, Checkbox, FormControlLabel, TextareaAutosize } from '@mui/material'
-import ChatSessionMessages from '../../../deployed/serene-ai-client/components/chat/view/messages'
 import { getChatMessagesQuery } from '@/apollo/instance-chats'
+import { BaseDataTypes } from '@/shared/types/base-data-types'
 import { ElevenLabsClientService } from '@/services/elevenlabs/service'
+import ChatSessionMessages from './messages'
 import CreateElevenLabsToken from '../elevenlabs/create-token'
 import SaveSpeakPreference from '../elevenlabs/save-speak-user-preference'
 import StreamMicComponent from '../elevenlabs/stream-mic'
@@ -18,7 +19,7 @@ const socket = io(`${process.env.NEXT_PUBLIC_SOCKET_IO_URL}`)
 // Page function interface
 interface Props {
   userProfileId: string
-  generationsConfigId: string
+  analysis: any
   chatSession: any
   chatSpeakPreference: boolean | null
   showInputTip: boolean | undefined
@@ -30,7 +31,7 @@ interface Props {
 
 export default function ViewInstanceChatSession({
   userProfileId,  // should be fromChatParticipantId (or both)
-  generationsConfigId,
+  analysis,
   chatSession,
   chatSpeakPreference,
   showInputTip,
@@ -63,6 +64,7 @@ export default function ViewInstanceChatSession({
 
   const [elevenlabsToken, setElevenlabsToken] = useState<string | undefined>(undefined)
   const [speak, setSpeak] = useState<boolean>(chatSpeakPreference != null ? chatSpeakPreference : true)
+  const [analysisSent, setAnalysisSent] = useState<boolean>(false)
 
   // Refs
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -152,18 +154,39 @@ export default function ViewInstanceChatSession({
       prepMyMessage = myMessage.trim()
     }
 
+    // Contents
+    var contents: any[] = []
+
+    if (analysisSent === false &&
+        (analysis.name != null ||
+         analysis.description != null ||
+         analysis.prompt != null)) {
+
+      contents.push({
+        type: 'metadata',
+        text: `FYI: the current Analysis record is: ` +
+        analysis.name != null ? `name: ${analysis.name} ` : '' +
+        analysis.description != null ? `description: ${analysis.description} ` : '' +
+        analysis.prompt != null ? `prompt: ${analysis.prompt} ` : ''
+      })
+
+      setAnalysisSent(true)
+    }
+
+    contents.push({
+      type: '',
+      text: prepMyMessage
+    })
+
     // Emit a 'message' event to the server
     socket.emit('message', {
-      generationsConfigId: generationsConfigId,
+      generationsConfigId: analysis.generationsConfigId,
       sentByAi: false,
       chatSessionId: chatSessionId,
       chatParticipantId: chatParticipant.id,
       userProfileId: userProfileId,
       name: chatParticipant.name,
-      contents: [{
-        type: '',
-        text: prepMyMessage
-      }]
+      contents: contents
     })
 
     setLastMyMessage(prepMyMessage)
@@ -223,9 +246,37 @@ export default function ViewInstanceChatSession({
         }
       }
 
-      // Update raw JSON if present
-      if (newMessage.rawJson != null) {
-        setChatRawJson(newMessage.rawJson)
+      // Update raw JSON if present, but not if unpublished
+      if (newMessage.rawJson?.name != null ||
+          newMessage.rawJson?.description != null ||
+          newMessage.rawJson?.prompt != null) {
+
+        // Debug
+        // console.log(`rawJson: ` + JSON.stringify(newMessage.rawJson))
+
+        // Update message
+        var updateContents: any[] = []
+
+        if (analysis.status === BaseDataTypes.newStatus) {
+
+          setChatRawJson(newMessage.rawJson)
+
+          updateContents.push({
+            type: 'update',
+            text: 'Form updated'
+          })
+        } else {
+          updateContents.push({
+            type: 'update',
+            text: 'Form not updated (not in draft status)'
+          })
+        }
+
+        const formMessage = {
+          contents: updateContents
+        }
+
+        setMessages(prevMessages => prevMessages.concat(formMessage))
       }
     }
 

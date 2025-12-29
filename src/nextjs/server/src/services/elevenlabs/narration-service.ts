@@ -65,6 +65,11 @@ export class NarrationAudioService {
     // Process each sentence
     for (const message of replyData.contents) {
 
+      // Skip if no tone set (e.g. metadata)
+      if (message.tone == null) {
+        continue
+      }
+
       // Lookup tone settings
       const tone = message.tone as string
 

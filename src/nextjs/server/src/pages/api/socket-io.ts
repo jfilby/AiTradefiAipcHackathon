@@ -81,6 +81,7 @@ io.on('connection', (socket) => {
     io.to(chatSessionId).emit('message', data)
 
     // Debug
+    // console.log(`${fnName}: generationsConfigId: ${generationsConfigId}`)
     // console.log(`${fnName}: contents: ` + JSON.stringify(contents))
 
     // Process chat session turn
