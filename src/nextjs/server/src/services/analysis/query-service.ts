@@ -30,7 +30,8 @@ export class AnalysesQueryService {
               undefined,  // generationsConfigId
               undefined,  // type
               status,
-              instrumentType)
+              instrumentType,
+              true)       // sortByUpdated
 
     return {
       status: true,

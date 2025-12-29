@@ -72,7 +72,7 @@ export class AnalysisModel {
           type: string | undefined = undefined,
           status: string | undefined = undefined,
           instrumentType: string | undefined = undefined,
-          name: string | undefined = undefined) {
+          sortByUpdated: boolean = false) {
 
     // Debug
     const fnName = `${this.clName}.filter()`
@@ -85,9 +85,13 @@ export class AnalysisModel {
           generationsConfigId: generationsConfigId,
           type: type,
           status: status,
-          instrumentType: instrumentType,
-          name: name
-        }
+          instrumentType: instrumentType
+        },
+        orderBy: [
+          {
+            updated: sortByUpdated ? 'desc' : undefined
+          }
+        ]
       })
     } catch(error: any) {
       console.error(`${fnName}: error: ${error}`)
@@ -247,7 +251,7 @@ export class AnalysisModel {
     // Debug
     const fnName = `${this.clName}.upsert()`
 
-    console.log(`${fnName}: starting with id: ` + JSON.stringify(id))
+    // console.log(`${fnName}: starting with id: ` + JSON.stringify(id))
 
     // If id isn't specified, but the unique keys are, try to get the record
     if (id == null &&
