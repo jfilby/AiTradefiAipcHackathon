@@ -137,13 +137,11 @@ export default function AnalysisCard({
       <SaveAnalysis
         userProfileId={userProfileId}
         analysis={thisAnalysis}
-        isAdd={false}
+        isEditPage={false}
         setAlertSeverity={setAlertSeverity}
         setMessage={setMessage}
         saveAction={saveAction}
-        setSaveAction={setSaveAction}
-        setEditMode={undefined}
-        redirectToIndexOnSave={false} />
+        setSaveAction={setSaveAction} />
 
       <DeleteDialog
         open={deleteDialogOpen}

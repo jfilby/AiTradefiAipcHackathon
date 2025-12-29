@@ -151,13 +151,11 @@ export default function CreateAnalysesPage({
         userProfileId={userProfile.id}
         instanceId={undefined}
         analysis={analysis}
-        isAdd={true}
+        isEditPage={false}
         setAlertSeverity={setAlertSeverity}
         setMessage={setMessage}
         saveAction={saveAction}
-        setSaveAction={setSaveAction}
-        setEditMode={undefined}
-        redirectToIndexOnSave={true} />
+        setSaveAction={setSaveAction} />
 
       <PublishDialog
         open={publishOpen}

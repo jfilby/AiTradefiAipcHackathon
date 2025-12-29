@@ -37,6 +37,7 @@ export default function EditAnalysesPage({
   })
 
   const [loaded, setLoaded] = useState<boolean>(false)
+  const [saved, setSaved] = useState<boolean>(false)
   const [saveAction, setSaveAction] = useState<boolean>(false)
 
   const [showChat, setShowChat] = useState<boolean>(false)
@@ -156,13 +157,11 @@ export default function EditAnalysesPage({
           userProfileId={userProfile.id}
           instanceId={undefined}
           analysis={analysis}
-          isAdd={false}
+          isEditPage={true}
           setAlertSeverity={setAlertSeverity}
           setMessage={setMessage}
           saveAction={saveAction}
-          setSaveAction={setSaveAction}
-          setEditMode={undefined}
-          redirectToIndexOnSave={true} />
+          setSaveAction={setSaveAction} />
 
       </Layout>
 

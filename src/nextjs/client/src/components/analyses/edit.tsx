@@ -44,7 +44,6 @@ export default function EditAnalysis({
   // State
   const [name, setName] = useState<string>(analysis.name)
   const [type, setType] = useState<string>(BaseDataTypes.screenerType)
-  const [status, setStatus] = useState<string>(analysis.status)
   const [instrumentType, setInstrumentType] = useState<string>(analysis.instrumentType)
   const [description, setDescription] = useState<string>(analysis.description)
   const [prompt, setPrompt] = useState<string>(analysis.prompt)
@@ -76,14 +75,6 @@ export default function EditAnalysis({
 
       setAlertSeverity('error')
       setMessage('The name must be specified')
-      return false
-    }
-
-    if (status == null ||
-        status.trim() === '') {
-
-      setAlertSeverity('error')
-      setMessage('The status must be specified')
       return false
     }
 
@@ -197,7 +188,7 @@ export default function EditAnalysis({
               label='Instrument type'
               native
               onChange={(e) => {
-                setStatus(e.target.value)
+                setInstrumentType(e.target.value)
 
                 analysis.instrumentType = e.target.value
                 setAnalysis(analysis)
@@ -276,7 +267,6 @@ export default function EditAnalysis({
                 icon={SaveIcon}
                 label='Save'
                 onClick={(e: any) => {
-                  analysis.status = status
 
                   if (verifyFields() === true) {
 

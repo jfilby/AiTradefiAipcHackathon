@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { Toaster, toast } from 'sonner'
 import { useMutation } from '@apollo/client/react'
 import { upsertGenerationsConfigMutation } from '@/apollo/generations-configs'
 
@@ -76,6 +77,7 @@ export default function SaveGenerationsConfig({
     setMessage(results.message)
 
     // Done
+    toast(`Saved`)
     setSaveAction(false)
 
     if (results.status === true &&
@@ -106,6 +108,8 @@ export default function SaveGenerationsConfig({
 
   // Render
   return (
-    <></>
+    <>
+      <Toaster />
+    </>
   )
 }

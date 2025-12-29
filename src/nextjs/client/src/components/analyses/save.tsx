@@ -1,31 +1,29 @@
 import { useEffect } from 'react'
+import { Toaster, toast } from 'sonner'
 import { useMutation } from '@apollo/client/react'
 import { upsertAnalysisMutation } from '@/apollo/analyses'
+import { BaseDataTypes } from '@/shared/types/base-data-types'
 
 interface Props {
   userProfileId: string
   instanceId?: string
   analysis: any
-  isAdd: boolean
+  isEditPage: boolean
   setAlertSeverity: any
   setMessage: any
   saveAction: boolean
   setSaveAction: any
-  setEditMode: any
-  redirectToIndexOnSave: boolean
 }
 
 export default function SaveAnalysis({
                           userProfileId,
                           instanceId,
                           analysis,
-                          isAdd,
+                          isEditPage,
                           setAlertSeverity,
                           setMessage,
                           saveAction,
-                          setSaveAction,
-                          setEditMode,
-                          redirectToIndexOnSave
+                          setSaveAction
                         }: Props) {
 
   // Consts
@@ -77,13 +75,16 @@ export default function SaveAnalysis({
     setMessage(results.message)
 
     // Done
+    toast(`Saved`)
     setSaveAction(false)
 
     if (results.status === true &&
-        redirectToIndexOnSave === true) {
-      // setEditMode(false)
+        isEditPage === true) {
 
-      window.location.href = indexUrl
+      // Done (redirect to index) if published
+      if (analysis.status === BaseDataTypes.activeStatus) {
+         window.location.href = indexUrl
+      }
     }
   }
 
@@ -107,6 +108,8 @@ export default function SaveAnalysis({
 
   // Render
   return (
-    <></>
+    <>
+      <Toaster />
+    </>
   )
 }
