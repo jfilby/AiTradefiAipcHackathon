@@ -1,9 +1,8 @@
 import Head from 'next/head'
 import React from 'react'
-import Typography from '@mui/material/Typography'
+import { Link, Typography } from '@mui/material'
 import { loadServerPage } from '@/services/page/load-server-page'
 import Layout, { pageBodyWidth } from '@/components/layouts/layout'
-import LaunchedDetails from '@/components/landing-pages/launched-details'
 import LaunchedHeader from '@/components/landing-pages/header'
 
 interface Props {
@@ -26,18 +25,36 @@ export default function AboutPage({ userProfile }: Props) {
 
           <LaunchedHeader />
 
-          <LaunchedDetails />
+          <div style={{ marginBottom: '5em' }}>
+            <Typography
+              style={{ marginBottom: '0.5em' }}
+              variant='h3'>
+              AI Partner Catalyst Hackathon
+            </Typography>
+            <Typography variant='body1'>
+              This project was developed for the{' '}
+              <Link href='https://ai-partner-catalyst.devpost.com/'>AI Partner Catalyst Hackathon</Link>{' '}
+              with a focus on the ElevenLabs track.
+              <br/>
+              <br/>
+              See AiTradefi's{' '}
+              <Link href='https://devpost.com/software/aitradefi'>project page</Link>{' '}
+              or watch the{' '}
+              <Link href='https://www.youtube.com/watch?v=2QaUFH82o_k'>demo video</Link>.
+            </Typography>
+          </div>
 
           <div>
-            <Typography variant='h5'>
+            <Typography
+              style={{ marginBottom: '0.5em' }}
+              variant='h3'>
               Team
             </Typography>
             <Typography variant='body1'>
               The founder is Jason Filby (X:&nbsp;
-              <a href='https://x.com/jasonfi'>@jasonfi</a>).
+              <Link href='https://x.com/jasonfi'>@jasonfi</Link>).
             </Typography>
           </div>
-          <br />
         </div>
       </Layout>
     </>
