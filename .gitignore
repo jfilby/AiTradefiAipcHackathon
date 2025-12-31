@@ -3,4 +3,5 @@ private-data
 private-docs
 src/nextjs/client/config
 src/nextjs/server/config
-staging
+staging/
+
