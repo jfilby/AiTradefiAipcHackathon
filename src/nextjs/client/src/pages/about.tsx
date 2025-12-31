@@ -40,7 +40,7 @@ export default function AboutPage({ userProfile }: Props) {
               See AiTradefi's{' '}
               <Link href='https://devpost.com/software/aitradefi'>project page</Link>{' '}
               or watch the{' '}
-              <Link href='https://www.youtube.com/watch?v=2QaUFH82o_k'>demo video</Link>.
+              <Link href='https://youtu.be/QxWF89SPePE'>demo video</Link>.
             </Typography>
           </div>
 
